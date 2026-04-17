@@ -112,7 +112,11 @@ select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:u
     <div class="time-badge">⏱ Takes about 10 minutes</div>
   </div>
 
-  <form class="assess-form" id="assessForm" onsubmit="handleAssess(event)">
+  <form class="assess-form" id="assessForm" action="https://api.web3forms.com/submit" method="POST">
+    <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE"/>
+    <input type="hidden" name="subject" value="New LogicStack AI Business Assessment"/>
+    <input type="hidden" name="from_name" value="LogicStack Assessment"/>
+    <input type="checkbox" name="botcheck" style="display:none;"/>
 
     <!-- SECTION 1: About Your Business -->
     <div class="form-section">
@@ -346,50 +350,6 @@ function updateProgress(){
 }
 form.addEventListener('input',updateProgress);
 form.addEventListener('change',updateProgress);
-
-// Submit handler — collects everything into a mailto
-function handleAssess(e){
-  e.preventDefault();
-  const fd=new FormData(form);
-  let body='=== LOGICSTACK AI BUSINESS ASSESSMENT ===\n\n';
-
-  body+='--- ABOUT THE BUSINESS ---\n';
-  body+='Business: '+fd.get('biz_name')+'\n';
-  body+='Name: '+fd.get('your_name')+'\n';
-  body+='Email: '+fd.get('email')+'\n';
-  body+='Phone: '+fd.get('phone')+'\n';
-  body+='What they do: '+fd.get('biz_type')+'\n';
-  body+='Employees: '+fd.get('employees')+'\n';
-  body+='Location: '+fd.get('location')+'\n';
-  body+='Website: '+fd.get('website')+'\n\n';
-
-  body+='--- DAILY OPERATIONS ---\n';
-  body+='Typical day: '+fd.get('typical_day')+'\n';
-  body+='Time wasters: '+fd.get('time_wasters')+'\n';
-  body+='Problems checked: '+fd.getAll('problems').join(', ')+'\n\n';
-
-  body+='--- CUSTOMERS & REVENUE ---\n';
-  body+='Channels: '+fd.getAll('channels').join(', ')+'\n';
-  body+='How they book: '+fd.get('customer_book')+'\n';
-  body+='Lost revenue: '+fd.get('lost_revenue')+'\n';
-  body+='Customer value: '+fd.get('avg_customer_value')+'\n\n';
-
-  body+='--- CURRENT TOOLS ---\n';
-  body+='Tools: '+fd.getAll('tools').join(', ')+'\n';
-  body+='Other tools: '+fd.get('tools_other')+'\n';
-  body+='Tool frustrations: '+fd.get('tools_frustration')+'\n';
-  body+='AI experience: '+fd.get('ai_experience')+'\n\n';
-
-  body+='--- GOALS ---\n';
-  body+='#1 fix: '+fd.get('magic_wand')+'\n';
-  body+='90-day goal: '+fd.get('goals_90')+'\n';
-  body+='Budget: '+fd.get('budget')+'\n';
-  body+='Timeline: '+fd.get('timeline')+'\n';
-  body+='Anything else: '+fd.get('anything_else')+'\n';
-
-  const subject='AI Assessment — '+fd.get('biz_name');
-  window.location.href='mailto:kernelkrafttech@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-}
 </script>
 </body>
 </html>
