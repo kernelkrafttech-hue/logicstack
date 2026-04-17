@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Free AI Business Assessment — LogicStack</title>
+<meta name="description" content="Tell us what's slowing your business down. We'll build a free, custom AI roadmap showing exactly how automation and AI agents can help."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #faf9f6;
+  --bg-warm: #f3f0ea;
+  --bg-dark: #1a1a2e;
+  --ink: #1a1a2e;
+  --ink-mid: #4a4a5e;
+  --ink-dim: #7a7a8e;
+  --accent: #e85d26;
+  --accent-light: #ff7a45;
+  --teal: #0d9488;
+  --line: rgba(26,26,46,0.09);
+  --display: 'DM Serif Display', Georgia, serif;
+  --sans: 'Outfit', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --radius: 12px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+.container{max-width:820px;margin:0 auto;padding:0 28px;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:rgba(250,249,246,0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:70px;max-width:820px;margin:0 auto;padding:0 28px;}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--sans);font-weight:700;font-size:18px;}
+.logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--mono);font-size:14px;font-weight:700;}
+.back{font-size:14px;color:var(--ink-dim);transition:color .2s;}
+.back:hover{color:var(--accent);}
+
+/* HEADER */
+.assess-header{padding:80px 0 48px;border-bottom:1px solid var(--line);}
+.assess-header h1{font-family:var(--display);font-size:clamp(32px,4.5vw,52px);line-height:1.08;letter-spacing:-0.02em;margin-bottom:20px;}
+.assess-header h1 em{font-style:italic;color:var(--accent);}
+.assess-header p{font-size:18px;color:var(--ink-mid);max-width:58ch;line-height:1.6;}
+.time-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;background:rgba(13,148,136,0.08);color:var(--teal);font-size:14px;font-weight:600;margin-top:20px;}
+
+/* FORM */
+.assess-form{padding:48px 0 120px;}
+.form-section{margin-bottom:56px;}
+.form-section-label{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.form-section-title{font-family:var(--display);font-size:28px;margin-bottom:8px;font-weight:400;}
+.form-section-desc{font-size:15px;color:var(--ink-dim);margin-bottom:28px;max-width:56ch;}
+
+.field{margin-bottom:24px;}
+.field label{display:block;font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.field .hint{font-size:13px;color:var(--ink-dim);margin-bottom:8px;line-height:1.5;}
+input[type="text"],input[type="email"],input[type="tel"],input[type="url"],input[type="number"],textarea,select{
+  width:100%;background:white;border:1px solid var(--line);color:var(--ink);padding:14px 16px;font-family:var(--sans);font-size:15px;border-radius:8px;transition:border-color .2s;
+}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);}
+textarea{min-height:120px;resize:vertical;}
+select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237a7a8e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 14px center;background-size:16px;padding-right:42px;}
+
+.checkbox-group{display:flex;flex-direction:column;gap:10px;}
+.checkbox-group label{display:flex;align-items:start;gap:10px;cursor:pointer;font-weight:400;font-size:15px;color:var(--ink-mid);}
+.checkbox-group input[type="checkbox"]{width:18px;height:18px;margin-top:2px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;}
+.checkbox-group label:hover{color:var(--ink);}
+
+.rating-scale{display:flex;gap:8px;flex-wrap:wrap;}
+.rating-scale label{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:10px;border:1.5px solid var(--line);font-size:16px;font-weight:600;color:var(--ink-mid);cursor:pointer;transition:all .2s;}
+.rating-scale input[type="radio"]{display:none;}
+.rating-scale input[type="radio"]:checked + span{background:var(--accent);color:#fff;border-color:var(--accent);}
+.rating-scale label:hover{border-color:var(--accent);color:var(--accent);}
+
+.divider{height:1px;background:var(--line);margin:56px 0;}
+
+/* Progress */
+.progress-bar{position:fixed;top:70px;left:0;right:0;height:3px;background:var(--line);z-index:49;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-light));width:0;transition:width .3s ease;}
+
+/* Submit */
+.submit-section{text-align:center;padding:48px 0 0;border-top:1px solid var(--line);}
+.submit-section h3{font-family:var(--display);font-size:28px;margin-bottom:12px;font-weight:400;}
+.submit-section p{font-size:16px;color:var(--ink-mid);margin-bottom:28px;max-width:48ch;margin-left:auto;margin-right:auto;}
+.form-submit{background:var(--accent);color:#fff;border:none;padding:18px 40px;font-family:var(--sans);font-size:16px;font-weight:600;border-radius:10px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:10px;}
+.form-submit:hover{background:#d14f1c;transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,93,38,0.25);}
+.privacy-note{font-size:12px;color:var(--ink-dim);margin-top:16px;}
+
+/* Footer mini */
+.mini-footer{padding:36px 0;text-align:center;font-size:13px;color:var(--ink-dim);border-top:1px solid var(--line);margin-top:60px;}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><span class="logo-icon">LS</span> LogicStack</a>
+    <a href="index.html" class="back">← Back to home</a>
+  </div>
+</header>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="container">
+
+  <div class="assess-header">
+    <h1>Tell us everything that's <em>not working.</em></h1>
+    <p>This is the most important step. The more detail you give us here, the more specific and useful your free AI roadmap will be. Be honest, be messy — we've heard it all.</p>
+    <div class="time-badge">⏱ Takes about 10 minutes</div>
+  </div>
+
+  <form class="assess-form" id="assessForm" onsubmit="handleAssess(event)">
+
+    <!-- SECTION 1: About Your Business -->
+    <div class="form-section">
+      <div class="form-section-label">Section 1 of 5</div>
+      <div class="form-section-title">About your business</div>
+      <div class="form-section-desc">The basics — so we understand what kind of business we're looking at.</div>
+
+      <div class="field">
+        <label for="biz_name">Business name</label>
+        <input type="text" id="biz_name" name="biz_name" required/>
+      </div>
+      <div class="field">
+        <label for="your_name">Your name</label>
+        <input type="text" id="your_name" name="your_name" required/>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required/>
+      </div>
+      <div class="field">
+        <label for="phone">Phone (optional)</label>
+        <input type="tel" id="phone" name="phone"/>
+      </div>
+      <div class="field">
+        <label for="biz_type">What does your business do?</label>
+        <div class="hint">e.g. "We're a 3-location dental practice" or "Auto repair shop, family-owned, 8 employees"</div>
+        <textarea id="biz_type" name="biz_type" required placeholder="Describe your business in a few sentences..."></textarea>
+      </div>
+      <div class="field">
+        <label for="employees">How many employees?</label>
+        <select id="employees" name="employees">
+          <option>Just me (solo)</option>
+          <option>2–5</option>
+          <option>6–15</option>
+          <option>16–50</option>
+          <option>50+</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="location">Where are you located?</label>
+        <input type="text" id="location" name="location" placeholder="e.g. Columbia, MD"/>
+      </div>
+      <div class="field">
+        <label for="website">Website (if you have one)</label>
+        <input type="url" id="website" name="website" placeholder="https://"/>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 2: Daily Operations -->
+    <div class="form-section">
+      <div class="form-section-label">Section 2 of 5</div>
+      <div class="form-section-title">Your daily operations</div>
+      <div class="form-section-desc">Help us understand what a typical day looks like and where the friction is.</div>
+
+      <div class="field">
+        <label for="typical_day">Walk us through a typical day.</label>
+        <div class="hint">What do you do from the moment you open? What tasks fill the most time? What feels repetitive or frustrating?</div>
+        <textarea id="typical_day" name="typical_day" rows="5" placeholder="e.g. I come in at 7am, check voicemails from overnight, manually enter appointments into our scheduling system, deal with no-shows, try to follow up on yesterday's estimates..."></textarea>
+      </div>
+      <div class="field">
+        <label for="time_wasters">What tasks eat the most time that you wish you didn't have to do?</label>
+        <div class="hint">Think: scheduling, data entry, follow-ups, answering the same questions, creating invoices, social media, etc.</div>
+        <textarea id="time_wasters" name="time_wasters" rows="4" placeholder="Be specific — the more detail, the better our recommendations."></textarea>
+      </div>
+      <div class="field">
+        <label>Which of these are problems for you? (check all that apply)</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="problems" value="missed_calls"/> We miss customer calls during busy hours</label>
+          <label><input type="checkbox" name="problems" value="slow_response"/> We're too slow responding to inquiries</label>
+          <label><input type="checkbox" name="problems" value="manual_scheduling"/> Scheduling / booking is manual and messy</label>
+          <label><input type="checkbox" name="problems" value="no_followup"/> We don't follow up with leads or past customers consistently</label>
+          <label><input type="checkbox" name="problems" value="data_entry"/> Too much manual data entry between systems</label>
+          <label><input type="checkbox" name="problems" value="no_marketing"/> We never have time for marketing or social media</label>
+          <label><input type="checkbox" name="problems" value="no_reviews"/> We don't ask for reviews or testimonials systematically</label>
+          <label><input type="checkbox" name="problems" value="no_dashboard"/> We have no clear picture of how the business is doing (revenue, trends, etc.)</label>
+          <label><input type="checkbox" name="problems" value="systems_disconnected"/> Our tools / software don't talk to each other</label>
+          <label><input type="checkbox" name="problems" value="hiring"/> Hard to hire or train new people on our processes</label>
+          <label><input type="checkbox" name="problems" value="invoicing"/> Invoicing and payments are slow or inconsistent</label>
+          <label><input type="checkbox" name="problems" value="inventory"/> Inventory management is a headache</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 3: Customers & Revenue -->
+    <div class="form-section">
+      <div class="form-section-label">Section 3 of 5</div>
+      <div class="form-section-title">Customers &amp; revenue</div>
+      <div class="form-section-desc">Understanding your customer flow helps us see where AI can have the biggest revenue impact.</div>
+
+      <div class="field">
+        <label for="customer_find">How do customers find you?</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="channels" value="google"/> Google search / Maps</label>
+          <label><input type="checkbox" name="channels" value="referrals"/> Word of mouth / referrals</label>
+          <label><input type="checkbox" name="channels" value="social"/> Social media (Instagram, Facebook, etc.)</label>
+          <label><input type="checkbox" name="channels" value="walk_in"/> Walk-ins / drive-bys</label>
+          <label><input type="checkbox" name="channels" value="website"/> Website</label>
+          <label><input type="checkbox" name="channels" value="ads"/> Paid ads (Google, Facebook, etc.)</label>
+          <label><input type="checkbox" name="channels" value="yelp"/> Yelp / review sites</label>
+          <label><input type="checkbox" name="channels" value="other_channel"/> Other</label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="customer_book">How do customers book, order, or buy from you?</label>
+        <textarea id="customer_book" name="customer_book" rows="3" placeholder="e.g. They call us, we check the schedule on paper, and call them back to confirm."></textarea>
+      </div>
+      <div class="field">
+        <label for="lost_revenue">Where do you think you're losing money?</label>
+        <div class="hint">Missed appointments, no-shows, abandoned estimates, slow follow-up, undercharging, inefficiency — anything.</div>
+        <textarea id="lost_revenue" name="lost_revenue" rows="4" placeholder="Be honest. We're not judging — we're diagnosing."></textarea>
+      </div>
+      <div class="field">
+        <label for="avg_customer_value">Roughly, what's a typical customer worth to you?</label>
+        <div class="hint">A single transaction or lifetime value — whatever you know offhand.</div>
+        <input type="text" id="avg_customer_value" name="avg_customer_value" placeholder="e.g. $150 per visit, ~$2000/year"/>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 4: Current Tools -->
+    <div class="form-section">
+      <div class="form-section-label">Section 4 of 5</div>
+      <div class="form-section-title">Tools &amp; software you use today</div>
+      <div class="form-section-desc">We need to know what you're already working with so we can integrate, not replace.</div>
+
+      <div class="field">
+        <label>What tools do you currently use? (check all that apply)</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="tools" value="google_workspace"/> Google Workspace (Gmail, Sheets, etc.)</label>
+          <label><input type="checkbox" name="tools" value="microsoft"/> Microsoft 365 / Outlook</label>
+          <label><input type="checkbox" name="tools" value="quickbooks"/> QuickBooks</label>
+          <label><input type="checkbox" name="tools" value="square"/> Square</label>
+          <label><input type="checkbox" name="tools" value="shopify"/> Shopify</label>
+          <label><input type="checkbox" name="tools" value="pos"/> POS system (which one?)</label>
+          <label><input type="checkbox" name="tools" value="crm"/> CRM (which one?)</label>
+          <label><input type="checkbox" name="tools" value="social_tools"/> Social media management tool</label>
+          <label><input type="checkbox" name="tools" value="scheduling"/> Scheduling tool (Calendly, Acuity, etc.)</label>
+          <label><input type="checkbox" name="tools" value="website_builder"/> Website builder (Wix, Squarespace, WordPress, etc.)</label>
+          <label><input type="checkbox" name="tools" value="spreadsheets"/> Spreadsheets for everything</label>
+          <label><input type="checkbox" name="tools" value="paper"/> Paper / whiteboard / sticky notes</label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="tools_other">Any other tools or software we should know about?</label>
+        <input type="text" id="tools_other" name="tools_other" placeholder="e.g. We use ServiceTitan for dispatching, Mailchimp for emails"/>
+      </div>
+      <div class="field">
+        <label for="tools_frustration">What frustrates you most about your current tools?</label>
+        <textarea id="tools_frustration" name="tools_frustration" rows="3" placeholder="e.g. Nothing syncs. I enter the same info 3 times. My booking system doesn't send reminders."></textarea>
+      </div>
+      <div class="field">
+        <label for="ai_experience">Have you tried any AI tools (ChatGPT, etc.)? What was your experience?</label>
+        <textarea id="ai_experience" name="ai_experience" rows="3" placeholder="e.g. I tried ChatGPT for writing social posts but it felt generic. / Never tried anything. / We use an AI phone answering service but it's terrible."></textarea>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 5: Goals -->
+    <div class="form-section">
+      <div class="form-section-label">Section 5 of 5</div>
+      <div class="form-section-title">Your goals &amp; priorities</div>
+      <div class="form-section-desc">This is the most important section. What does "better" look like to you?</div>
+
+      <div class="field">
+        <label for="magic_wand">If you could fix ONE thing in your business overnight, what would it be?</label>
+        <textarea id="magic_wand" name="magic_wand" rows="3" required placeholder="Don't overthink this. What's the #1 pain point?"></textarea>
+      </div>
+      <div class="field">
+        <label for="goals_90">What would success look like 90 days from now?</label>
+        <textarea id="goals_90" name="goals_90" rows="3" placeholder="e.g. We're not missing calls anymore, appointments are automated, and I've got 20% more free time."></textarea>
+      </div>
+      <div class="field">
+        <label for="budget">What's your rough budget for improving operations?</label>
+        <select id="budget" name="budget">
+          <option>Under $500/month</option>
+          <option>$500–$1,500/month</option>
+          <option>$1,500–$3,000/month</option>
+          <option>$3,000+/month</option>
+          <option>One-time project (not monthly)</option>
+          <option>Not sure yet — tell me what makes sense</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="timeline">How soon are you looking to get started?</label>
+        <select id="timeline" name="timeline">
+          <option>ASAP — we needed this yesterday</option>
+          <option>Within the next month</option>
+          <option>Next 2–3 months</option>
+          <option>Just exploring for now</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="anything_else">Anything else we should know?</label>
+        <div class="hint">Concerns about AI, bad experiences with past vendors, things we didn't ask about — all welcome.</div>
+        <textarea id="anything_else" name="anything_else" rows="4" placeholder="This is your space. Say whatever you need to say."></textarea>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-section">
+      <h3>That's it. You're done.</h3>
+      <p>Hit send and we'll get back to you within 2 business days with your free custom AI roadmap.</p>
+      <button type="submit" class="form-submit">Send my assessment →</button>
+      <div class="privacy-note">Your information stays between us. We don't share, sell, or spam. Ever.</div>
+    </div>
+
+  </form>
+
+</div>
+
+<div class="mini-footer">
+  © <span id="year"></span> LogicStack LLC · Elkridge, Maryland · <a href="index.html" style="color:var(--accent);">Back to home</a>
+</div>
+
+<script>
+document.getElementById('year').textContent=new Date().getFullYear();
+
+// Progress bar
+const form=document.getElementById('assessForm');
+const fill=document.getElementById('progressFill');
+function updateProgress(){
+  const inputs=form.querySelectorAll('input:not([type=checkbox]):not([type=radio]),textarea,select');
+  let filled=0;
+  inputs.forEach(i=>{if(i.value.trim())filled++;});
+  const pct=Math.round((filled/inputs.length)*100);
+  fill.style.width=pct+'%';
+}
+form.addEventListener('input',updateProgress);
+form.addEventListener('change',updateProgress);
+
+// Submit handler — collects everything into a mailto
+function handleAssess(e){
+  e.preventDefault();
+  const fd=new FormData(form);
+  let body='=== LOGICSTACK AI BUSINESS ASSESSMENT ===\n\n';
+
+  body+='--- ABOUT THE BUSINESS ---\n';
+  body+='Business: '+fd.get('biz_name')+'\n';
+  body+='Name: '+fd.get('your_name')+'\n';
+  body+='Email: '+fd.get('email')+'\n';
+  body+='Phone: '+fd.get('phone')+'\n';
+  body+='What they do: '+fd.get('biz_type')+'\n';
+  body+='Employees: '+fd.get('employees')+'\n';
+  body+='Location: '+fd.get('location')+'\n';
+  body+='Website: '+fd.get('website')+'\n\n';
+
+  body+='--- DAILY OPERATIONS ---\n';
+  body+='Typical day: '+fd.get('typical_day')+'\n';
+  body+='Time wasters: '+fd.get('time_wasters')+'\n';
+  body+='Problems checked: '+fd.getAll('problems').join(', ')+'\n\n';
+
+  body+='--- CUSTOMERS & REVENUE ---\n';
+  body+='Channels: '+fd.getAll('channels').join(', ')+'\n';
+  body+='How they book: '+fd.get('customer_book')+'\n';
+  body+='Lost revenue: '+fd.get('lost_revenue')+'\n';
+  body+='Customer value: '+fd.get('avg_customer_value')+'\n\n';
+
+  body+='--- CURRENT TOOLS ---\n';
+  body+='Tools: '+fd.getAll('tools').join(', ')+'\n';
+  body+='Other tools: '+fd.get('tools_other')+'\n';
+  body+='Tool frustrations: '+fd.get('tools_frustration')+'\n';
+  body+='AI experience: '+fd.get('ai_experience')+'\n\n';
+
+  body+='--- GOALS ---\n';
+  body+='#1 fix: '+fd.get('magic_wand')+'\n';
+  body+='90-day goal: '+fd.get('goals_90')+'\n';
+  body+='Budget: '+fd.get('budget')+'\n';
+  body+='Timeline: '+fd.get('timeline')+'\n';
+  body+='Anything else: '+fd.get('anything_else')+'\n';
+
+  const subject='AI Assessment — '+fd.get('biz_name');
+  window.location.href='mailto:hello@logicstack.ai?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+}
+</script>
+</body>
+</html>
