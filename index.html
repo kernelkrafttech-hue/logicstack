@@ -474,10 +474,14 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
           </div>
         </div>
         <div class="reveal">
-          <form id="contactForm" onsubmit="handleSubmit(event)">
+          <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE"/>
+            <input type="hidden" name="subject" value="New LogicStack Contact Form Submission"/>
+            <input type="hidden" name="from_name" value="LogicStack Website"/>
+            <input type="checkbox" name="botcheck" style="display:none;"/>
             <div class="form-row">
               <div><label for="name">Name</label><input type="text" id="name" name="name" required/></div>
-              <div><label for="biz">Business name</label><input type="text" id="biz" name="biz"/></div>
+              <div><label for="biz">Business name</label><input type="text" id="biz" name="Business Name"/></div>
             </div>
             <div class="form-row">
               <div><label for="email">Email</label><input type="email" id="email" name="email" required/></div>
@@ -485,7 +489,7 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
             </div>
             <div>
               <label for="interest">What are you looking for?</label>
-              <select id="interest" name="interest">
+              <select id="interest" name="Interest">
                 <option>AI chatbot or phone agent</option>
                 <option>Workflow automation</option>
                 <option>Custom app or dashboard</option>
@@ -522,14 +526,6 @@ document.getElementById('year').textContent=new Date().getFullYear();
 const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('in');io.unobserve(el.target);}});},{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 document.querySelectorAll('.hero .reveal').forEach((el,i)=>{el.style.transitionDelay=(i*100)+'ms';});
-
-function handleSubmit(e){
-  e.preventDefault();
-  const f=e.target;
-  const subject='LogicStack inquiry — '+f.interest.value;
-  const body='Name: '+f.name.value+'\nBusiness: '+f.biz.value+'\nEmail: '+f.email.value+'\nPhone: '+f.phone.value+'\nInterest: '+f.interest.value+'\n\n'+f.message.value;
-  window.location.href='mailto:kernelkrafttech@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-}
 </script>
 </body>
 </html>
