@@ -474,18 +474,18 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
           </div>
         </div>
         <div class="reveal">
-          <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
-            <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE"/>
-            <input type="hidden" name="subject" value="New LogicStack Contact Form Submission"/>
-            <input type="hidden" name="from_name" value="LogicStack Website"/>
-            <input type="checkbox" name="botcheck" style="display:none;"/>
+          <form id="contactForm" action="https://formsubmit.co/kernelkrafttech@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="New LogicStack Contact Form Submission"/>
+            <input type="hidden" name="_captcha" value="false"/>
+            <input type="hidden" name="_template" value="table"/>
+            <input type="text" name="_honey" style="display:none;"/>
             <div class="form-row">
-              <div><label for="name">Name</label><input type="text" id="name" name="name" required/></div>
+              <div><label for="name">Name</label><input type="text" id="name" name="Name" required/></div>
               <div><label for="biz">Business name</label><input type="text" id="biz" name="Business Name"/></div>
             </div>
             <div class="form-row">
-              <div><label for="email">Email</label><input type="email" id="email" name="email" required/></div>
-              <div><label for="phone">Phone (optional)</label><input type="tel" id="phone" name="phone"/></div>
+              <div><label for="email">Email</label><input type="email" id="email" name="Email" required/></div>
+              <div><label for="phone">Phone (optional)</label><input type="tel" id="phone" name="Phone"/></div>
             </div>
             <div>
               <label for="interest">What are you looking for?</label>
@@ -497,7 +497,7 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
                 <option>Not sure — just want to talk</option>
               </select>
             </div>
-            <div><label for="message">Tell us what's going on</label><textarea id="message" name="message" required placeholder="Example: I own a dental practice with 3 locations. We're losing patients because we can't answer every call. We need something to handle booking and basic questions."></textarea></div>
+            <div><label for="message">Tell us what's going on</label><textarea id="message" name="Message" required placeholder="Example: I own a dental practice with 3 locations. We're losing patients because we can't answer every call. We need something to handle booking and basic questions."></textarea></div>
             <button type="submit" class="form-submit">Send message →</button>
             <div class="form-note">We reply within one business day.</div>
           </form>
