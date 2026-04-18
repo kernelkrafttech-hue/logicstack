@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Thank You — LogicStack Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --ink: #1a1a2e;
+    --ink-mid: #4a4a5e;
+    --accent: #e85d26;
+    --teal: #0d9488;
+    --display: 'DM Serif Display', Georgia, serif;
+    --sans: 'Outfit', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 28px;
+    text-align: center;
+  }
+  .wrap { max-width: 520px; }
+  .check {
+    width: 80px;
+    height: 80px;
+    background: rgba(13,148,136,0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 28px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-size: 40px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  p {
+    font-size: 17px;
+    color: var(--ink-mid);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  a {
+    display: inline-block;
+    padding: 14px 28px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all .2s;
+  }
+  a:hover { background: #d14f1c; transform: translateY(-2px); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="check">✓</div>
+  <h1>Got it. <em>We're on it.</em></h1>
+  <p>Your submission has been sent to our team. We'll review everything and get back to you within 2 business days with a response. Check your email — we sent you a confirmation too.</p>
+  <a href="index.html">← Back to LogicStack</a>
+</div>
+</body>
+</html>
