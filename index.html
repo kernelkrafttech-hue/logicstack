@@ -541,12 +541,39 @@ const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.ta
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 document.querySelectorAll('.hero .reveal').forEach((el,i)=>{el.style.transitionDelay=(i*100)+'ms';});
 
-function handleSubmit(e){
+async function handleSubmit(e){
   e.preventDefault();
   const f=e.target;
-  const subject='LogicStack inquiry — '+f.interest.value;
-  const body='Name: '+f.name.value+'\nBusiness: '+f.biz.value+'\nEmail: '+f.email.value+'\nPhone: '+f.phone.value+'\nInterest: '+f.interest.value+'\n\n'+f.message.value;
-  window.location.href='mailto:kernelkrafttech@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  const btn=f.querySelector('.form-submit');
+  const originalLabel=btn.textContent;
+  btn.disabled=true;
+  btn.textContent='Sending…';
+
+  const payload={
+    _subject: 'LogicStack inquiry — '+f.interest.value,
+    _template: 'table',
+    _captcha: 'false',
+    name: f.name.value,
+    business: f.biz.value,
+    email: f.email.value,
+    phone: f.phone.value,
+    interest: f.interest.value,
+    message: f.message.value
+  };
+
+  try{
+    const res=await fetch('https://formsubmit.co/ajax/kernelkrafttech@gmail.com',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error('Network response was not ok');
+    window.location.href='thanks.html';
+  }catch(err){
+    btn.disabled=false;
+    btn.textContent=originalLabel;
+    alert("Sorry — something went wrong sending your message. Please email kernelkrafttech@gmail.com directly.");
+  }
 }
 </script>
 </body>

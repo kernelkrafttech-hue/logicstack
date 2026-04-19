@@ -349,48 +349,58 @@ function updateProgress(){
 form.addEventListener('input',updateProgress);
 form.addEventListener('change',updateProgress);
 
-// Submit handler — collects everything into a mailto
-function handleAssess(e){
+// Submit handler — posts to FormSubmit and redirects to thanks page
+async function handleAssess(e){
   e.preventDefault();
+  const btn=form.querySelector('.form-submit');
+  const originalLabel=btn.textContent;
+  btn.disabled=true;
+  btn.textContent='Sending…';
+
   const fd=new FormData(form);
-  let body='=== LOGICSTACK AI BUSINESS ASSESSMENT ===\n\n';
+  const payload={
+    _subject: 'AI Assessment — '+(fd.get('biz_name')||'(no business name)'),
+    _template: 'table',
+    _captcha: 'false',
+    business_name: fd.get('biz_name'),
+    your_name: fd.get('your_name'),
+    email: fd.get('email'),
+    phone: fd.get('phone'),
+    what_they_do: fd.get('biz_type'),
+    employees: fd.get('employees'),
+    location: fd.get('location'),
+    website: fd.get('website'),
+    typical_day: fd.get('typical_day'),
+    time_wasters: fd.get('time_wasters'),
+    problems: fd.getAll('problems').join(', '),
+    channels: fd.getAll('channels').join(', '),
+    how_they_book: fd.get('customer_book'),
+    lost_revenue: fd.get('lost_revenue'),
+    avg_customer_value: fd.get('avg_customer_value'),
+    tools: fd.getAll('tools').join(', '),
+    tools_other: fd.get('tools_other'),
+    tools_frustration: fd.get('tools_frustration'),
+    ai_experience: fd.get('ai_experience'),
+    magic_wand: fd.get('magic_wand'),
+    goals_90: fd.get('goals_90'),
+    budget: fd.get('budget'),
+    timeline: fd.get('timeline'),
+    anything_else: fd.get('anything_else')
+  };
 
-  body+='--- ABOUT THE BUSINESS ---\n';
-  body+='Business: '+fd.get('biz_name')+'\n';
-  body+='Name: '+fd.get('your_name')+'\n';
-  body+='Email: '+fd.get('email')+'\n';
-  body+='Phone: '+fd.get('phone')+'\n';
-  body+='What they do: '+fd.get('biz_type')+'\n';
-  body+='Employees: '+fd.get('employees')+'\n';
-  body+='Location: '+fd.get('location')+'\n';
-  body+='Website: '+fd.get('website')+'\n\n';
-
-  body+='--- DAILY OPERATIONS ---\n';
-  body+='Typical day: '+fd.get('typical_day')+'\n';
-  body+='Time wasters: '+fd.get('time_wasters')+'\n';
-  body+='Problems checked: '+fd.getAll('problems').join(', ')+'\n\n';
-
-  body+='--- CUSTOMERS & REVENUE ---\n';
-  body+='Channels: '+fd.getAll('channels').join(', ')+'\n';
-  body+='How they book: '+fd.get('customer_book')+'\n';
-  body+='Lost revenue: '+fd.get('lost_revenue')+'\n';
-  body+='Customer value: '+fd.get('avg_customer_value')+'\n\n';
-
-  body+='--- CURRENT TOOLS ---\n';
-  body+='Tools: '+fd.getAll('tools').join(', ')+'\n';
-  body+='Other tools: '+fd.get('tools_other')+'\n';
-  body+='Tool frustrations: '+fd.get('tools_frustration')+'\n';
-  body+='AI experience: '+fd.get('ai_experience')+'\n\n';
-
-  body+='--- GOALS ---\n';
-  body+='#1 fix: '+fd.get('magic_wand')+'\n';
-  body+='90-day goal: '+fd.get('goals_90')+'\n';
-  body+='Budget: '+fd.get('budget')+'\n';
-  body+='Timeline: '+fd.get('timeline')+'\n';
-  body+='Anything else: '+fd.get('anything_else')+'\n';
-
-  const subject='AI Assessment — '+fd.get('biz_name');
-  window.location.href='mailto:kernelkrafttech@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  try{
+    const res=await fetch('https://formsubmit.co/ajax/kernelkrafttech@gmail.com',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error('Network response was not ok');
+    window.location.href='thanks.html';
+  }catch(err){
+    btn.disabled=false;
+    btn.textContent=originalLabel;
+    alert("Sorry — something went wrong sending your assessment. Please email kernelkrafttech@gmail.com directly and we'll take it from there.");
+  }
 }
 </script>
 </body>
