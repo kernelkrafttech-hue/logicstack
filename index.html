@@ -7,224 +7,245 @@
 <meta name="description" content="LogicStack builds custom AI agents, automations, and apps that help local businesses save time, reduce costs, and grow. Based in Elkridge, Maryland — serving the DC–Baltimore corridor."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg: #faf9f6;
-  --bg-warm: #f3f0ea;
-  --bg-dark: #1a1a2e;
-  --bg-dark-2: #232340;
-  --ink: #1a1a2e;
-  --ink-mid: #4a4a5e;
-  --ink-dim: #7a7a8e;
-  --accent: #e85d26;
-  --accent-light: #ff7a45;
-  --accent-glow: rgba(232,93,38,0.12);
-  --teal: #0d9488;
-  --teal-light: #14b8a6;
-  --violet: #7c3aed;
-  --line: rgba(26,26,46,0.09);
-  --line-dark: rgba(255,255,255,0.1);
-  --display: 'DM Serif Display', Georgia, serif;
-  --sans: 'Outfit', system-ui, sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, monospace;
-  --radius: 12px;
+:root{
+  --bg:#05070f;--bg-2:#0a0d1c;--bg-3:#111529;
+  --ink:#e8ecf7;--ink-mid:#9ba3bf;--ink-dim:#5c6484;
+  --accent:#ff6b35;--accent-2:#ff9458;--accent-glow:rgba(255,107,53,.35);
+  --cyan:#00e5ff;--cyan-glow:rgba(0,229,255,.3);
+  --violet:#a855f7;--violet-glow:rgba(168,85,247,.3);
+  --teal:#14b8a6;
+  --line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.15);
+  --display:'Instrument Serif',Georgia,serif;
+  --sans:'Space Grotesk',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
 }
-
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;}
 a{color:inherit;text-decoration:none;}
 img{max-width:100%;display:block;}
-.container{max-width:1180px;margin:0 auto;padding:0 28px;}
+.container{max-width:1240px;margin:0 auto;padding:0 28px;position:relative;z-index:2;}
 
-/* === NAV === */
-.nav{position:sticky;top:0;z-index:50;background:rgba(250,249,246,0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:70px;}
-.logo{display:flex;align-items:center;gap:10px;font-family:var(--sans);font-weight:700;font-size:18px;letter-spacing:-0.02em;}
-.logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--mono);font-size:14px;font-weight:700;}
-.nav-links{display:flex;gap:32px;font-size:15px;font-weight:400;color:var(--ink-mid);}
-.nav-links a{transition:color .2s;}
+/* Background — animated grid + gradient orbs */
+.bg-fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.bg-grid{position:absolute;inset:-2px;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 30%,transparent 80%);animation:gridShift 40s linear infinite;}
+@keyframes gridShift{from{background-position:0 0,0 0}to{background-position:56px 56px,56px 56px}}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.55;animation:orbFloat 18s ease-in-out infinite;}
+.orb-1{width:600px;height:600px;background:radial-gradient(circle,var(--accent),transparent 70%);top:-150px;left:-100px;}
+.orb-2{width:500px;height:500px;background:radial-gradient(circle,var(--cyan),transparent 70%);top:30%;right:-100px;animation-delay:-6s;}
+.orb-3{width:450px;height:450px;background:radial-gradient(circle,var(--violet),transparent 70%);bottom:-50px;left:30%;animation-delay:-12s;}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.08)}66%{transform:translate(-30px,40px) scale(.95)}}
+.noise{position:absolute;inset:0;opacity:.04;mix-blend-mode:overlay;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='.9'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:rgba(5,7,15,.65);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--line);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;}
+.logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:17px;letter-spacing:-.02em;}
+.logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--mono);font-size:13px;font-weight:700;box-shadow:0 0 24px var(--accent-glow),inset 0 1px 0 rgba(255,255,255,.25);position:relative;}
+.logo-icon::after{content:'';position:absolute;inset:-1px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--cyan));z-index:-1;opacity:.6;filter:blur(8px);}
+.nav-links{display:flex;gap:32px;font-size:14px;color:var(--ink-mid);font-family:var(--mono);}
+.nav-links a{transition:color .2s;position:relative;}
+.nav-links a::before{content:'>';color:var(--accent);opacity:0;margin-right:6px;transition:opacity .2s;}
 .nav-links a:hover{color:var(--ink);}
-.nav-cta{padding:10px 22px;background:var(--accent);color:#fff;font-weight:600;font-size:14px;border-radius:8px;transition:all .2s;}
-.nav-cta:hover{background:var(--ink);transform:translateY(-1px);}
+.nav-links a:hover::before{opacity:1;}
+.nav-cta{padding:11px 22px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:600;font-size:14px;border-radius:10px;transition:all .25s;box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 4px 24px var(--accent-glow);}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 6px 32px var(--accent-glow);}
 @media(max-width:820px){.nav-links,.nav-cta{display:none;}}
 
-/* === HERO === */
-.hero{padding:100px 0 120px;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:700px;height:700px;background:radial-gradient(circle,var(--accent-glow),transparent 70%);pointer-events:none;}
-.hero::after{content:'';position:absolute;bottom:-200px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(13,148,136,0.08),transparent 70%);pointer-events:none;}
-.hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:80px;align-items:center;}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid var(--line);font-size:13px;font-weight:500;color:var(--ink-mid);margin-bottom:24px;background:white;}
-.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:blink 2s infinite;}
-@keyframes blink{0%,100%{opacity:.5}50%{opacity:1}}
-.hero h1{font-family:var(--display);font-size:clamp(40px,5.5vw,72px);line-height:1.05;letter-spacing:-0.02em;margin-bottom:28px;}
-.hero h1 em{font-style:italic;color:var(--accent);}
-.hero-lede{font-size:clamp(17px,1.3vw,20px);color:var(--ink-mid);max-width:52ch;margin-bottom:36px;line-height:1.6;}
+/* HERO */
+.hero{padding:110px 0 130px;position:relative;}
+.hero-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:72px;align-items:center;}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;padding:7px 14px;border-radius:100px;border:1px solid var(--line-2);background:rgba(255,255,255,.02);backdrop-filter:blur(10px);font-size:12px;font-family:var(--mono);color:var(--ink-mid);margin-bottom:28px;}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 12px var(--teal),0 0 4px var(--teal);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.hero h1{font-family:var(--display);font-size:clamp(46px,6.5vw,86px);line-height:1.02;letter-spacing:-.03em;margin-bottom:28px;font-weight:400;}
+.hero h1 em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--accent-2) 40%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero-lede{font-size:clamp(16px,1.2vw,18px);color:var(--ink-mid);max-width:54ch;margin-bottom:40px;line-height:1.65;}
 .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 26px;font-family:var(--sans);font-weight:600;font-size:15px;border-radius:10px;transition:all .25s;cursor:pointer;border:none;}
-.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(232,93,38,0.25);}
-.btn-primary:hover{background:#d14f1c;transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,93,38,0.3);}
-.btn-outline{background:transparent;border:1.5px solid var(--line);color:var(--ink);}
-.btn-outline:hover{border-color:var(--ink);background:var(--ink);color:#fff;}
-.btn .arrow{transition:transform .2s;}
-.btn:hover .arrow{transform:translateX(4px);}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 28px;font-family:var(--sans);font-weight:600;font-size:15px;border-radius:10px;transition:all .25s;cursor:pointer;border:none;position:relative;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 4px 32px var(--accent-glow);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(255,255,255,.15) inset,0 8px 48px var(--accent-glow);}
+.btn-outline{background:rgba(255,255,255,.03);border:1px solid var(--line-2);color:var(--ink);backdrop-filter:blur(10px);}
+.btn-outline:hover{border-color:var(--cyan);box-shadow:0 0 24px var(--cyan-glow);color:#fff;}
+.btn .arrow{transition:transform .25s;}
+.btn:hover .arrow{transform:translateX(5px);}
 
-/* Hero visual — floating card mockup */
-.hero-visual{position:relative;}
-.hero-card{background:white;border-radius:16px;border:1px solid var(--line);box-shadow:0 20px 60px rgba(26,26,46,0.08);padding:28px;position:relative;}
-.hero-card-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line);}
-.hero-card-header .avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-light));display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;}
-.hero-card-header .meta{font-size:13px;color:var(--ink-dim);}
-.hero-card-header .meta strong{color:var(--ink);display:block;font-size:14px;}
-.hero-chat{display:flex;flex-direction:column;gap:12px;}
-.chat-msg{max-width:85%;padding:12px 16px;border-radius:14px;font-size:14px;line-height:1.5;animation:fadeUp .6s ease both;}
-.chat-user{background:var(--bg-warm);align-self:flex-end;border-bottom-right-radius:4px;color:var(--ink-mid);}
-.chat-ai{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;align-self:flex-start;border-bottom-left-radius:4px;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.chat-msg:nth-child(2){animation-delay:.15s}
-.chat-msg:nth-child(3){animation-delay:.3s}
-.chat-msg:nth-child(4){animation-delay:.45s}
-.hero-card-float{position:absolute;right:-30px;top:50%;transform:translateY(-50%);background:white;border-radius:12px;border:1px solid var(--line);padding:14px 18px;box-shadow:0 12px 40px rgba(26,26,46,0.1);font-size:13px;white-space:nowrap;animation:float 4s ease-in-out infinite;}
-.hero-card-float .num{font-family:var(--display);font-size:28px;color:var(--teal);line-height:1;}
-@keyframes float{0%,100%{transform:translateY(-50%) translateX(0)}50%{transform:translateY(-50%) translateX(-6px)}}
+/* Hero stats strip */
+.hero-stats{display:flex;gap:40px;margin-top:56px;padding-top:32px;border-top:1px solid var(--line);flex-wrap:wrap;}
+.stat .num{font-family:var(--display);font-size:34px;background:linear-gradient(135deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;margin-bottom:4px;}
+.stat .lbl{font-family:var(--mono);font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.1em;}
 
-@media(max-width:900px){
-  .hero-grid{grid-template-columns:1fr;gap:48px;}
-  .hero-card-float{right:-10px;top:auto;bottom:-30px;transform:none;}
-  .hero-card-float,.hero-card-float:hover{animation:none;}
-}
+/* Terminal card */
+.terminal{position:relative;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid var(--line-2);backdrop-filter:blur(20px);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.03) inset;}
+.terminal::before{content:'';position:absolute;inset:-1px;border-radius:16px;padding:1px;background:linear-gradient(135deg,var(--accent),transparent 30%,transparent 70%,var(--cyan));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.5;pointer-events:none;}
+.term-bar{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.2);}
+.term-dots{display:flex;gap:6px;}
+.term-dots span{width:10px;height:10px;border-radius:50%;background:var(--line-2);}
+.term-dots span:nth-child(1){background:#ff5f57;}
+.term-dots span:nth-child(2){background:#febc2e;}
+.term-dots span:nth-child(3){background:#28c840;}
+.term-title{font-family:var(--mono);font-size:12px;color:var(--ink-dim);margin-left:auto;margin-right:auto;}
+.term-body{padding:24px;font-family:var(--mono);font-size:13px;line-height:1.7;}
+.term-prompt{color:var(--ink-dim);}
+.term-prompt::before{content:'$ ';color:var(--accent);}
+.term-out{color:var(--ink-mid);margin-bottom:14px;}
+.chat{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.chat-msg{max-width:88%;padding:11px 14px;border-radius:12px;font-family:var(--sans);font-size:13.5px;line-height:1.5;animation:msgIn .5s ease both;}
+.chat-user{background:rgba(255,255,255,.05);border:1px solid var(--line);align-self:flex-end;border-bottom-right-radius:4px;color:var(--ink);}
+.chat-ai{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;align-self:flex-start;border-bottom-left-radius:4px;box-shadow:0 8px 28px var(--accent-glow);}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.chat-msg:nth-child(1){animation-delay:.2s}.chat-msg:nth-child(2){animation-delay:.5s}.chat-msg:nth-child(3){animation-delay:.9s}.chat-msg:nth-child(4){animation-delay:1.2s}
+.floaty{position:absolute;right:-24px;top:30%;padding:14px 18px;border-radius:12px;background:rgba(10,13,28,.85);border:1px solid var(--line-2);backdrop-filter:blur(16px);font-family:var(--mono);font-size:11px;color:var(--ink-mid);white-space:nowrap;box-shadow:0 16px 48px rgba(0,0,0,.5);animation:floatY 4s ease-in-out infinite;}
+.floaty .v{display:block;font-family:var(--display);font-size:28px;background:linear-gradient(135deg,var(--cyan),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:2px;}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.floaty-2{right:auto;left:-30px;top:auto;bottom:-20px;animation-delay:-2s;}
+.floaty-2 .v{background:linear-gradient(135deg,var(--accent),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;}
 
-/* === SECTION SCAFFOLD === */
-section{padding:110px 0;position:relative;}
-.section-label{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;}
-.section-title{font-family:var(--display);font-size:clamp(32px,4vw,52px);line-height:1.08;letter-spacing:-0.02em;margin-bottom:20px;max-width:20ch;}
-.section-title em{font-style:italic;color:var(--accent);}
-.section-sub{font-size:18px;color:var(--ink-mid);max-width:56ch;line-height:1.6;}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:56px;}.floaty{right:-10px;}.floaty-2{left:-10px;}}
 
-/* === PAIN POINTS / WHO === */
-.pain{background:var(--bg-dark);color:#fff;border-radius:0;position:relative;overflow:hidden;}
-.pain::before{content:'';position:absolute;top:0;right:0;width:50%;height:100%;background:radial-gradient(circle at 80% 30%,rgba(232,93,38,0.1),transparent 50%);pointer-events:none;}
-.pain .section-label{color:var(--accent-light);}
-.pain .section-sub{color:rgba(255,255,255,0.6);}
+/* Section scaffolding */
+section{padding:120px 0;position:relative;}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:20px;padding:6px 12px;border-radius:100px;border:1px solid rgba(255,107,53,.25);background:rgba(255,107,53,.06);}
+.section-label::before{content:'//';color:var(--accent);opacity:.6;}
+.section-title{font-family:var(--display);font-size:clamp(34px,4.5vw,60px);line-height:1.05;letter-spacing:-.02em;margin-bottom:20px;max-width:22ch;font-weight:400;}
+.section-title em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.section-sub{font-size:17px;color:var(--ink-mid);max-width:58ch;line-height:1.6;}
+
+/* Divider line */
+.div-line{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--line-2),transparent);}
+
+/* PAIN CARDS */
 .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px;}
-.pain-card{background:var(--bg-dark-2);border:1px solid var(--line-dark);border-radius:var(--radius);padding:32px 28px;transition:all .3s;}
-.pain-card:hover{transform:translateY(-4px);border-color:rgba(232,93,38,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.2);}
-.pain-card .icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:20px;}
-.pain-card .icon.orange{background:rgba(232,93,38,0.15);color:var(--accent-light);}
-.pain-card .icon.teal{background:rgba(13,148,136,0.15);color:var(--teal-light);}
-.pain-card .icon.violet{background:rgba(124,58,237,0.15);color:#a78bfa;}
-.pain-card h3{font-family:var(--display);font-size:22px;margin-bottom:10px;font-weight:400;}
-.pain-card p{color:rgba(255,255,255,0.55);font-size:15px;line-height:1.6;}
+.glass{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:16px;padding:32px 28px;transition:all .35s;position:relative;overflow:hidden;backdrop-filter:blur(10px);}
+.glass::before{content:'';position:absolute;inset:0;border-radius:16px;padding:1px;background:linear-gradient(135deg,transparent,transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .35s;pointer-events:none;}
+.glass:hover{transform:translateY(-6px);border-color:var(--line-2);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));}
+.glass:hover::before{background:linear-gradient(135deg,var(--accent),var(--cyan));opacity:.5;}
+.pain-card .icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:22px;position:relative;}
+.pain-card .icon.orange{background:rgba(255,107,53,.12);color:var(--accent-2);box-shadow:0 0 28px rgba(255,107,53,.15),inset 0 0 0 1px rgba(255,107,53,.25);}
+.pain-card .icon.cyan{background:rgba(0,229,255,.1);color:var(--cyan);box-shadow:0 0 28px rgba(0,229,255,.15),inset 0 0 0 1px rgba(0,229,255,.25);}
+.pain-card .icon.violet{background:rgba(168,85,247,.12);color:#c084fc;box-shadow:0 0 28px rgba(168,85,247,.15),inset 0 0 0 1px rgba(168,85,247,.25);}
+.pain-card h3{font-family:var(--display);font-size:23px;margin-bottom:12px;font-weight:400;letter-spacing:-.01em;}
+.pain-card p{color:var(--ink-mid);font-size:14.5px;line-height:1.6;}
 @media(max-width:820px){.pain-grid{grid-template-columns:1fr;}}
 
-/* === SERVICES === */
+/* SERVICES */
 .services-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:56px;}
-.svc-card{background:white;border:1px solid var(--line);border-radius:var(--radius);padding:36px 32px;transition:all .3s;position:relative;overflow:hidden;}
-.svc-card:hover{border-color:var(--accent);box-shadow:0 12px 40px rgba(232,93,38,0.08);transform:translateY(-3px);}
-.svc-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-light));opacity:0;transition:opacity .3s;}
-.svc-card:hover::after{opacity:1;}
-.svc-num{font-family:var(--mono);font-size:12px;color:var(--ink-dim);margin-bottom:16px;}
-.svc-card h3{font-family:var(--display);font-size:24px;margin-bottom:12px;font-weight:400;}
-.svc-card p{color:var(--ink-mid);font-size:15px;line-height:1.6;margin-bottom:16px;}
+.svc-card{padding:36px 32px;}
+.svc-num{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:.1em;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.svc-num::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--line-2),transparent);}
+.svc-card h3{font-family:var(--display);font-size:26px;margin-bottom:14px;font-weight:400;letter-spacing:-.01em;}
+.svc-card p{color:var(--ink-mid);font-size:14.5px;line-height:1.6;margin-bottom:20px;}
 .svc-tags{display:flex;flex-wrap:wrap;gap:6px;}
-.svc-tag{padding:4px 10px;border-radius:100px;background:var(--bg-warm);font-size:12px;font-weight:500;color:var(--ink-mid);}
+.svc-tag{padding:5px 11px;border-radius:100px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--ink-mid);transition:all .2s;}
+.svc-card:hover .svc-tag{border-color:rgba(255,107,53,.25);color:var(--accent-2);}
 @media(max-width:720px){.services-grid{grid-template-columns:1fr;}}
 
-/* === HOW IT WORKS === */
-.how{background:var(--bg-warm);}
-.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:56px;position:relative;}
-.how-steps::before{content:'';position:absolute;top:32px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,var(--accent),var(--teal));opacity:0.2;}
+/* HOW */
+.how-wrap{position:relative;margin-top:64px;}
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;}
+.how-steps::before{content:'';position:absolute;top:36px;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--accent) 20%,var(--cyan) 80%,transparent);opacity:.4;}
 .step{text-align:center;position:relative;}
-.step-num{width:64px;height:64px;border-radius:50%;background:white;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:24px;color:var(--accent);margin:0 auto 20px;position:relative;z-index:1;transition:all .3s;}
-.step:hover .step-num{background:var(--accent);color:#fff;transform:scale(1.08);}
-.step h4{font-family:var(--display);font-size:20px;margin-bottom:8px;font-weight:400;}
+.step-num{width:72px;height:72px;border-radius:50%;background:var(--bg-2);border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:28px;color:var(--ink);margin:0 auto 24px;position:relative;z-index:1;transition:all .35s;box-shadow:0 0 0 6px var(--bg);}
+.step-num::before{content:'';position:absolute;inset:-2px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--cyan));z-index:-1;opacity:0;filter:blur(6px);transition:opacity .35s;}
+.step:hover .step-num{border-color:transparent;color:#fff;transform:scale(1.08);}
+.step:hover .step-num::before{opacity:.8;}
+.step h4{font-family:var(--display);font-size:21px;margin-bottom:10px;font-weight:400;}
 .step p{color:var(--ink-mid);font-size:14px;line-height:1.55;max-width:26ch;margin:0 auto;}
-@media(max-width:820px){.how-steps{grid-template-columns:1fr 1fr;gap:36px;}.how-steps::before{display:none;}}
+@media(max-width:820px){.how-steps{grid-template-columns:1fr 1fr;gap:40px;}.how-steps::before{display:none;}}
 @media(max-width:480px){.how-steps{grid-template-columns:1fr;}}
 
-/* === ASSESSMENT CTA (the big interactive concern page link) === */
-.assess{background:white;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-.assess-wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
-.assess-text .section-title{max-width:18ch;}
-.assess-features{display:flex;flex-direction:column;gap:16px;margin-top:28px;}
+/* ASSESSMENT */
+.assess-wrap{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.assess-features{display:flex;flex-direction:column;gap:18px;margin-top:32px;}
 .assess-feat{display:flex;gap:14px;align-items:start;}
-.assess-feat .check{width:24px;height:24px;border-radius:50%;background:rgba(13,148,136,0.1);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px;}
-.assess-feat p{font-size:15px;color:var(--ink-mid);line-height:1.5;}
+.assess-feat .check{width:26px;height:26px;border-radius:8px;background:rgba(0,229,255,.12);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px;border:1px solid rgba(0,229,255,.3);box-shadow:0 0 16px rgba(0,229,255,.15);}
+.assess-feat p{font-size:15px;color:var(--ink-mid);line-height:1.55;}
 .assess-feat p strong{color:var(--ink);font-weight:600;}
-.assess-preview{background:var(--bg-warm);border-radius:var(--radius);border:1px solid var(--line);padding:36px;position:relative;}
-.assess-preview-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-dim);margin-bottom:20px;}
-.assess-q{padding:14px 0;border-bottom:1px solid var(--line);font-size:15px;color:var(--ink-mid);display:flex;gap:12px;align-items:start;}
+.assess-preview{padding:32px;border-radius:16px;}
+.assess-preview-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--cyan);margin-bottom:22px;display:flex;align-items:center;gap:8px;}
+.assess-preview-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);}
+.assess-q{padding:14px 0;border-bottom:1px solid var(--line);font-size:14.5px;color:var(--ink-mid);display:flex;gap:14px;align-items:start;font-family:var(--mono);}
 .assess-q:last-child{border-bottom:none;}
-.assess-q .qnum{font-family:var(--mono);font-size:12px;color:var(--accent);flex-shrink:0;margin-top:2px;}
+.assess-q .qnum{font-size:11px;color:var(--accent);flex-shrink:0;margin-top:3px;}
 @media(max-width:900px){.assess-wrap{grid-template-columns:1fr;gap:48px;}}
 
-/* === LOCAL === */
-.local-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-top:56px;}
-.local-card{background:white;border:1px solid var(--line);border-radius:var(--radius);padding:40px;text-align:center;}
-.local-card .big{font-family:var(--display);font-size:56px;color:var(--accent);line-height:1;margin-bottom:8px;}
-.local-card .label{font-size:14px;color:var(--ink-dim);}
-.local-text p{font-size:17px;color:var(--ink-mid);line-height:1.7;margin-bottom:16px;}
-.local-areas{margin-top:20px;}
-.local-areas span{display:inline-block;padding:6px 14px;margin:4px;border-radius:100px;border:1px solid var(--line);font-size:13px;font-weight:500;color:var(--ink-mid);}
+/* LOCAL */
+.local-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-top:56px;}
+.local-text p{font-size:16px;color:var(--ink-mid);line-height:1.7;margin-bottom:16px;}
+.local-areas{margin-top:22px;display:flex;flex-wrap:wrap;gap:6px;}
+.local-areas span{padding:7px 14px;border-radius:100px;border:1px solid var(--line-2);background:rgba(255,255,255,.03);font-family:var(--mono);font-size:12px;color:var(--ink-mid);transition:all .2s;}
+.local-areas span:hover{border-color:var(--accent);color:var(--accent-2);}
+.local-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.local-card{padding:28px 22px;text-align:center;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid var(--line);transition:all .3s;}
+.local-card:hover{border-color:var(--accent);box-shadow:0 0 32px var(--accent-glow);transform:translateY(-3px);}
+.local-card .big{font-family:var(--display);font-size:46px;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;margin-bottom:10px;}
+.local-card .label{font-family:var(--mono);font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.08em;}
 @media(max-width:720px){.local-grid{grid-template-columns:1fr;}}
 
-/* === BIG CTA === */
-.big-cta{background:var(--bg-dark);color:#fff;text-align:center;padding:130px 0;position:relative;overflow:hidden;}
-.big-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(232,93,38,0.12),transparent 60%);pointer-events:none;}
-.big-cta h2{font-family:var(--display);font-size:clamp(36px,5vw,64px);line-height:1.05;letter-spacing:-0.02em;margin-bottom:24px;max-width:18ch;margin-left:auto;margin-right:auto;}
-.big-cta h2 em{font-style:italic;color:var(--accent-light);}
-.big-cta p{color:rgba(255,255,255,0.6);font-size:18px;max-width:50ch;margin:0 auto 36px;line-height:1.6;}
-.big-cta .btn-primary{box-shadow:0 4px 24px rgba(232,93,38,0.35);}
+/* BIG CTA */
+.big-cta{text-align:center;padding:140px 0;position:relative;overflow:hidden;}
+.big-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,var(--accent-glow),transparent 60%);pointer-events:none;}
+.big-cta h2{font-family:var(--display);font-size:clamp(40px,5.5vw,72px);line-height:1.02;letter-spacing:-.02em;margin-bottom:26px;max-width:18ch;margin-left:auto;margin-right:auto;font-weight:400;}
+.big-cta h2 em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.big-cta p{color:var(--ink-mid);font-size:18px;max-width:52ch;margin:0 auto 40px;line-height:1.6;}
 
-/* === CONTACT === */
-.contact{background:var(--bg-warm);}
-.contact-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:80px;}
-.contact-info h2{font-family:var(--display);font-size:clamp(32px,4vw,44px);line-height:1.08;margin-bottom:20px;letter-spacing:-0.015em;}
-.contact-info>p{color:var(--ink-mid);font-size:16px;line-height:1.6;margin-bottom:32px;}
-.contact-detail{padding:14px 0;border-top:1px solid var(--line);font-size:14px;}
+/* CONTACT */
+.contact-wrap{display:grid;grid-template-columns:1fr 1.15fr;gap:64px;}
+.contact-info h2{font-family:var(--display);font-size:clamp(32px,4vw,48px);line-height:1.05;margin-bottom:20px;letter-spacing:-.015em;font-weight:400;}
+.contact-info h2 em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.contact-info>p{color:var(--ink-mid);font-size:16px;line-height:1.6;margin-bottom:36px;}
+.contact-detail{padding:16px 0;border-top:1px solid var(--line);font-size:14px;}
 .contact-detail:last-child{border-bottom:1px solid var(--line);}
-.contact-detail .key{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-dim);display:block;margin-bottom:4px;}
-.contact-detail .val{color:var(--ink);}
+.contact-detail .key{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--cyan);display:block;margin-bottom:6px;}
+.contact-detail .val{color:var(--ink);font-size:14.5px;}
 
-form{display:flex;flex-direction:column;gap:18px;background:white;border:1px solid var(--line);border-radius:var(--radius);padding:36px;}
+form{display:flex;flex-direction:column;gap:18px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid var(--line-2);border-radius:16px;padding:36px;backdrop-filter:blur(14px);position:relative;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
-label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;}
-input,textarea,select{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:13px 16px;font-family:var(--sans);font-size:15px;border-radius:8px;transition:border-color .2s;}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);}
+label{display:block;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--ink-mid);margin-bottom:8px;letter-spacing:.08em;text-transform:uppercase;}
+input,textarea,select{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--line);color:var(--ink);padding:13px 16px;font-family:var(--sans);font-size:15px;border-radius:10px;transition:all .2s;}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,.1);}
+select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ba3bf' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 14px center;background-size:16px;padding-right:42px;}
 textarea{min-height:120px;resize:vertical;}
-.form-submit{background:var(--accent);color:#fff;border:none;padding:15px 28px;font-family:var(--sans);font-size:15px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .2s;align-self:start;}
-.form-submit:hover{background:#d14f1c;transform:translateY(-2px);}
-.form-note{font-family:var(--mono);font-size:12px;color:var(--ink-dim);margin-top:4px;}
+.form-submit{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border:none;padding:15px 28px;font-family:var(--sans);font-size:15px;font-weight:600;border-radius:10px;cursor:pointer;transition:all .25s;align-self:start;box-shadow:0 4px 24px var(--accent-glow);}
+.form-submit:hover{transform:translateY(-2px);box-shadow:0 8px 36px var(--accent-glow);}
+.form-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.form-note{font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.05em;}
 @media(max-width:900px){.contact-wrap{grid-template-columns:1fr;gap:48px;}.form-row{grid-template-columns:1fr;}}
 
-/* === FOOTER === */
-footer{padding:56px 0 36px;border-top:1px solid var(--line);}
-.footer-top{display:flex;justify-content:space-between;align-items:center;padding-bottom:36px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:20px;}
-.footer-bottom{padding-top:28px;display:flex;justify-content:space-between;font-size:13px;color:var(--ink-dim);flex-wrap:wrap;gap:12px;}
+/* FOOTER */
+footer{padding:56px 0 36px;border-top:1px solid var(--line);position:relative;z-index:2;}
+.footer-top{display:flex;justify-content:space-between;align-items:center;padding-bottom:32px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:20px;}
+.footer-bottom{padding-top:28px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--ink-dim);flex-wrap:wrap;gap:12px;}
 .footer-bottom a:hover{color:var(--accent);}
 
-/* === REVEAL === */
-.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease;}
 .reveal.in{opacity:1;transform:translateY(0);}
-@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;}*{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;}*{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 </style>
 </head>
 <body>
 
+<div class="bg-fx">
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="noise"></div>
+</div>
+
 <header class="nav">
   <div class="container nav-inner">
-    <a href="#top" class="logo">
-      <span class="logo-icon">LS</span>
-      LogicStack
-    </a>
+    <a href="#top" class="logo"><span class="logo-icon">LS</span> LogicStack</a>
     <nav class="nav-links">
       <a href="#services">Services</a>
-      <a href="#how">How It Works</a>
-      <a href="#assessment">Free Assessment</a>
+      <a href="#how">Process</a>
+      <a href="#assessment">Assessment</a>
       <a href="#contact">Contact</a>
     </nav>
-    <a href="assessment.html" class="nav-cta">Get Your AI Roadmap →</a>
+    <a href="assessment.html" class="nav-cta">Get AI Roadmap →</a>
   </div>
 </header>
 
@@ -234,80 +255,61 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
     <div class="container">
       <div class="hero-grid">
         <div>
-          <div class="hero-badge reveal"><span class="dot"></span> Now serving Elkridge &amp; the DC–Baltimore corridor</div>
+          <div class="hero-badge reveal"><span class="dot"></span> System online · Serving DC–Baltimore corridor</div>
           <h1 class="reveal">Your business runs on effort. <em>Let AI carry some of it.</em></h1>
           <p class="hero-lede reveal">LogicStack builds custom AI agents, automations, and apps for local businesses. We listen to what's slowing you down, then build the exact AI solution that fixes it — no buzzwords, no off-the-shelf garbage, just tools that work the way your business does.</p>
           <div class="hero-ctas reveal">
             <a href="assessment.html" class="btn btn-primary">Tell us what's not working <span class="arrow">→</span></a>
             <a href="#services" class="btn btn-outline">See what we build</a>
           </div>
+          <div class="hero-stats reveal">
+            <div class="stat"><div class="num" data-count="73">0</div><div class="lbl">% fewer missed calls</div></div>
+            <div class="stat"><div class="num" data-count="24">0</div><div class="lbl">/7 AI coverage</div></div>
+            <div class="stat"><div class="num" data-count="48">0</div><div class="lbl">hr first response</div></div>
+          </div>
         </div>
 
         <div class="hero-visual reveal">
-          <div class="hero-card">
-            <div class="hero-card-header">
-              <div class="avatar">🤖</div>
-              <div class="meta"><strong>LogicStack AI Agent</strong>Built for Mario's Auto Shop</div>
+          <div class="terminal">
+            <div class="term-bar">
+              <div class="term-dots"><span></span><span></span><span></span></div>
+              <div class="term-title">logicstack-agent · mario-auto-shop</div>
             </div>
-            <div class="hero-chat">
-              <div class="chat-msg chat-user">Hi, I need to schedule an oil change for my 2019 Civic this week</div>
-              <div class="chat-msg chat-ai">Hey! I've got Thursday at 10am or Friday at 2pm open. Which works better? I'll get you confirmed in 30 seconds 🔧</div>
-              <div class="chat-msg chat-user">Thursday works!</div>
-              <div class="chat-msg chat-ai">Done ✓ — You're booked for Thursday 10am. I've texted you a confirmation with the address and what to expect. See you then!</div>
+            <div class="term-body">
+              <div class="term-prompt">deploy agent --client "Mario's Auto Shop"</div>
+              <div class="term-out">✓ Agent live · trained on 2,341 past jobs</div>
+              <div class="chat">
+                <div class="chat-msg chat-user">Hi, I need to schedule an oil change for my 2019 Civic this week</div>
+                <div class="chat-msg chat-ai">Hey! I've got Thursday 10am or Friday 2pm open. Which works better? 🔧</div>
+                <div class="chat-msg chat-user">Thursday works!</div>
+                <div class="chat-msg chat-ai">Done ✓ Booked Thursday 10am. Confirmation texted to you.</div>
+              </div>
             </div>
           </div>
-          <div class="hero-card-float">
-            <div class="num">73%</div>
-            less missed calls
-          </div>
+          <div class="floaty"><span class="v">73%</span>fewer missed calls</div>
+          <div class="floaty floaty-2"><span class="v">$4.2k</span>monthly savings</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PAIN POINTS -->
-  <section class="pain" id="problems">
+  <section id="problems">
     <div class="container">
       <div class="section-label reveal">The problems we solve</div>
-      <h2 class="section-title reveal" style="color:#fff;max-width:24ch;">You didn't start your business to answer the same questions <em>400 times a month.</em></h2>
+      <h2 class="section-title reveal">You didn't start your business to answer the same questions <em>400 times a month.</em></h2>
       <p class="section-sub reveal">These are the things local business owners tell us are eating their time, costing them money, and keeping them from growing.</p>
 
       <div class="pain-grid">
-        <div class="pain-card reveal">
-          <div class="icon orange">📞</div>
-          <h3>Missed calls, lost leads</h3>
-          <p>Customers call during your busiest hours. You can't answer every one. They hang up and call your competitor. That's revenue walking out the door every single day.</p>
-        </div>
-        <div class="pain-card reveal">
-          <div class="icon teal">🔁</div>
-          <h3>Repetitive admin killing your day</h3>
-          <p>Scheduling, invoicing, follow-up emails, data entry — the same 10 tasks eating 3–4 hours daily that could be handled without a human touching them.</p>
-        </div>
-        <div class="pain-card reveal">
-          <div class="icon violet">📊</div>
-          <h3>No clear picture of your numbers</h3>
-          <p>Your data lives in 6 different spreadsheets, your POS, and your head. You're making gut decisions when you could have a dashboard that tells you exactly where you stand.</p>
-        </div>
-        <div class="pain-card reveal">
-          <div class="icon orange">💬</div>
-          <h3>Slow response to customers</h3>
-          <p>Customers expect instant replies to DMs, texts, and website inquiries. If you take 4 hours to respond, 50% of them have already gone elsewhere.</p>
-        </div>
-        <div class="pain-card reveal">
-          <div class="icon teal">📝</div>
-          <h3>Marketing you never have time for</h3>
-          <p>You know you should post on social media, send email newsletters, ask for reviews. But when you're running the business, marketing is always the thing that gets cut.</p>
-        </div>
-        <div class="pain-card reveal">
-          <div class="icon violet">⚙️</div>
-          <h3>Systems that don't talk to each other</h3>
-          <p>Your booking tool doesn't sync with your CRM. Your CRM doesn't sync with your invoicing. You're copy-pasting between tabs like it's 2005.</p>
-        </div>
+        <div class="glass pain-card reveal"><div class="icon orange">📞</div><h3>Missed calls, lost leads</h3><p>Customers call during your busiest hours. You can't answer every one. They hang up and call your competitor. That's revenue walking out the door every single day.</p></div>
+        <div class="glass pain-card reveal"><div class="icon cyan">🔁</div><h3>Repetitive admin killing your day</h3><p>Scheduling, invoicing, follow-up emails, data entry — the same 10 tasks eating 3–4 hours daily that could be handled without a human touching them.</p></div>
+        <div class="glass pain-card reveal"><div class="icon violet">📊</div><h3>No clear picture of your numbers</h3><p>Your data lives in 6 different spreadsheets, your POS, and your head. You're making gut decisions when you could have a dashboard that tells you exactly where you stand.</p></div>
+        <div class="glass pain-card reveal"><div class="icon orange">💬</div><h3>Slow response to customers</h3><p>Customers expect instant replies to DMs, texts, and website inquiries. If you take 4 hours to respond, 50% of them have already gone elsewhere.</p></div>
+        <div class="glass pain-card reveal"><div class="icon cyan">📝</div><h3>Marketing you never have time for</h3><p>You know you should post on social media, send email newsletters, ask for reviews. But when you're running the business, marketing is always the thing that gets cut.</p></div>
+        <div class="glass pain-card reveal"><div class="icon violet">⚙️</div><h3>Systems that don't talk to each other</h3><p>Your booking tool doesn't sync with your CRM. Your CRM doesn't sync with your invoicing. You're copy-pasting between tabs like it's 2005.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- SERVICES -->
   <section id="services">
     <div class="container">
       <div class="section-label reveal">What we build</div>
@@ -315,82 +317,36 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
       <p class="section-sub reveal">Every solution is custom-built after we understand your exact workflow. Here's the range of what we deliver.</p>
 
       <div class="services-grid">
-        <div class="svc-card reveal">
-          <div class="svc-num">01</div>
-          <h3>AI Customer Agents</h3>
-          <p>Chatbots and voice agents trained on your specific business — handling bookings, answering FAQs, qualifying leads, and routing complex questions to you. Available 24/7 on your website, SMS, or phone line.</p>
-          <div class="svc-tags"><span class="svc-tag">Chatbots</span><span class="svc-tag">Voice AI</span><span class="svc-tag">SMS</span><span class="svc-tag">Lead Capture</span></div>
-        </div>
-        <div class="svc-card reveal">
-          <div class="svc-num">02</div>
-          <h3>Workflow Automation</h3>
-          <p>We connect your tools and eliminate the manual steps. Client books online → confirmation sent → added to CRM → invoice generated → follow-up scheduled. Zero typing required.</p>
-          <div class="svc-tags"><span class="svc-tag">Zapier</span><span class="svc-tag">Make.com</span><span class="svc-tag">Custom APIs</span><span class="svc-tag">n8n</span></div>
-        </div>
-        <div class="svc-card reveal">
-          <div class="svc-num">03</div>
-          <h3>Custom AI Apps</h3>
-          <p>Need something that doesn't exist off the shelf? We build it. Internal dashboards, AI-powered estimators, smart inventory trackers, customer portals — whatever your business actually needs.</p>
-          <div class="svc-tags"><span class="svc-tag">Web Apps</span><span class="svc-tag">Mobile</span><span class="svc-tag">Dashboards</span><span class="svc-tag">Internal Tools</span></div>
-        </div>
-        <div class="svc-card reveal">
-          <div class="svc-num">04</div>
-          <h3>AI Marketing &amp; Content</h3>
-          <p>Automated social media posting, AI-written email campaigns personalized to your customers, review request sequences, and local SEO content — the marketing you'd do if you had time.</p>
-          <div class="svc-tags"><span class="svc-tag">Social Media</span><span class="svc-tag">Email</span><span class="svc-tag">Reviews</span><span class="svc-tag">Local SEO</span></div>
-        </div>
-        <div class="svc-card reveal">
-          <div class="svc-num">05</div>
-          <h3>Data &amp; Analytics</h3>
-          <p>We pull your scattered data into one clear dashboard. See revenue trends, customer patterns, inventory levels, and key metrics — updated in real time, not last Tuesday.</p>
-          <div class="svc-tags"><span class="svc-tag">Dashboards</span><span class="svc-tag">Reports</span><span class="svc-tag">Forecasting</span><span class="svc-tag">KPIs</span></div>
-        </div>
-        <div class="svc-card reveal">
-          <div class="svc-num">06</div>
-          <h3>AI Integration &amp; Training</h3>
-          <p>Already using ChatGPT or other AI tools but not getting real value? We integrate AI properly into your workflows and train your team to use it in ways that actually save time.</p>
-          <div class="svc-tags"><span class="svc-tag">ChatGPT</span><span class="svc-tag">Team Training</span><span class="svc-tag">Integration</span><span class="svc-tag">Strategy</span></div>
-        </div>
+        <div class="glass svc-card reveal"><div class="svc-num">01 / Agents</div><h3>AI Customer Agents</h3><p>Chatbots and voice agents trained on your specific business — handling bookings, answering FAQs, qualifying leads, and routing complex questions to you. Available 24/7 on your website, SMS, or phone line.</p><div class="svc-tags"><span class="svc-tag">Chatbots</span><span class="svc-tag">Voice AI</span><span class="svc-tag">SMS</span><span class="svc-tag">Lead Capture</span></div></div>
+        <div class="glass svc-card reveal"><div class="svc-num">02 / Automation</div><h3>Workflow Automation</h3><p>We connect your tools and eliminate the manual steps. Client books online → confirmation sent → added to CRM → invoice generated → follow-up scheduled. Zero typing required.</p><div class="svc-tags"><span class="svc-tag">Zapier</span><span class="svc-tag">Make.com</span><span class="svc-tag">Custom APIs</span><span class="svc-tag">n8n</span></div></div>
+        <div class="glass svc-card reveal"><div class="svc-num">03 / Apps</div><h3>Custom AI Apps</h3><p>Need something that doesn't exist off the shelf? We build it. Internal dashboards, AI-powered estimators, smart inventory trackers, customer portals — whatever your business actually needs.</p><div class="svc-tags"><span class="svc-tag">Web Apps</span><span class="svc-tag">Mobile</span><span class="svc-tag">Dashboards</span><span class="svc-tag">Internal Tools</span></div></div>
+        <div class="glass svc-card reveal"><div class="svc-num">04 / Marketing</div><h3>AI Marketing &amp; Content</h3><p>Automated social media posting, AI-written email campaigns personalized to your customers, review request sequences, and local SEO content — the marketing you'd do if you had time.</p><div class="svc-tags"><span class="svc-tag">Social Media</span><span class="svc-tag">Email</span><span class="svc-tag">Reviews</span><span class="svc-tag">Local SEO</span></div></div>
+        <div class="glass svc-card reveal"><div class="svc-num">05 / Data</div><h3>Data &amp; Analytics</h3><p>We pull your scattered data into one clear dashboard. See revenue trends, customer patterns, inventory levels, and key metrics — updated in real time, not last Tuesday.</p><div class="svc-tags"><span class="svc-tag">Dashboards</span><span class="svc-tag">Reports</span><span class="svc-tag">Forecasting</span><span class="svc-tag">KPIs</span></div></div>
+        <div class="glass svc-card reveal"><div class="svc-num">06 / Integration</div><h3>AI Integration &amp; Training</h3><p>Already using ChatGPT or other AI tools but not getting real value? We integrate AI properly into your workflows and train your team to use it in ways that actually save time.</p><div class="svc-tags"><span class="svc-tag">ChatGPT</span><span class="svc-tag">Team Training</span><span class="svc-tag">Integration</span><span class="svc-tag">Strategy</span></div></div>
       </div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section class="how" id="how">
+  <section id="how">
     <div class="container">
       <div class="section-label reveal">How it works</div>
       <h2 class="section-title reveal">From "what's broken" to <em>"it's handled"</em> in four steps.</h2>
 
-      <div class="how-steps">
-        <div class="step reveal">
-          <div class="step-num">1</div>
-          <h4>Tell us what hurts</h4>
-          <p>Fill out our business assessment — a detailed page where you walk us through your daily pain points, tools you use, and what you wish worked better.</p>
-        </div>
-        <div class="step reveal">
-          <div class="step-num">2</div>
-          <h4>We map the fix</h4>
-          <p>We analyze your responses and come back with a free AI roadmap: exactly what we'd build, what it costs, and what you can expect it to save.</p>
-        </div>
-        <div class="step reveal">
-          <div class="step-num">3</div>
-          <h4>We build &amp; integrate</h4>
-          <p>We build it, test it with your real data, and plug it into your existing tools. You stay focused on running your business the whole time.</p>
-        </div>
-        <div class="step reveal">
-          <div class="step-num">4</div>
-          <h4>You grow, we support</h4>
-          <p>We don't disappear. Ongoing support, updates, and new automations as your business evolves. Month-to-month, cancel whenever.</p>
+      <div class="how-wrap">
+        <div class="how-steps">
+          <div class="step reveal"><div class="step-num">1</div><h4>Tell us what hurts</h4><p>Fill out our business assessment — a detailed page where you walk us through your daily pain points, tools you use, and what you wish worked better.</p></div>
+          <div class="step reveal"><div class="step-num">2</div><h4>We map the fix</h4><p>We analyze your responses and come back with a free AI roadmap: exactly what we'd build, what it costs, and what you can expect it to save.</p></div>
+          <div class="step reveal"><div class="step-num">3</div><h4>We build &amp; integrate</h4><p>We build it, test it with your real data, and plug it into your existing tools. You stay focused on running your business the whole time.</p></div>
+          <div class="step reveal"><div class="step-num">4</div><h4>You grow, we support</h4><p>We don't disappear. Ongoing support, updates, and new automations as your business evolves. Month-to-month, cancel whenever.</p></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ASSESSMENT CTA -->
-  <section class="assess" id="assessment">
+  <section id="assessment">
     <div class="container">
       <div class="assess-wrap">
-        <div class="assess-text reveal">
+        <div class="reveal">
           <div class="section-label">Free AI Assessment</div>
           <h2 class="section-title">Tell us every problem. <em>We'll find the AI that solves it.</em></h2>
           <p class="section-sub">Our business assessment is a detailed questionnaire that digs into your operations, workflows, and frustrations. We use your answers to build a custom AI roadmap — for free, no strings.</p>
@@ -404,14 +360,14 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
           </div>
         </div>
 
-        <div class="assess-preview reveal">
-          <div class="assess-preview-label">Preview: What we'll ask you</div>
+        <div class="glass assess-preview reveal">
+          <div class="assess-preview-label">Preview · 8 questions</div>
           <div class="assess-q"><span class="qnum">01</span> What does your business do, and how many people work there?</div>
           <div class="assess-q"><span class="qnum">02</span> Walk us through a typical day — what tasks eat the most time?</div>
           <div class="assess-q"><span class="qnum">03</span> How do customers currently find you and book/buy from you?</div>
           <div class="assess-q"><span class="qnum">04</span> What tools or software do you already use daily?</div>
           <div class="assess-q"><span class="qnum">05</span> What's the #1 thing you'd fix in your business if you had unlimited help?</div>
-          <div class="assess-q"><span class="qnum">06</span> Where are you losing money to inefficiency, missed opportunities, or errors?</div>
+          <div class="assess-q"><span class="qnum">06</span> Where are you losing money to inefficiency or errors?</div>
           <div class="assess-q"><span class="qnum">07</span> Have you tried any AI tools? What worked and what didn't?</div>
           <div class="assess-q"><span class="qnum">08</span> What would "success" look like 90 days from now?</div>
         </div>
@@ -419,7 +375,6 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
     </div>
   </section>
 
-  <!-- LOCAL -->
   <section>
     <div class="container">
       <div class="local-grid">
@@ -434,29 +389,16 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
             <span>Elkridge</span><span>Columbia</span><span>Baltimore</span><span>Annapolis</span><span>DC</span><span>Silver Spring</span><span>Laurel</span><span>Ellicott City</span><span>Towson</span><span>Glen Burnie</span>
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="reveal">
-          <div class="local-card">
-            <div class="big">🏪</div>
-            <div class="label">Built for local businesses</div>
-          </div>
-          <div class="local-card">
-            <div class="big">🤝</div>
-            <div class="label">In-person discovery sessions</div>
-          </div>
-          <div class="local-card">
-            <div class="big">⚡</div>
-            <div class="label">48-hour first response</div>
-          </div>
-          <div class="local-card">
-            <div class="big">📱</div>
-            <div class="label">Direct line to the builder</div>
-          </div>
+        <div class="local-cards reveal">
+          <div class="local-card"><div class="big">🏪</div><div class="label">Built for local businesses</div></div>
+          <div class="local-card"><div class="big">🤝</div><div class="label">In-person discovery sessions</div></div>
+          <div class="local-card"><div class="big">⚡</div><div class="label">48-hour first response</div></div>
+          <div class="local-card"><div class="big">📱</div><div class="label">Direct line to the builder</div></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- BIG CTA -->
   <section class="big-cta">
     <div class="container">
       <h2 class="reveal">Stop leaving money on the table. <em>Let AI pick it up.</em></h2>
@@ -465,30 +407,17 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section class="contact" id="contact">
+  <section id="contact">
     <div class="container">
       <div class="contact-wrap">
         <div class="contact-info reveal">
           <div class="section-label">Get in touch</div>
-          <h2>Let's talk about your business.</h2>
+          <h2>Let's talk about <em>your business.</em></h2>
           <p>Not ready for the full assessment? No problem — drop us a line with whatever you've got. We'll get back to you within one business day.</p>
-          <div class="contact-detail">
-            <span class="key">Email</span>
-            <span class="val">kernelkrafttech@gmail.com</span>
-          </div>
-          <div class="contact-detail">
-            <span class="key">Based in</span>
-            <span class="val">Elkridge, Maryland</span>
-          </div>
-          <div class="contact-detail">
-            <span class="key">Service area</span>
-            <span class="val">DC · Baltimore · Annapolis · Columbia · remote US</span>
-          </div>
-          <div class="contact-detail">
-            <span class="key">Hours</span>
-            <span class="val">Mon–Fri · 9am–6pm ET</span>
-          </div>
+          <div class="contact-detail"><span class="key">Email</span><span class="val">kernelkrafttech@gmail.com</span></div>
+          <div class="contact-detail"><span class="key">Based in</span><span class="val">Elkridge, Maryland</span></div>
+          <div class="contact-detail"><span class="key">Service area</span><span class="val">DC · Baltimore · Annapolis · Columbia · remote US</span></div>
+          <div class="contact-detail"><span class="key">Hours</span><span class="val">Mon–Fri · 9am–6pm ET</span></div>
         </div>
         <div class="reveal">
           <form id="contactForm" onsubmit="handleSubmit(event)">
@@ -513,7 +442,7 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
             </div>
             <div><label for="message">Tell us what's going on</label><textarea id="message" name="message" required placeholder="Example: I own a dental practice with 3 locations. We're losing patients because we can't answer every call. We need something to handle booking and basic questions."></textarea></div>
             <button type="submit" class="form-submit">Send message →</button>
-            <div class="form-note">We reply within one business day.</div>
+            <div class="form-note">// We reply within one business day.</div>
           </form>
         </div>
       </div>
@@ -526,7 +455,7 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
   <div class="container">
     <div class="footer-top">
       <div class="logo"><span class="logo-icon">LS</span> LogicStack</div>
-      <div style="font-size:14px;color:var(--ink-dim);max-width:36ch;text-align:right;">AI agents &amp; automation for local businesses in the DC–Baltimore corridor.</div>
+      <div style="font-family:var(--mono);font-size:12px;color:var(--ink-dim);max-width:40ch;text-align:right;">AI agents &amp; automation for local businesses · DC–Baltimore corridor</div>
     </div>
     <div class="footer-bottom">
       <div>© <span id="year"></span> LogicStack LLC · Elkridge, Maryland</div>
@@ -537,9 +466,14 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);}
 
 <script>
 document.getElementById('year').textContent=new Date().getFullYear();
-const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('in');io.unobserve(el.target);}});},{threshold:0.1});
+const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('in');io.unobserve(el.target);}});},{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-document.querySelectorAll('.hero .reveal').forEach((el,i)=>{el.style.transitionDelay=(i*100)+'ms';});
+document.querySelectorAll('.hero .reveal').forEach((el,i)=>{el.style.transitionDelay=(i*90)+'ms';});
+
+// Animated counters
+const counters=document.querySelectorAll('[data-count]');
+const counterIO=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,target=+el.dataset.count;let cur=0;const step=Math.max(1,Math.floor(target/40));const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t);}el.textContent=cur;},24);counterIO.unobserve(el);});},{threshold:.5});
+counters.forEach(c=>counterIO.observe(c));
 
 async function handleSubmit(e){
   e.preventDefault();
@@ -550,15 +484,15 @@ async function handleSubmit(e){
   btn.textContent='Sending…';
 
   const payload={
-    access_key: 'f08b63ba-6b6c-40c0-be32-20fb54fda15d',
-    subject: 'LogicStack inquiry — '+f.interest.value,
-    from_name: 'LogicStack Website',
-    name: f.name.value,
-    business: f.biz.value,
-    email: f.email.value,
-    phone: f.phone.value,
-    interest: f.interest.value,
-    message: f.message.value
+    access_key:'f08b63ba-6b6c-40c0-be32-20fb54fda15d',
+    subject:'LogicStack inquiry — '+f.interest.value,
+    from_name:'LogicStack Website',
+    name:f.name.value,
+    business:f.biz.value,
+    email:f.email.value,
+    phone:f.phone.value,
+    interest:f.interest.value,
+    message:f.message.value
   };
 
   try{
