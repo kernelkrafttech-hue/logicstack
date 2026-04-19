@@ -359,9 +359,9 @@ async function handleAssess(e){
 
   const fd=new FormData(form);
   const payload={
-    _subject: 'AI Assessment — '+(fd.get('biz_name')||'(no business name)'),
-    _template: 'table',
-    _captcha: 'false',
+    access_key: 'f08b63ba-6b6c-40c0-be32-20fb54fda15d',
+    subject: 'AI Assessment — '+(fd.get('biz_name')||'(no business name)'),
+    from_name: 'LogicStack Assessment',
     business_name: fd.get('biz_name'),
     your_name: fd.get('your_name'),
     email: fd.get('email'),
@@ -389,12 +389,13 @@ async function handleAssess(e){
   };
 
   try{
-    const res=await fetch('https://formsubmit.co/ajax/kernelkrafttech@gmail.com',{
+    const res=await fetch('https://api.web3forms.com/submit',{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify(payload)
     });
-    if(!res.ok) throw new Error('Network response was not ok');
+    const data=await res.json();
+    if(!res.ok||!data.success) throw new Error(data.message||'Submission failed');
     window.location.href='thanks.html';
   }catch(err){
     btn.disabled=false;
