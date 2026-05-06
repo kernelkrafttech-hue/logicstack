@@ -143,6 +143,16 @@ enum RequestUrgency {
     }
     return RequestUrgency.medium;
   }
+
+  /// Like [fromStorage] but returns `null` for unknown values, so the AI
+  /// suggestion can fall back to plain text rendering.
+  static RequestUrgency? fromStorageOrNull(String? value) {
+    if (value == null) return null;
+    for (final RequestUrgency u in RequestUrgency.values) {
+      if (u.storageValue == value) return u;
+    }
+    return null;
+  }
 }
 
 enum RequestCategory {
@@ -200,6 +210,27 @@ enum RequestCategory {
   }
 }
 
+/// Result of running a request through the `analyzeMaintenanceRequest`
+/// Cloud Function. Used by the AI service and the repository's update helper.
+class AiAnalysis {
+  const AiAnalysis({
+    required this.aiSummary,
+    required this.likelyTrade,
+    required this.urgencySuggestion,
+    required this.contractorMessage,
+  });
+
+  final String aiSummary;
+  final String likelyTrade;
+  final String urgencySuggestion;
+  final String contractorMessage;
+
+  /// Maps [urgencySuggestion] back onto a [RequestUrgency] when it parses
+  /// cleanly, so the UI can render an [UrgencyBadge].
+  RequestUrgency? get suggestedUrgencyEnum =>
+      RequestUrgency.fromStorageOrNull(urgencySuggestion);
+}
+
 /// A maintenance request submitted by a tenant against a property.
 ///
 /// Backed by `maintenanceRequests/{requestId}`. The model owns its enum
@@ -218,6 +249,11 @@ class MaintenanceRequest {
     required this.photoUrls,
     this.createdAt,
     this.updatedAt,
+    this.aiSummary,
+    this.likelyTrade,
+    this.urgencySuggestion,
+    this.contractorMessage,
+    this.aiAnalyzedAt,
   });
 
   final String id;
@@ -232,6 +268,21 @@ class MaintenanceRequest {
   final List<String> photoUrls;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+
+  // AI fields, populated asynchronously by the analyzeMaintenanceRequest
+  // Cloud Function after the doc is created.
+  final String? aiSummary;
+  final String? likelyTrade;
+  final String? urgencySuggestion;
+  final String? contractorMessage;
+  final DateTime? aiAnalyzedAt;
+
+  bool get hasAiAnalysis => aiAnalyzedAt != null;
+
+  /// The AI's urgency suggestion mapped back to a [RequestUrgency], if it
+  /// matches one of the known storage values.
+  RequestUrgency? get aiUrgencyEnum =>
+      RequestUrgency.fromStorageOrNull(urgencySuggestion);
 
   Map<String, Object?> toFirestoreCreate() {
     return <String, Object?>{
@@ -270,6 +321,11 @@ class MaintenanceRequest {
       photoUrls: photos,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate(),
+      aiSummary: data['aiSummary'] as String?,
+      likelyTrade: data['likelyTrade'] as String?,
+      urgencySuggestion: data['urgencySuggestion'] as String?,
+      contractorMessage: data['contractorMessage'] as String?,
+      aiAnalyzedAt: (data['aiAnalyzedAt'] as Timestamp?)?.toDate(),
     );
   }
 }

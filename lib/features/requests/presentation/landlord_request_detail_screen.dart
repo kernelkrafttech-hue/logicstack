@@ -10,6 +10,7 @@ import '../../properties/domain/property.dart';
 import '../application/request_providers.dart';
 import '../data/request_repository.dart';
 import '../domain/maintenance_request.dart';
+import 'widgets/ai_insights_section.dart';
 import 'widgets/status_chip.dart';
 import 'widgets/urgency_badge.dart';
 
@@ -124,6 +125,8 @@ class _Body extends ConsumerWidget {
         _SectionHeader(label: 'Property'),
         const SizedBox(height: 8),
         _PropertyTile(async: property),
+        const SizedBox(height: 24),
+        AiInsightsSection(request: request),
         const SizedBox(height: 24),
         _SectionHeader(label: 'Tenant'),
         const SizedBox(height: 8),

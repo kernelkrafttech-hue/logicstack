@@ -105,6 +105,7 @@ class _SubmitRequestScreenState extends ConsumerState<SubmitRequestScreen> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     final AsyncValue<void> state = ref.watch(submitRequestControllerProvider);
@@ -184,12 +185,24 @@ class _SubmitRequestScreenState extends ConsumerState<SubmitRequestScreen> {
                   ),
                   const SizedBox(height: 24),
                   PrimaryButton(
-                    label:
-                        _photos.isEmpty ? 'Submit request' : 'Upload & submit',
+                    label: _photos.isEmpty
+                        ? 'Submit request'
+                        : 'Upload & submit',
                     loading: loading,
                     onPressed: _submit,
                     icon: Icons.send_rounded,
                   ),
+                  if (loading) ...<Widget>[
+                    const SizedBox(height: 10),
+                    Center(
+                      child: Text(
+                        'Saving and analyzing — this may take a few seconds.',
+                        style: text.bodySmall?.copyWith(
+                          color: AppColors.mutedText,
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed:

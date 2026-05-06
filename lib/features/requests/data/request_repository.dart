@@ -147,6 +147,25 @@ class RequestRepository {
     }
   }
 
+  /// Writes the four AI fields plus the `aiAnalyzedAt` server timestamp.
+  /// Firestore rules constrain this to the request's tenant or landlord.
+  Future<void> applyAiAnalysis({
+    required String id,
+    required AiAnalysis analysis,
+  }) async {
+    try {
+      await _collection.doc(id).update(<String, Object?>{
+        'aiSummary': analysis.aiSummary,
+        'likelyTrade': analysis.likelyTrade,
+        'urgencySuggestion': analysis.urgencySuggestion,
+        'contractorMessage': analysis.contractorMessage,
+        'aiAnalyzedAt': FieldValue.serverTimestamp(),
+      });
+    } on FirebaseException catch (e) {
+      throw RequestException(_messageForCode(e.code));
+    }
+  }
+
   String _messageForCode(String code) {
     switch (code) {
       case 'permission-denied':

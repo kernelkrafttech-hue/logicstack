@@ -111,14 +111,30 @@ service cloud.firestore {
         && request.resource.data.photoUrls is list;
 
       // Phase 4: the landlord on a request can change `status` (and the
-      // server-side updatedAt). Nothing else may move.
-      allow update: if isSignedIn()
-        && resource.data.landlordId == request.auth.uid
-        && request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(['status', 'updatedAt'])
-        && request.resource.data.status in
-            ['submitted','reviewed','sent_to_contractor','scheduled',
-             'in_progress','completed','closed','cancelled'];
+      // server-side updatedAt). Phase 5: tenant or landlord may write the
+      // AI insight fields (populated by the analyzeMaintenanceRequest
+      // Cloud Function and persisted from the client).
+      allow update: if isSignedIn() && (
+        // Landlord status update
+        (resource.data.landlordId == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['status', 'updatedAt'])
+          && request.resource.data.status in
+              ['submitted','reviewed','sent_to_contractor','scheduled',
+               'in_progress','completed','closed','cancelled'])
+        ||
+        // AI analysis write (tenant or landlord on the request)
+        ((resource.data.tenantId == request.auth.uid
+          || resource.data.landlordId == request.auth.uid)
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['aiSummary','likelyTrade','urgencySuggestion',
+                        'contractorMessage','aiAnalyzedAt'])
+          && request.resource.data.aiSummary is string
+          && request.resource.data.likelyTrade is string
+          && request.resource.data.contractorMessage is string
+          && request.resource.data.urgencySuggestion in
+              ['low','medium','high','emergency'])
+      );
 
       allow delete: if false;
     }

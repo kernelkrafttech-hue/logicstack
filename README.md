@@ -51,6 +51,25 @@ Once the project is connected, deploy security rules and indexes:
 firebase deploy --only firestore:rules,firestore:indexes,storage
 ```
 
+### Cloud Functions
+
+The `analyzeMaintenanceRequest` callable lives in `functions/`. Configure the
+OpenAI key as a Functions secret (it never enters the Flutter app) and deploy:
+
+```bash
+cd functions
+npm install
+firebase functions:secrets:set OPENAI_API_KEY    # paste key when prompted
+npm run deploy
+```
+
+To run locally against the emulator:
+
+```bash
+cd functions
+npm run serve
+```
+
 ### Platform setup for `image_picker`
 
 The maintenance request flow uses the system photo picker. After running
