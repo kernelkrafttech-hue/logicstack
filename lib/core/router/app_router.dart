@@ -1,0 +1,170 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../features/auth/application/auth_providers.dart';
+import '../../features/auth/domain/app_user.dart';
+import '../../features/auth/domain/user_role.dart';
+import '../../features/auth/presentation/login_screen.dart';
+import '../../features/auth/presentation/signup_screen.dart';
+import '../../features/dashboard/presentation/contractor_dashboard.dart';
+import '../../features/dashboard/presentation/landlord_dashboard.dart';
+import '../../features/dashboard/presentation/tenant_dashboard.dart';
+import '../../features/splash/splash_screen.dart';
+
+/// Routes the app exposes. Centralised so we can refer to them by name
+/// instead of sprinkling string literals through the codebase.
+class AppRoutes {
+  const AppRoutes._();
+
+  static const String splash = '/';
+  static const String login = '/login';
+  static const String signup = '/signup';
+  static const String landlord = '/landlord';
+  static const String tenant = '/tenant';
+  static const String contractor = '/contractor';
+
+  static String dashboardFor(UserRole role) {
+    switch (role) {
+      case UserRole.landlord:
+        return landlord;
+      case UserRole.tenant:
+        return tenant;
+      case UserRole.contractor:
+        return contractor;
+    }
+  }
+}
+
+/// Bridges a Riverpod stream into a [Listenable] so GoRouter can `refresh`
+/// its redirect logic when auth state changes.
+class _RouterRefreshNotifier extends ChangeNotifier {
+  _RouterRefreshNotifier(Ref ref) {
+    _sub = ref.listen<AsyncValue<AppUser?>>(
+      appUserProvider,
+      (_, __) => notifyListeners(),
+      fireImmediately: false,
+    );
+    _authSub = ref.listen<AsyncValue<User?>>(
+      authStateProvider,
+      (_, __) => notifyListeners(),
+      fireImmediately: false,
+    );
+  }
+
+  late final ProviderSubscription<AsyncValue<AppUser?>> _sub;
+  late final ProviderSubscription<AsyncValue<User?>> _authSub;
+
+  @override
+  void dispose() {
+    _sub.close();
+    _authSub.close();
+    super.dispose();
+  }
+}
+
+final Provider<GoRouter> appRouterProvider = Provider<GoRouter>(
+  (ProviderRef<GoRouter> ref) {
+    final _RouterRefreshNotifier refresh = _RouterRefreshNotifier(ref);
+    ref.onDispose(refresh.dispose);
+
+    return GoRouter(
+      initialLocation: AppRoutes.splash,
+      refreshListenable: refresh,
+      redirect: (BuildContext context, GoRouterState state) {
+        final AsyncValue<User?> auth = ref.read(authStateProvider);
+        final AsyncValue<AppUser?> profile = ref.read(appUserProvider);
+
+        // Still resolving the initial auth or profile fetch.
+        if (auth.isLoading || (auth.valueOrNull != null && profile.isLoading)) {
+          return AppRoutes.splash;
+        }
+
+        final bool signedIn = auth.valueOrNull != null;
+        final String location = state.matchedLocation;
+        final bool onAuthScreen =
+            location == AppRoutes.login || location == AppRoutes.signup;
+        final bool onSplash = location == AppRoutes.splash;
+
+        if (!signedIn) {
+          return onAuthScreen ? null : AppRoutes.login;
+        }
+
+        // Signed in but the Firestore profile hasn't materialised yet.
+        final AppUser? appUser = profile.valueOrNull;
+        if (appUser == null) {
+          return AppRoutes.splash;
+        }
+
+        final String target = AppRoutes.dashboardFor(appUser.role);
+        if (onAuthScreen || onSplash) return target;
+
+        // Prevent visiting another role's dashboard.
+        const Set<String> dashboardPaths = <String>{
+          AppRoutes.landlord,
+          AppRoutes.tenant,
+          AppRoutes.contractor,
+        };
+        if (dashboardPaths.contains(location) && location != target) {
+          return target;
+        }
+        return null;
+      },
+      routes: <RouteBase>[
+        GoRoute(
+          path: AppRoutes.splash,
+          builder: (BuildContext context, GoRouterState state) =>
+              const SplashScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.login,
+          builder: (BuildContext context, GoRouterState state) =>
+              const LoginScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.signup,
+          builder: (BuildContext context, GoRouterState state) =>
+              const SignupScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.landlord,
+          builder: (BuildContext context, GoRouterState state) {
+            final AppUser? user = ref.read(appUserProvider).valueOrNull;
+            if (user == null) return const SplashScreen();
+            return LandlordDashboard(user: user);
+          },
+        ),
+        GoRoute(
+          path: AppRoutes.tenant,
+          builder: (BuildContext context, GoRouterState state) {
+            final AppUser? user = ref.read(appUserProvider).valueOrNull;
+            if (user == null) return const SplashScreen();
+            return TenantDashboard(user: user);
+          },
+        ),
+        GoRoute(
+          path: AppRoutes.contractor,
+          builder: (BuildContext context, GoRouterState state) {
+            final AppUser? user = ref.read(appUserProvider).valueOrNull;
+            if (user == null) return const SplashScreen();
+            return ContractorDashboard(user: user);
+          },
+        ),
+      ],
+      errorBuilder: (BuildContext context, GoRouterState state) => Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              'Page not found:\n${state.uri}',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
+    );
+  },
+);

@@ -1,0 +1,46 @@
+rules_version = '2';
+
+// MaintenanceOS Firestore security rules — foundation phase.
+//
+// Only the `users/{uid}` profile collection is in scope right now. Each user
+// can read and write only their own profile document. Roles are stored on the
+// profile (landlord / tenant / contractor) and will be used to gate future
+// collections (properties, requests, etc.) in subsequent milestones.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function validRole(role) {
+      return role in ['landlord', 'tenant', 'contractor'];
+    }
+
+    match /users/{uid} {
+      allow read: if isSelf(uid);
+
+      allow create: if isSelf(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.email is string
+        && request.resource.data.displayName is string
+        && validRole(request.resource.data.role);
+
+      allow update: if isSelf(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.role == resource.data.role;
+
+      allow delete: if false;
+    }
+
+    // Default-deny everything else until a feature explicitly opens access.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

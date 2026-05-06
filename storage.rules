@@ -1,0 +1,11 @@
+rules_version = '2';
+
+// Foundation-phase Storage rules. Default deny; specific paths will be opened
+// up as features (avatars, request photos, contractor documents) are built.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
