@@ -2,10 +2,12 @@ rules_version = '2';
 
 // MaintenanceOS Firestore security rules.
 //
-// Phase 2 scope: `users/{uid}` profile and `properties/{propertyId}`. Tenants
-// and contractors are not yet wired in to properties, so rules deny their
-// reads/writes and the foundation maintains a default-deny stance for every
-// collection that hasn't been explicitly opened.
+// Phase 3 scope:
+//   - users/{uid}           — self-only profile
+//   - properties/{id}       — landlord-owned, plus temporary tenant read so
+//                             tenants can pick a property when submitting a
+//                             request (will tighten once invites land)
+//   - maintenanceRequests/  — tenant authors; tenant + landlord can read
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -27,6 +29,10 @@ service cloud.firestore {
 
     function isLandlord() {
       return isSignedIn() && userRole() == 'landlord';
+    }
+
+    function isTenant() {
+      return isSignedIn() && userRole() == 'tenant';
     }
 
     function ownsProperty(data) {
@@ -51,8 +57,10 @@ service cloud.firestore {
     }
 
     match /properties/{propertyId} {
-      // A landlord can read only the properties they own.
-      allow read: if ownsProperty(resource.data);
+      // Landlord can read their own properties. Tenants can read all
+      // properties for now (Phase-3 picker); tighten once tenant invites
+      // exist.
+      allow read: if ownsProperty(resource.data) || isTenant();
 
       // Only landlords may create, and the document must list them as owner.
       allow create: if isLandlord()
@@ -69,11 +77,38 @@ service cloud.firestore {
         && request.resource.data.zipCode is string
         && request.resource.data.zipCode.matches('^[0-9]{5}(-[0-9]{4})?$');
 
-      // Owner can update everything except the ownerId.
       allow update: if ownsProperty(resource.data)
         && request.resource.data.ownerId == resource.data.ownerId;
 
       allow delete: if ownsProperty(resource.data);
+    }
+
+    match /maintenanceRequests/{requestId} {
+      // Author (tenant) and the property's landlord can read.
+      allow read: if isSignedIn() && (
+        resource.data.tenantId == request.auth.uid ||
+        resource.data.landlordId == request.auth.uid
+      );
+
+      // A signed-in tenant creates the doc, must list themselves as
+      // tenantId, and the request must start in `submitted`.
+      allow create: if isTenant()
+        && request.resource.data.tenantId == request.auth.uid
+        && request.resource.data.status == 'submitted'
+        && request.resource.data.propertyId is string
+        && request.resource.data.propertyId.size() > 0
+        && request.resource.data.landlordId is string
+        && request.resource.data.landlordId.size() > 0
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.description is string
+        && request.resource.data.category in
+            ['plumbing','electrical','hvac','appliance','pest','structural','other']
+        && request.resource.data.urgency in ['low','medium','high','emergency']
+        && request.resource.data.photoUrls is list;
+
+      // Updates and deletes are not exposed in Phase 3.
+      allow update, delete: if false;
     }
 
     match /{document=**} {

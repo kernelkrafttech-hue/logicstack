@@ -38,6 +38,21 @@ class PropertyRepository {
         );
   }
 
+  /// Live list of every property in the system, newest first.
+  ///
+  /// Used by the tenant submission flow until proper tenant↔property
+  /// invitations land. Access is gated by Firestore rules.
+  Stream<List<Property>> watchAllProperties() {
+    return _collection
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (QuerySnapshot<Map<String, dynamic>> snap) => snap.docs
+              .map(Property.fromFirestore)
+              .toList(growable: false),
+        );
+  }
+
   /// Live single property. Emits `null` when the document doesn't exist.
   Stream<Property?> watchProperty(String id) {
     return _collection.doc(id).snapshots().map(

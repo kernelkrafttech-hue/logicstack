@@ -45,11 +45,26 @@ flutterfire configure --project=<your-firebase-project>
 flutter run
 ```
 
-Once the project is connected, deploy security rules:
+Once the project is connected, deploy security rules and indexes:
 
 ```bash
-firebase deploy --only firestore:rules,storage
+firebase deploy --only firestore:rules,firestore:indexes,storage
 ```
+
+### Platform setup for `image_picker`
+
+The maintenance request flow uses the system photo picker. After running
+`flutter create .` to materialise platform folders, add:
+
+- **iOS** — `ios/Runner/Info.plist`:
+  ```xml
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>MaintenanceOS needs access to add photos to your maintenance requests.</string>
+  <key>NSCameraUsageDescription</key>
+  <string>MaintenanceOS needs camera access if you take photos of an issue.</string>
+  ```
+- **Android** — no manifest changes are required for `image_picker` 1.x on
+  modern Android (it uses the Photo Picker / scoped storage).
 
 ## Roles
 

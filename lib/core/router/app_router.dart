@@ -16,6 +16,8 @@ import '../../features/dashboard/presentation/tenant_dashboard.dart';
 import '../../features/properties/presentation/add_property_screen.dart';
 import '../../features/properties/presentation/properties_list_screen.dart';
 import '../../features/properties/presentation/property_detail_screen.dart';
+import '../../features/requests/presentation/request_detail_screen.dart';
+import '../../features/requests/presentation/submit_request_screen.dart';
 import '../../features/splash/splash_screen.dart';
 
 /// Routes the app exposes. Centralised so we can refer to them by name
@@ -34,6 +36,10 @@ class AppRoutes {
   static const String properties = '/landlord/properties';
   static const String propertyNew = '/landlord/properties/new';
   static String propertyDetailFor(String id) => '/landlord/properties/$id';
+
+  // Tenant -> Maintenance requests
+  static const String requestNew = '/tenant/requests/new';
+  static String requestDetailFor(String id) => '/tenant/requests/$id';
 
   /// Path prefixes that scope a route to a single role. Used by the redirect
   /// to keep tenants/contractors out of landlord-only screens.
@@ -186,6 +192,23 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>(
             if (user == null) return const SplashScreen();
             return TenantDashboard(user: user);
           },
+          routes: <RouteBase>[
+            GoRoute(
+              path: 'requests/new',
+              builder: (BuildContext context, GoRouterState state) =>
+                  const SubmitRequestScreen(),
+            ),
+            GoRoute(
+              path: 'requests/:id',
+              builder: (BuildContext context, GoRouterState state) {
+                final String? id = state.pathParameters['id'];
+                if (id == null || id.isEmpty) {
+                  return const SplashScreen();
+                }
+                return RequestDetailScreen(requestId: id);
+              },
+            ),
+          ],
         ),
         GoRoute(
           path: AppRoutes.contractor,

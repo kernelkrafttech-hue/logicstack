@@ -1,37 +1,180 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../core/router/app_router.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/primary_button.dart';
 import '../../auth/domain/app_user.dart';
+import '../../requests/application/request_providers.dart';
+import '../../requests/domain/maintenance_request.dart';
+import '../../requests/presentation/widgets/request_card.dart';
 import 'dashboard_scaffold.dart';
 
-class TenantDashboard extends StatelessWidget {
+class TenantDashboard extends ConsumerWidget {
   const TenantDashboard({required this.user, super.key});
 
   final AppUser user;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<List<MaintenanceRequest>> requests =
+        ref.watch(myRequestsProvider);
+    final TextTheme text = Theme.of(context).textTheme;
+
     return DashboardScaffold(
       user: user,
       title: 'Tenant',
       subtitle:
           'Report issues quickly and follow them through to resolution from your phone.',
-      children: const <Widget>[
-        DashboardCard(
+      children: <Widget>[
+        PrimaryButton(
+          label: 'Submit maintenance request',
           icon: Icons.add_circle_outline_rounded,
-          title: 'Report an issue',
-          body: 'Snap a photo, describe the problem, and we route it for you.',
+          onPressed: () => context.go(AppRoutes.requestNew),
         ),
-        DashboardCard(
-          icon: Icons.history_rounded,
-          title: 'My requests',
-          body: 'Track the status of every request you have submitted.',
+        const SizedBox(height: 24),
+        Row(
+          children: <Widget>[
+            Text(
+              'My requests',
+              style: text.titleMedium?.copyWith(
+                color: AppColors.navy,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const Spacer(),
+            requests.maybeWhen(
+              data: (List<MaintenanceRequest> list) => list.isEmpty
+                  ? const SizedBox.shrink()
+                  : Text(
+                      '${list.length} total',
+                      style: text.bodySmall?.copyWith(
+                        color: AppColors.mutedText,
+                      ),
+                    ),
+              orElse: () => const SizedBox.shrink(),
+            ),
+          ],
         ),
-        DashboardCard(
-          icon: Icons.chat_bubble_outline_rounded,
-          title: 'Messages',
-          body: 'Coordinate scheduling with your landlord and contractors.',
-        ),
+        const SizedBox(height: 12),
+        _RequestsList(requests: requests),
       ],
+    );
+  }
+}
+
+class _RequestsList extends StatelessWidget {
+  const _RequestsList({required this.requests});
+
+  final AsyncValue<List<MaintenanceRequest>> requests;
+
+  @override
+  Widget build(BuildContext context) {
+    return requests.when(
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(vertical: 24),
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (Object error, _) => _ErrorState(message: '$error'),
+      data: (List<MaintenanceRequest> list) {
+        if (list.isEmpty) return const _EmptyState();
+        return Column(
+          children: <Widget>[
+            for (int i = 0; i < list.length; i++) ...<Widget>[
+              if (i != 0) const SizedBox(height: 12),
+              RequestCard(
+                request: list[i],
+                onTap: () => GoRouter.of(context).go(
+                  AppRoutes.requestDetailFor(list[i].id),
+                ),
+              ),
+            ],
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme text = Theme.of(context).textTheme;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 56,
+            width: 56,
+            decoration: BoxDecoration(
+              color: AppColors.lightGray,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(
+              Icons.inbox_outlined,
+              color: AppColors.navy,
+              size: 26,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'No requests yet',
+            style: text.titleSmall?.copyWith(
+              color: AppColors.navy,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'When you submit one, it will show up here.',
+            textAlign: TextAlign.center,
+            style: text.bodySmall?.copyWith(color: AppColors.mutedText),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ErrorState extends StatelessWidget {
+  const _ErrorState({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.error),
+      ),
+      child: Row(
+        children: <Widget>[
+          const Icon(Icons.error_outline_rounded, color: AppColors.error),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.bodyText,
+                  ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

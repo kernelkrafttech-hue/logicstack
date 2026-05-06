@@ -34,6 +34,17 @@ final StreamProviderFamily<Property?, String> propertyByIdProvider =
   },
 );
 
+/// Live list of every property in the system.
+///
+/// Phase-3 only: used so a tenant can pick any property when submitting a
+/// request. Will be replaced by an invitation-scoped provider once tenants
+/// can be linked to specific units.
+final StreamProvider<List<Property>> allPropertiesProvider =
+    StreamProvider<List<Property>>(
+  (StreamProviderRef<List<Property>> ref) =>
+      ref.watch(propertyRepositoryProvider).watchAllProperties(),
+);
+
 class AddPropertyController extends StateNotifier<AsyncValue<void>> {
   AddPropertyController(this._repo) : super(const AsyncValue<void>.data(null));
 
