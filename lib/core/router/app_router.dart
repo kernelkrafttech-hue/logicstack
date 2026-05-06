@@ -13,6 +13,9 @@ import '../../features/auth/presentation/signup_screen.dart';
 import '../../features/dashboard/presentation/contractor_dashboard.dart';
 import '../../features/dashboard/presentation/landlord_dashboard.dart';
 import '../../features/dashboard/presentation/tenant_dashboard.dart';
+import '../../features/properties/presentation/add_property_screen.dart';
+import '../../features/properties/presentation/properties_list_screen.dart';
+import '../../features/properties/presentation/property_detail_screen.dart';
 import '../../features/splash/splash_screen.dart';
 
 /// Routes the app exposes. Centralised so we can refer to them by name
@@ -26,6 +29,19 @@ class AppRoutes {
   static const String landlord = '/landlord';
   static const String tenant = '/tenant';
   static const String contractor = '/contractor';
+
+  // Landlord -> Properties
+  static const String properties = '/landlord/properties';
+  static const String propertyNew = '/landlord/properties/new';
+  static String propertyDetailFor(String id) => '/landlord/properties/$id';
+
+  /// Path prefixes that scope a route to a single role. Used by the redirect
+  /// to keep tenants/contractors out of landlord-only screens.
+  static const Map<UserRole, String> rolePrefixes = <UserRole, String>{
+    UserRole.landlord: landlord,
+    UserRole.tenant: tenant,
+    UserRole.contractor: contractor,
+  };
 
   static String dashboardFor(UserRole role) {
     switch (role) {
@@ -102,14 +118,15 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>(
         final String target = AppRoutes.dashboardFor(appUser.role);
         if (onAuthScreen || onSplash) return target;
 
-        // Prevent visiting another role's dashboard.
-        const Set<String> dashboardPaths = <String>{
-          AppRoutes.landlord,
-          AppRoutes.tenant,
-          AppRoutes.contractor,
-        };
-        if (dashboardPaths.contains(location) && location != target) {
-          return target;
+        // Prevent visiting any route scoped to a different role (e.g. a
+        // tenant trying to load /landlord/properties/abc).
+        for (final MapEntry<UserRole, String> entry
+            in AppRoutes.rolePrefixes.entries) {
+          if (entry.key == appUser.role) continue;
+          if (location == entry.value ||
+              location.startsWith('${entry.value}/')) {
+            return target;
+          }
         }
         return null;
       },
@@ -136,6 +153,31 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>(
             if (user == null) return const SplashScreen();
             return LandlordDashboard(user: user);
           },
+          routes: <RouteBase>[
+            GoRoute(
+              path: 'properties',
+              builder: (BuildContext context, GoRouterState state) =>
+                  const PropertiesListScreen(),
+              routes: <RouteBase>[
+                // Order matters: `new` is matched before `:id`.
+                GoRoute(
+                  path: 'new',
+                  builder: (BuildContext context, GoRouterState state) =>
+                      const AddPropertyScreen(),
+                ),
+                GoRoute(
+                  path: ':id',
+                  builder: (BuildContext context, GoRouterState state) {
+                    final String? id = state.pathParameters['id'];
+                    if (id == null || id.isEmpty) {
+                      return const SplashScreen();
+                    }
+                    return PropertyDetailScreen(propertyId: id);
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
         GoRoute(
           path: AppRoutes.tenant,

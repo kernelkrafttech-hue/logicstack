@@ -1,11 +1,11 @@
 rules_version = '2';
 
-// MaintenanceOS Firestore security rules — foundation phase.
+// MaintenanceOS Firestore security rules.
 //
-// Only the `users/{uid}` profile collection is in scope right now. Each user
-// can read and write only their own profile document. Roles are stored on the
-// profile (landlord / tenant / contractor) and will be used to gate future
-// collections (properties, requests, etc.) in subsequent milestones.
+// Phase 2 scope: `users/{uid}` profile and `properties/{propertyId}`. Tenants
+// and contractors are not yet wired in to properties, so rules deny their
+// reads/writes and the foundation maintains a default-deny stance for every
+// collection that hasn't been explicitly opened.
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -19,6 +19,18 @@ service cloud.firestore {
 
     function validRole(role) {
       return role in ['landlord', 'tenant', 'contractor'];
+    }
+
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isLandlord() {
+      return isSignedIn() && userRole() == 'landlord';
+    }
+
+    function ownsProperty(data) {
+      return isSignedIn() && data.ownerId == request.auth.uid;
     }
 
     match /users/{uid} {
@@ -38,7 +50,32 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // Default-deny everything else until a feature explicitly opens access.
+    match /properties/{propertyId} {
+      // A landlord can read only the properties they own.
+      allow read: if ownsProperty(resource.data);
+
+      // Only landlords may create, and the document must list them as owner.
+      allow create: if isLandlord()
+        && ownsProperty(request.resource.data)
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.address is string
+        && request.resource.data.address.size() > 0
+        && request.resource.data.unit is string
+        && request.resource.data.city is string
+        && request.resource.data.city.size() > 0
+        && request.resource.data.state is string
+        && request.resource.data.state.matches('^[A-Z]{2}$')
+        && request.resource.data.zipCode is string
+        && request.resource.data.zipCode.matches('^[0-9]{5}(-[0-9]{4})?$');
+
+      // Owner can update everything except the ownerId.
+      allow update: if ownsProperty(resource.data)
+        && request.resource.data.ownerId == resource.data.ownerId;
+
+      allow delete: if ownsProperty(resource.data);
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
