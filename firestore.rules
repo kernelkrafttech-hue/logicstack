@@ -54,6 +54,31 @@ service cloud.firestore {
         && request.resource.data.role == resource.data.role;
 
       allow delete: if false;
+
+      // Per-device FCM tokens. Only the owning user can read or write.
+      match /fcmTokens/{tokenId} {
+        allow read, create, update, delete: if isSelf(uid);
+      }
+    }
+
+    // In-app notifications. Created by the notification trigger Cloud
+    // Functions (admin SDK bypasses these rules); the recipient may read
+    // their own and toggle `read`.
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn()
+        && resource.data.userId == request.auth.uid;
+
+      allow update: if isSignedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['read']);
+
+      allow delete: if isSignedIn()
+        && resource.data.userId == request.auth.uid;
+
+      // Clients never create directly — only the Cloud Function.
+      allow create: if false;
     }
 
     match /contractors/{contractorId} {

@@ -9,6 +9,7 @@ import '../application/request_providers.dart';
 import '../domain/maintenance_request.dart';
 import 'widgets/activity_timeline.dart';
 import 'widgets/comments_section.dart';
+import 'widgets/reminder_cards.dart';
 import 'widgets/urgency_badge.dart';
 
 class RequestDetailScreen extends ConsumerWidget {
@@ -119,6 +120,10 @@ class _Body extends StatelessWidget {
             ],
           ),
         ),
+        if (TenantConfirmationCard.isApplicable(request)) ...<Widget>[
+          const SizedBox(height: 12),
+          TenantConfirmationCard(request: request),
+        ],
         const SizedBox(height: 24),
         if (request.description.isNotEmpty) ...<Widget>[
           Text(

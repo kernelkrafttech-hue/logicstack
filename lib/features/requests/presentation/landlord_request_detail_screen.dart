@@ -15,6 +15,7 @@ import '../domain/maintenance_request.dart';
 import 'widgets/activity_timeline.dart';
 import 'widgets/ai_insights_section.dart';
 import 'widgets/comments_section.dart';
+import 'widgets/reminder_cards.dart';
 import 'widgets/status_chip.dart';
 import 'widgets/urgency_badge.dart';
 
@@ -117,6 +118,10 @@ class _Body extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
       children: <Widget>[
         _HeroCard(request: request),
+        if (ContractorWaitingReminder.isApplicable(request)) ...<Widget>[
+          const SizedBox(height: 12),
+          ContractorWaitingReminder(request: request),
+        ],
         const SizedBox(height: 24),
         _SectionHeader(label: 'Status'),
         const SizedBox(height: 8),

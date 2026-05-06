@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../auth/application/auth_controller.dart';
 import '../../auth/domain/app_user.dart';
+import '../../notifications/presentation/widgets/notification_bell.dart';
 
 /// Shared scaffold used by every role dashboard.
 ///
@@ -30,6 +31,7 @@ class DashboardScaffold extends ConsumerWidget {
       appBar: AppBar(
         title: Text(title),
         actions: <Widget>[
+          const NotificationBell(),
           IconButton(
             tooltip: 'Sign out',
             icon: const Icon(Icons.logout_rounded),

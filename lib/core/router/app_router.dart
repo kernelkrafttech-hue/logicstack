@@ -18,6 +18,7 @@ import '../../features/contractors/domain/contractor.dart';
 import '../../features/contractors/presentation/add_contractor_screen.dart';
 import '../../features/contractors/presentation/contractor_detail_screen.dart';
 import '../../features/contractors/presentation/contractors_list_screen.dart';
+import '../../features/notifications/presentation/notifications_screen.dart';
 import '../../features/properties/presentation/add_property_screen.dart';
 import '../../features/properties/presentation/properties_list_screen.dart';
 import '../../features/properties/presentation/property_detail_screen.dart';
@@ -66,6 +67,22 @@ class AppRoutes {
 
   // Contractor -> Jobs
   static String contractorJobDetailFor(String id) => '/contractor/jobs/$id';
+
+  // Cross-role
+  static const String notifications = '/notifications';
+
+  /// Returns the role-appropriate request-detail route. Used by deep-links
+  /// fired from FCM notifications and the in-app notifications list.
+  static String requestDetailForRole(UserRole role, String requestId) {
+    switch (role) {
+      case UserRole.tenant:
+        return requestDetailFor(requestId);
+      case UserRole.landlord:
+        return landlordRequestDetailFor(requestId);
+      case UserRole.contractor:
+        return contractorJobDetailFor(requestId);
+    }
+  }
 
   /// Path prefixes that scope a route to a single role. Used by the redirect
   /// to keep tenants/contractors out of landlord-only screens.
@@ -318,6 +335,11 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>(
               },
             ),
           ],
+        ),
+        GoRoute(
+          path: AppRoutes.notifications,
+          builder: (BuildContext context, GoRouterState state) =>
+              const NotificationsScreen(),
         ),
       ],
       errorBuilder: (BuildContext context, GoRouterState state) => Scaffold(

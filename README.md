@@ -85,6 +85,20 @@ The maintenance request flow uses the system photo picker. After running
 - **Android** — no manifest changes are required for `image_picker` 1.x on
   modern Android (it uses the Photo Picker / scoped storage).
 
+### Platform setup for FCM (`firebase_messaging`)
+
+- **iOS**
+  - Enable the **Push Notifications** capability in Xcode for the Runner
+    target.
+  - Enable **Background Modes → Remote notifications**.
+  - Upload an APNs auth key in the Firebase console (Project settings →
+    Cloud Messaging).
+- **Android**
+  - `flutterfire configure` writes `android/app/google-services.json` and
+    the gradle plugin entries.
+  - Android 13+ shows the runtime POST_NOTIFICATIONS prompt automatically
+    on first `requestPermission()` call.
+
 ## Roles
 
 `UserRole` defines `landlord`, `tenant`, and `contractor`. The role is captured

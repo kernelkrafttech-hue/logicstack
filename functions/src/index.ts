@@ -13,6 +13,12 @@ import {defineSecret} from "firebase-functions/params";
 import {logger} from "firebase-functions/v2";
 import OpenAI from "openai";
 
+export {
+  notifyOnRequestCreated,
+  notifyOnRequestUpdated,
+  notifyOnCommentCreated,
+} from "./notifications";
+
 const openaiApiKey = defineSecret("OPENAI_API_KEY");
 
 const VALID_CATEGORIES = [
