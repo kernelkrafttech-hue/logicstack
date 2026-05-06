@@ -5,13 +5,20 @@ import '../../../core/theme/app_colors.dart';
 
 /// Lifecycle states a maintenance request moves through.
 ///
-/// Phase 3 only writes [submitted]; later phases (contractor dispatch, AI
-/// triage) will transition through the rest. The enum is defined now so the
-/// model and rules don't need to change when those features land.
+/// Phase 3 only writes [submitted]; Phase 4 lets a landlord transition through
+/// [reviewed], [sentToContractor], [scheduled], [inProgress], [completed],
+/// [closed], or [cancelled].
 enum RequestStatus {
   submitted(storageValue: 'submitted', displayName: 'Submitted'),
+  reviewed(storageValue: 'reviewed', displayName: 'Reviewed'),
+  sentToContractor(
+    storageValue: 'sent_to_contractor',
+    displayName: 'Sent to contractor',
+  ),
+  scheduled(storageValue: 'scheduled', displayName: 'Scheduled'),
   inProgress(storageValue: 'in_progress', displayName: 'In progress'),
   completed(storageValue: 'completed', displayName: 'Completed'),
+  closed(storageValue: 'closed', displayName: 'Closed'),
   cancelled(storageValue: 'cancelled', displayName: 'Cancelled');
 
   const RequestStatus({
@@ -21,6 +28,65 @@ enum RequestStatus {
 
   final String storageValue;
   final String displayName;
+
+  /// Whether the request still needs landlord/contractor attention.
+  bool get isOpen {
+    switch (this) {
+      case RequestStatus.submitted:
+      case RequestStatus.reviewed:
+      case RequestStatus.sentToContractor:
+      case RequestStatus.scheduled:
+      case RequestStatus.inProgress:
+        return true;
+      case RequestStatus.completed:
+      case RequestStatus.closed:
+      case RequestStatus.cancelled:
+        return false;
+    }
+  }
+
+  /// Background tint for the status chip.
+  Color get tone {
+    switch (this) {
+      case RequestStatus.submitted:
+        return AppColors.lightGray;
+      case RequestStatus.reviewed:
+        return const Color(0xFFE3EEFB);
+      case RequestStatus.sentToContractor:
+        return const Color(0xFFEDE7F6);
+      case RequestStatus.scheduled:
+        return const Color(0xFFE3EEFB);
+      case RequestStatus.inProgress:
+        return const Color(0xFFFFF4DB);
+      case RequestStatus.completed:
+        return AppColors.greenSoft;
+      case RequestStatus.closed:
+        return AppColors.lightGray;
+      case RequestStatus.cancelled:
+        return const Color(0xFFFCE7E7);
+    }
+  }
+
+  Color get foreground {
+    switch (this) {
+      case RequestStatus.submitted:
+        return AppColors.bodyText;
+      case RequestStatus.reviewed:
+        return AppColors.info;
+      case RequestStatus.sentToContractor:
+        return const Color(0xFF6B46C1);
+      case RequestStatus.scheduled:
+        return AppColors.info;
+      case RequestStatus.inProgress:
+        return AppColors.warning;
+      case RequestStatus.completed:
+        return AppColors.greenDark;
+      case RequestStatus.closed:
+        return AppColors.mutedText;
+      case RequestStatus.cancelled:
+        return AppColors.error;
+    }
+  }
 
   static RequestStatus fromStorage(String? value) {
     for (final RequestStatus s in RequestStatus.values) {

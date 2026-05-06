@@ -27,6 +27,21 @@ final StreamProvider<List<MaintenanceRequest>> myRequestsProvider =
   },
 );
 
+/// Live list of every maintenance request that targets a property owned by
+/// the signed-in landlord.
+final StreamProvider<List<MaintenanceRequest>> landlordRequestsProvider =
+    StreamProvider<List<MaintenanceRequest>>(
+  (StreamProviderRef<List<MaintenanceRequest>> ref) {
+    final User? user = ref.watch(authStateProvider).valueOrNull;
+    if (user == null) {
+      return Stream<List<MaintenanceRequest>>.value(<MaintenanceRequest>[]);
+    }
+    return ref
+        .watch(requestRepositoryProvider)
+        .watchRequestsForLandlord(user.uid);
+  },
+);
+
 final StreamProviderFamily<MaintenanceRequest?, String> requestByIdProvider =
     StreamProvider.family<MaintenanceRequest?, String>(
   (StreamProviderRef<MaintenanceRequest?> ref, String id) {
@@ -98,5 +113,45 @@ final StateNotifierProvider<SubmitRequestController, AsyncValue<void>>
     StateNotifierProvider<SubmitRequestController, AsyncValue<void>>(
   (StateNotifierProviderRef<SubmitRequestController, AsyncValue<void>> ref) {
     return SubmitRequestController(ref.watch(requestRepositoryProvider));
+  },
+);
+
+/// Drives the landlord-side status update on the request detail screen.
+class UpdateRequestStatusController extends StateNotifier<AsyncValue<void>> {
+  UpdateRequestStatusController(this._repo)
+      : super(const AsyncValue<void>.data(null));
+
+  final RequestRepository _repo;
+
+  /// Returns `true` on success; failures are also published into [state] so
+  /// the screen can surface a snackbar without hand-rolling a try/catch.
+  Future<bool> setStatus({
+    required String id,
+    required RequestStatus status,
+  }) async {
+    state = const AsyncValue<void>.loading();
+    try {
+      await _repo.updateStatus(id: id, status: status);
+      state = const AsyncValue<void>.data(null);
+      return true;
+    } on RequestException catch (e, st) {
+      state = AsyncValue<void>.error(e, st);
+      return false;
+    } catch (e, st) {
+      state = AsyncValue<void>.error(
+        RequestException('Could not update status. Please try again.'),
+        st,
+      );
+      return false;
+    }
+  }
+}
+
+final StateNotifierProvider<UpdateRequestStatusController, AsyncValue<void>>
+    updateRequestStatusControllerProvider =
+    StateNotifierProvider<UpdateRequestStatusController, AsyncValue<void>>(
+  (StateNotifierProviderRef<UpdateRequestStatusController, AsyncValue<void>>
+          ref) {
+    return UpdateRequestStatusController(ref.watch(requestRepositoryProvider));
   },
 );

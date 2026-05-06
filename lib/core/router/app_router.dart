@@ -16,8 +16,11 @@ import '../../features/dashboard/presentation/tenant_dashboard.dart';
 import '../../features/properties/presentation/add_property_screen.dart';
 import '../../features/properties/presentation/properties_list_screen.dart';
 import '../../features/properties/presentation/property_detail_screen.dart';
+import '../../features/requests/presentation/landlord_request_detail_screen.dart';
+import '../../features/requests/presentation/maintenance_requests_screen.dart';
 import '../../features/requests/presentation/request_detail_screen.dart';
 import '../../features/requests/presentation/submit_request_screen.dart';
+import '../../features/requests/presentation/widgets/request_filter_bar.dart';
 import '../../features/splash/splash_screen.dart';
 
 /// Routes the app exposes. Centralised so we can refer to them by name
@@ -36,6 +39,13 @@ class AppRoutes {
   static const String properties = '/landlord/properties';
   static const String propertyNew = '/landlord/properties/new';
   static String propertyDetailFor(String id) => '/landlord/properties/$id';
+
+  // Landlord -> Maintenance requests
+  static const String landlordRequests = '/landlord/requests';
+  static String landlordRequestsWithFilter(RequestFilter filter) =>
+      '/landlord/requests?filter=${filter.name}';
+  static String landlordRequestDetailFor(String id) =>
+      '/landlord/requests/$id';
 
   // Tenant -> Maintenance requests
   static const String requestNew = '/tenant/requests/new';
@@ -179,6 +189,34 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>(
                       return const SplashScreen();
                     }
                     return PropertyDetailScreen(propertyId: id);
+                  },
+                ),
+              ],
+            ),
+            GoRoute(
+              path: 'requests',
+              builder: (BuildContext context, GoRouterState state) {
+                final String? raw = state.uri.queryParameters['filter'];
+                RequestFilter? initial;
+                if (raw != null) {
+                  for (final RequestFilter f in RequestFilter.values) {
+                    if (f.name == raw) {
+                      initial = f;
+                      break;
+                    }
+                  }
+                }
+                return MaintenanceRequestsScreen(initialFilter: initial);
+              },
+              routes: <RouteBase>[
+                GoRoute(
+                  path: ':id',
+                  builder: (BuildContext context, GoRouterState state) {
+                    final String? id = state.pathParameters['id'];
+                    if (id == null || id.isEmpty) {
+                      return const SplashScreen();
+                    }
+                    return LandlordRequestDetailScreen(requestId: id);
                   },
                 ),
               ],

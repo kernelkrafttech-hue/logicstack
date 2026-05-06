@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/maintenance_request.dart';
+import 'status_chip.dart';
 import 'urgency_badge.dart';
 
 class RequestCard extends StatelessWidget {
@@ -61,7 +62,7 @@ class RequestCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${request.category.displayName} · ${request.status.displayName}',
+                          request.category.displayName,
                           style: text.bodySmall?.copyWith(
                             color: AppColors.mutedText,
                           ),
@@ -81,9 +82,11 @@ class RequestCard extends StatelessWidget {
                   style: text.bodySmall?.copyWith(color: AppColors.bodyText),
                 ),
               ],
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
               Row(
                 children: <Widget>[
+                  StatusChip(status: request.status, dense: true),
+                  const Spacer(),
                   if (request.photoUrls.isNotEmpty) ...<Widget>[
                     const Icon(
                       Icons.photo_library_outlined,

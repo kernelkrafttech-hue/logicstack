@@ -45,6 +45,19 @@ class RequestRepository {
         );
   }
 
+  /// Live list of every request landed against properties owned by [landlordId].
+  Stream<List<MaintenanceRequest>> watchRequestsForLandlord(String landlordId) {
+    return _collection
+        .where('landlordId', isEqualTo: landlordId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (QuerySnapshot<Map<String, dynamic>> snap) => snap.docs
+              .map(MaintenanceRequest.fromFirestore)
+              .toList(growable: false),
+        );
+  }
+
   Stream<MaintenanceRequest?> watchRequest(String id) {
     return _collection.doc(id).snapshots().map(
       (DocumentSnapshot<Map<String, dynamic>> snap) {
@@ -113,6 +126,22 @@ class RequestRepository {
       );
       await _collection.doc(id).set(request.toFirestoreCreate());
       return request;
+    } on FirebaseException catch (e) {
+      throw RequestException(_messageForCode(e.code));
+    }
+  }
+
+  /// Updates only the [status] field and bumps `updatedAt` to the server
+  /// timestamp. Firestore rules constrain landlords to this exact diff.
+  Future<void> updateStatus({
+    required String id,
+    required RequestStatus status,
+  }) async {
+    try {
+      await _collection.doc(id).update(<String, Object?>{
+        'status': status.storageValue,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
     } on FirebaseException catch (e) {
       throw RequestException(_messageForCode(e.code));
     }

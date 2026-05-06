@@ -7,6 +7,9 @@ import '../../../core/theme/app_colors.dart';
 import '../../auth/domain/app_user.dart';
 import '../../properties/application/property_providers.dart';
 import '../../properties/domain/property.dart';
+import '../../requests/application/request_providers.dart';
+import '../../requests/domain/maintenance_request.dart';
+import '../../requests/presentation/widgets/request_filter_bar.dart';
 import 'dashboard_scaffold.dart';
 import 'widgets/stat_card.dart';
 
@@ -19,6 +22,8 @@ class LandlordDashboard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<List<Property>> properties =
         ref.watch(myPropertiesProvider);
+    final AsyncValue<List<MaintenanceRequest>> requests =
+        ref.watch(landlordRequestsProvider);
     final TextTheme text = Theme.of(context).textTheme;
 
     return DashboardScaffold(
@@ -35,7 +40,7 @@ class LandlordDashboard extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
-        _StatsGrid(properties: properties),
+        _StatsGrid(properties: properties, requests: requests),
         const SizedBox(height: 24),
         Text(
           'Manage',
@@ -45,36 +50,74 @@ class LandlordDashboard extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
-        _PropertiesEntryCard(
-          count: properties.valueOrNull?.length,
-          loading: properties.isLoading,
+        _EntryCard(
+          icon: Icons.apartment_rounded,
+          title: 'Properties',
+          trailing: _propertiesTrailing(properties),
           onTap: () => context.go(AppRoutes.properties),
         ),
         const SizedBox(height: 12),
-        const DashboardCard(
+        _EntryCard(
           icon: Icons.assignment_outlined,
           title: 'Maintenance requests',
-          body: 'Triage and assign incoming requests from your tenants.',
+          trailing: _requestsTrailing(requests),
+          onTap: () => context.go(AppRoutes.landlordRequests),
         ),
-        const DashboardCard(
+        const SizedBox(height: 12),
+        const _EntryCard(
           icon: Icons.engineering_outlined,
           title: 'Contractors',
-          body: 'Build a roster of trusted contractors for fast dispatch.',
+          trailing: 'Coming soon',
+          onTap: null,
         ),
       ],
     );
   }
+
+  String _propertiesTrailing(AsyncValue<List<Property>> p) {
+    if (p.isLoading && !p.hasValue) return '…';
+    final int n = p.valueOrNull?.length ?? 0;
+    if (n == 0) return 'Add your first';
+    return '$n managed';
+  }
+
+  String _requestsTrailing(AsyncValue<List<MaintenanceRequest>> r) {
+    if (r.isLoading && !r.hasValue) return '…';
+    final List<MaintenanceRequest> list = r.valueOrNull ?? <MaintenanceRequest>[];
+    if (list.isEmpty) return 'Nothing yet';
+    final int open = list.where((MaintenanceRequest x) => x.status.isOpen).length;
+    return '$open open · ${list.length} total';
+  }
 }
 
 class _StatsGrid extends StatelessWidget {
-  const _StatsGrid({required this.properties});
+  const _StatsGrid({required this.properties, required this.requests});
 
   final AsyncValue<List<Property>> properties;
+  final AsyncValue<List<MaintenanceRequest>> requests;
 
   @override
   Widget build(BuildContext context) {
-    final int count = properties.valueOrNull?.length ?? 0;
-    final bool loading = properties.isLoading && !properties.hasValue;
+    final List<MaintenanceRequest> list =
+        requests.valueOrNull ?? <MaintenanceRequest>[];
+    final bool propsLoading = properties.isLoading && !properties.hasValue;
+    final bool reqsLoading = requests.isLoading && !requests.hasValue;
+
+    final int totalProperties = properties.valueOrNull?.length ?? 0;
+    final int openCount =
+        list.where((MaintenanceRequest r) => r.status.isOpen).length;
+    final int emergencyCount = list
+        .where((MaintenanceRequest r) =>
+            r.urgency == RequestUrgency.emergency && r.status.isOpen)
+        .length;
+
+    final DateTime now = DateTime.now();
+    final int completedThisMonth = list.where((MaintenanceRequest r) {
+      if (r.status != RequestStatus.completed) return false;
+      final DateTime? when = r.updatedAt;
+      if (when == null) return false;
+      return when.year == now.year && when.month == now.month;
+    }).length;
 
     return Column(
       children: <Widget>[
@@ -83,40 +126,52 @@ class _StatsGrid extends StatelessWidget {
             Expanded(
               child: StatCard(
                 label: 'Total properties',
-                value: '$count',
+                value: '$totalProperties',
                 icon: Icons.apartment_rounded,
-                loading: loading,
+                loading: propsLoading,
                 onTap: () => GoRouter.of(context).go(AppRoutes.properties),
               ),
             ),
             const SizedBox(width: 12),
-            const Expanded(
+            Expanded(
               child: StatCard(
                 label: 'Open requests',
-                value: '0',
+                value: '$openCount',
                 icon: Icons.assignment_late_outlined,
+                loading: reqsLoading,
+                onTap: () => GoRouter.of(context).go(
+                  AppRoutes.landlordRequestsWithFilter(RequestFilter.open),
+                ),
               ),
             ),
           ],
         ),
         const SizedBox(height: 12),
         Row(
-          children: const <Widget>[
+          children: <Widget>[
             Expanded(
               child: StatCard(
                 label: 'Emergency',
-                value: '0',
+                value: '$emergencyCount',
                 icon: Icons.warning_amber_rounded,
                 tone: StatTone.danger,
+                loading: reqsLoading,
+                onTap: () => GoRouter.of(context).go(
+                  AppRoutes.landlordRequestsWithFilter(RequestFilter.emergency),
+                ),
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: StatCard(
                 label: 'Completed this month',
-                value: '0',
+                value: '$completedThisMonth',
                 icon: Icons.check_circle_outline_rounded,
                 tone: StatTone.success,
+                loading: reqsLoading,
+                onTap: () => GoRouter.of(context).go(
+                  AppRoutes.landlordRequestsWithFilter(RequestFilter.completed),
+                ),
               ),
             ),
           ],
@@ -126,26 +181,23 @@ class _StatsGrid extends StatelessWidget {
   }
 }
 
-class _PropertiesEntryCard extends StatelessWidget {
-  const _PropertiesEntryCard({
-    required this.count,
-    required this.loading,
+class _EntryCard extends StatelessWidget {
+  const _EntryCard({
+    required this.icon,
+    required this.title,
+    required this.trailing,
     required this.onTap,
   });
 
-  final int? count;
-  final bool loading;
-  final VoidCallback onTap;
+  final IconData icon;
+  final String title;
+  final String trailing;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final TextTheme text = Theme.of(context).textTheme;
-    final String trailing = loading
-        ? '…'
-        : (count == null || count == 0)
-            ? 'Add your first'
-            : '$count managed';
-
+    final bool enabled = onTap != null;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -164,12 +216,12 @@ class _PropertiesEntryCard extends StatelessWidget {
                 height: 44,
                 width: 44,
                 decoration: BoxDecoration(
-                  color: AppColors.greenSoft,
+                  color: enabled ? AppColors.greenSoft : AppColors.lightGray,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
-                  Icons.apartment_rounded,
-                  color: AppColors.greenDark,
+                child: Icon(
+                  icon,
+                  color: enabled ? AppColors.greenDark : AppColors.mutedText,
                 ),
               ),
               const SizedBox(width: 14),
@@ -178,7 +230,7 @@ class _PropertiesEntryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Properties',
+                      title,
                       style: text.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: AppColors.navy,
@@ -194,10 +246,11 @@ class _PropertiesEntryCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.mutedText,
-              ),
+              if (enabled)
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.mutedText,
+                ),
             ],
           ),
         ),

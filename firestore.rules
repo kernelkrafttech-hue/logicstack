@@ -91,7 +91,8 @@ service cloud.firestore {
       );
 
       // A signed-in tenant creates the doc, must list themselves as
-      // tenantId, and the request must start in `submitted`.
+      // tenantId, the landlordId must match the property's actual owner,
+      // and the request must start in `submitted`.
       allow create: if isTenant()
         && request.resource.data.tenantId == request.auth.uid
         && request.resource.data.status == 'submitted'
@@ -99,6 +100,8 @@ service cloud.firestore {
         && request.resource.data.propertyId.size() > 0
         && request.resource.data.landlordId is string
         && request.resource.data.landlordId.size() > 0
+        && request.resource.data.landlordId ==
+            get(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)).data.ownerId
         && request.resource.data.title is string
         && request.resource.data.title.size() > 0
         && request.resource.data.description is string
@@ -107,8 +110,17 @@ service cloud.firestore {
         && request.resource.data.urgency in ['low','medium','high','emergency']
         && request.resource.data.photoUrls is list;
 
-      // Updates and deletes are not exposed in Phase 3.
-      allow update, delete: if false;
+      // Phase 4: the landlord on a request can change `status` (and the
+      // server-side updatedAt). Nothing else may move.
+      allow update: if isSignedIn()
+        && resource.data.landlordId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['status', 'updatedAt'])
+        && request.resource.data.status in
+            ['submitted','reviewed','sent_to_contractor','scheduled',
+             'in_progress','completed','closed','cancelled'];
+
+      allow delete: if false;
     }
 
     match /{document=**} {
