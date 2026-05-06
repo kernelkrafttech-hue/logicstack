@@ -45,24 +45,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // On success the router redirect will move us to the dashboard.
   }
 
-  Future<void> _resetPassword() async {
-    final String email = _emailCtrl.text.trim();
-    if (Validators.email(email) != null) {
-      _showError('Enter your email above to receive a reset link.');
-      return;
-    }
-    await ref.read(authControllerProvider.notifier).sendPasswordReset(email);
-    if (!mounted) return;
-    final AsyncValue<void> state = ref.read(authControllerProvider);
-    if (state.hasError) {
-      _showError(state.error);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password reset email sent.')),
-      );
-    }
-  }
-
   void _showError(Object? error) {
     final String message =
         error is AuthException ? error.message : 'Something went wrong.';
@@ -129,7 +111,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: loading ? null : _resetPassword,
+                      onPressed: loading
+                          ? null
+                          : () => context.go(AppRoutes.forgotPassword),
                       child: const Text('Forgot password?'),
                     ),
                   ),

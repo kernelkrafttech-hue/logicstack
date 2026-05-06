@@ -108,6 +108,52 @@ The maintenance request flow uses the system photo picker. After running
 - **Android** — no manifest changes are required for `image_picker` 1.x on
   modern Android (it uses the Photo Picker / scoped storage).
 
+### Crashlytics, Analytics, and platform extras
+
+`flutterfire configure` already enables Analytics + Crashlytics for the
+Flutter app, but two platform tweaks land outside Dart code:
+
+- **Android** — Crashlytics requires the Gradle plugin. After running
+  `flutter create .`, add to `android/app/build.gradle`:
+
+  ```gradle
+  apply plugin: 'com.google.gms.google-services'
+  apply plugin: 'com.google.firebase.crashlytics'
+  ```
+  and to `android/build.gradle`:
+
+  ```gradle
+  classpath 'com.google.gms:google-services:4.4.2'
+  classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
+  ```
+
+- **iOS** — open `ios/Runner.xcworkspace` and run a release build at least
+  once so Crashlytics symbols upload via the `dSYMs` build phase that
+  `flutterfire configure` injects.
+
+### App icon and splash screen
+
+Use `flutter_native_splash` and `flutter_launcher_icons` after running
+`flutter create .`. Drop your master icon at
+`assets/icon/maintenanceos-icon.png` and add this to `pubspec.yaml`:
+
+```yaml
+flutter_launcher_icons:
+  image_path: assets/icon/maintenanceos-icon.png
+  android: true
+  ios: true
+
+flutter_native_splash:
+  color: "#0B2545"
+  image: assets/icon/maintenanceos-icon.png
+  android_12:
+    color: "#0B2545"
+    image: assets/icon/maintenanceos-icon.png
+```
+
+then run `dart run flutter_native_splash:create` and
+`dart run flutter_launcher_icons`.
+
 ### Platform setup for FCM (`firebase_messaging`)
 
 - **iOS**

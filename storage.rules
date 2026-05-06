@@ -26,6 +26,17 @@ service firebase.storage {
       allow write: if isSignedIn() && isImage();
     }
 
+    // Per-user avatar at users/{uid}/avatar.jpg. Only the user can write
+    // (size + content-type checks); everyone signed in can read so the
+    // profile shows up in shared comments and request detail screens.
+    match /users/{uid}/{file} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn()
+        && request.auth.uid == uid
+        && isImage()
+        && request.resource.size < 5 * 1024 * 1024;
+    }
+
     match /{allPaths=**} {
       allow read, write: if false;
     }

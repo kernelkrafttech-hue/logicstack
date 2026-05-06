@@ -26,6 +26,8 @@ export {
   stripeWebhook,
 } from "./billing";
 
+export {deleteAccount} from "./account";
+
 const openaiApiKey = defineSecret("OPENAI_API_KEY");
 
 const VALID_CATEGORIES = [

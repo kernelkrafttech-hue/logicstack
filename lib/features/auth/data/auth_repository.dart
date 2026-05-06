@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -55,6 +57,8 @@ class AuthRepository {
     required String password,
     required String displayName,
     required UserRole role,
+    String phone = '',
+    String companyName = '',
   }) async {
     try {
       final UserCredential credential = await _auth.createUserWithEmailAndPassword(
@@ -69,12 +73,70 @@ class AuthRepository {
         email: email.trim(),
         displayName: displayName.trim(),
         role: role,
+        phone: phone.trim(),
+        companyName: companyName.trim(),
       );
       await _users.doc(user.uid).set(appUser.toFirestore());
+      // Best-effort verification email — ignore failures (rate limits, etc.)
+      // since the user can re-send from the dedicated verify screen.
+      unawaited(_safeSendVerificationEmail(user));
       return appUser;
     } on FirebaseAuthException catch (e) {
       throw AuthException(_messageForCode(e.code));
     }
+  }
+
+  Future<void> _safeSendVerificationEmail(User user) async {
+    try {
+      await user.sendEmailVerification();
+    } catch (_) {
+      // Swallow — UI surfaces a "Resend" button on the verify screen.
+    }
+  }
+
+  /// Persists profile-editable fields. Refuses to touch `uid`, `email`, or
+  /// `role` (those are server-managed).
+  Future<void> updateProfile({
+    required String uid,
+    required String displayName,
+    required String phone,
+    required String companyName,
+    String? photoUrl,
+  }) async {
+    try {
+      await _users.doc(uid).update(<String, Object?>{
+        'displayName': displayName.trim(),
+        'phone': phone.trim(),
+        'companyName': companyName.trim(),
+        if (photoUrl != null) 'photoUrl': photoUrl,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      final User? current = _auth.currentUser;
+      if (current != null && current.uid == uid) {
+        await current.updateDisplayName(displayName.trim());
+      }
+    } on FirebaseException catch (e) {
+      throw AuthException(_messageForCode(e.code));
+    }
+  }
+
+  Future<void> resendVerificationEmail() async {
+    final User? user = _auth.currentUser;
+    if (user == null) {
+      throw AuthException('You must be signed in.');
+    }
+    try {
+      await user.sendEmailVerification();
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(_messageForCode(e.code));
+    }
+  }
+
+  Future<bool> reloadAndCheckEmailVerified() async {
+    final User? user = _auth.currentUser;
+    if (user == null) return false;
+    await user.reload();
+    return _auth.currentUser?.emailVerified ?? false;
   }
 
   Future<AppUser> signIn({

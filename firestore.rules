@@ -48,10 +48,15 @@ service cloud.firestore {
         && request.resource.data.displayName is string
         && validRole(request.resource.data.role);
 
+      // Profile updates: uid, email, role are immutable. The user can
+      // only touch their own display fields (handled by the diff
+      // affectedKeys check).
       allow update: if isSelf(uid)
         && request.resource.data.uid == uid
         && request.resource.data.email == resource.data.email
-        && request.resource.data.role == resource.data.role;
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['displayName','phone','companyName','photoUrl','updatedAt']);
 
       allow delete: if false;
 

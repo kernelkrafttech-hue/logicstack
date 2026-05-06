@@ -8,6 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/theme_mode_provider.dart';
 import '../../auth/application/auth_controller.dart';
 import '../../auth/domain/app_user.dart';
+import '../../auth/presentation/widgets/email_verification_banner.dart';
 import '../../notifications/presentation/widgets/notification_bell.dart';
 
 /// Shared scaffold used by every role dashboard.
@@ -35,17 +36,11 @@ class DashboardScaffold extends ConsumerWidget {
       appBar: AppBar(
         title: Text(title),
         actions: <Widget>[
-          IconButton(
-            tooltip: 'Subscription',
-            icon: const Icon(Icons.workspace_premium_rounded),
-            onPressed: () => context.go(AppRoutes.subscription),
-          ),
-          _ThemeToggleButton(),
           const NotificationBell(),
           IconButton(
-            tooltip: 'Sign out',
-            icon: const Icon(Icons.logout_rounded),
-            onPressed: () => _confirmSignOut(context, ref),
+            tooltip: 'Settings',
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => context.go(AppRoutes.settings),
           ),
         ],
       ),
@@ -53,6 +48,7 @@ class DashboardScaffold extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
           children: <Widget>[
+            const EmailVerificationBanner(),
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
