@@ -5,19 +5,25 @@ import 'package:intl/intl.dart';
 
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../contractors/domain/contractor.dart';
-import '../../contractors/presentation/widgets/assign_contractor_sheet.dart';
 import '../../properties/application/property_providers.dart';
 import '../../properties/domain/property.dart';
 import '../application/request_providers.dart';
 import '../data/request_repository.dart';
 import '../domain/maintenance_request.dart';
-import 'widgets/ai_insights_section.dart';
 import 'widgets/status_chip.dart';
 import 'widgets/urgency_badge.dart';
 
-class LandlordRequestDetailScreen extends ConsumerWidget {
-  const LandlordRequestDetailScreen({required this.requestId, super.key});
+/// Statuses the contractor can move a job through. Mirrors the Firestore
+/// rule that gates contractor-driven status writes.
+const List<RequestStatus> _contractorStatuses = <RequestStatus>[
+  RequestStatus.accepted,
+  RequestStatus.scheduled,
+  RequestStatus.inProgress,
+  RequestStatus.completed,
+];
+
+class ContractorJobDetailScreen extends ConsumerWidget {
+  const ContractorJobDetailScreen({required this.requestId, super.key});
 
   final String requestId;
 
@@ -28,10 +34,10 @@ class LandlordRequestDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Request'),
+        title: const Text('Job'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => context.go(AppRoutes.landlordRequests),
+          onPressed: () => context.go(AppRoutes.contractor),
         ),
       ),
       body: SafeArea(
@@ -40,7 +46,7 @@ class LandlordRequestDetailScreen extends ConsumerWidget {
           error: (Object error, _) => _Message(
             icon: Icons.error_outline_rounded,
             tone: AppColors.error,
-            title: 'Could not load request',
+            title: 'Could not load job',
             body: '$error',
           ),
           data: (MaintenanceRequest? r) {
@@ -48,8 +54,8 @@ class LandlordRequestDetailScreen extends ConsumerWidget {
               return const _Message(
                 icon: Icons.search_off_rounded,
                 tone: AppColors.mutedText,
-                title: 'Request not found',
-                body: 'It may have been removed.',
+                title: 'Job not found',
+                body: 'It may have been removed or reassigned.',
               );
             }
             return _Body(request: r);
@@ -62,7 +68,6 @@ class LandlordRequestDetailScreen extends ConsumerWidget {
 
 class _Body extends ConsumerWidget {
   const _Body({required this.request});
-
   final MaintenanceRequest request;
 
   Future<void> _changeStatus(BuildContext context, WidgetRef ref) async {
@@ -72,8 +77,7 @@ class _Body extends ConsumerWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (BuildContext ctx) =>
-          _StatusPicker(current: request.status),
+      builder: (BuildContext ctx) => _StatusPicker(current: request.status),
     );
     if (next == null || next == request.status) return;
     if (!context.mounted) return;
@@ -92,12 +96,13 @@ class _Body extends ConsumerWidget {
     final AsyncValue<void> state =
         ref.read(updateRequestStatusControllerProvider);
     final Object? error = state.error;
-    final String message = error is RequestException
-        ? error.message
-        : 'Could not update status. Please try again.';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(
+          error is RequestException
+              ? error.message
+              : 'Could not update status.',
+        ),
         backgroundColor: AppColors.error,
       ),
     );
@@ -114,9 +119,67 @@ class _Body extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
       children: <Widget>[
-        _HeroCard(request: request),
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppColors.navy,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Container(
+                    height: 44,
+                    width: 44,
+                    decoration: BoxDecoration(
+                      color: AppColors.navyDark,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      request.category.icon,
+                      color: AppColors.green,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          request.title,
+                          style: text.titleLarge?.copyWith(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          request.category.displayName,
+                          style: text.bodySmall?.copyWith(
+                            color: AppColors.lightGray,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              Wrap(
+                spacing: 8,
+                runSpacing: 6,
+                children: <Widget>[
+                  StatusChip(status: request.status),
+                  UrgencyBadge(urgency: request.urgency),
+                ],
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 24),
-        _SectionHeader(label: 'Status'),
+        _SectionHeader('Update status'),
         const SizedBox(height: 8),
         _StatusActionRow(
           status: request.status,
@@ -124,24 +187,12 @@ class _Body extends ConsumerWidget {
           onChange: () => _changeStatus(context, ref),
         ),
         const SizedBox(height: 24),
-        _SectionHeader(label: 'Property'),
+        _SectionHeader('Property'),
         const SizedBox(height: 8),
         _PropertyTile(async: property),
         const SizedBox(height: 24),
-        AiInsightsSection(request: request),
-        const SizedBox(height: 24),
-        _ContractorSection(request: request),
-        const SizedBox(height: 24),
-        _SectionHeader(label: 'Tenant'),
-        const SizedBox(height: 8),
-        _DetailRow(
-          label: 'Tenant ID',
-          value: request.tenantId.isEmpty ? '—' : request.tenantId,
-          mono: true,
-        ),
-        const SizedBox(height: 24),
         if (request.description.isNotEmpty) ...<Widget>[
-          _SectionHeader(label: 'Description'),
+          _SectionHeader('Description'),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(16),
@@ -157,8 +208,25 @@ class _Body extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
         ],
+        if (request.contractorMessage?.isNotEmpty == true) ...<Widget>[
+          _SectionHeader('Note from landlord'),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.greenSoft,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Text(
+              request.contractorMessage!,
+              style: text.bodyMedium?.copyWith(color: AppColors.bodyText),
+            ),
+          ),
+          const SizedBox(height: 24),
+        ],
         if (request.photoUrls.isNotEmpty) ...<Widget>[
-          _SectionHeader(label: 'Photos'),
+          _SectionHeader('Photos'),
           const SizedBox(height: 8),
           GridView.count(
             crossAxisCount: 3,
@@ -203,9 +271,11 @@ class _Body extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
         ],
-        _SectionHeader(label: 'Activity'),
+        _SectionHeader('Activity'),
         const SizedBox(height: 8),
         _DetailRow(label: 'Submitted', value: _formatDate(request.createdAt)),
+        if (request.assignedAt != null)
+          _DetailRow(label: 'Assigned', value: _formatDate(request.assignedAt)),
         _DetailRow(
           label: 'Last updated',
           value: _formatDate(request.updatedAt),
@@ -217,281 +287,6 @@ class _Body extends ConsumerWidget {
   String _formatDate(DateTime? date) {
     if (date == null) return '—';
     return DateFormat.yMMMMd().add_jm().format(date.toLocal());
-  }
-}
-
-class _HeroCard extends StatelessWidget {
-  const _HeroCard({required this.request});
-  final MaintenanceRequest request;
-
-  @override
-  Widget build(BuildContext context) {
-    final TextTheme text = Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.navy,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                height: 44,
-                width: 44,
-                decoration: BoxDecoration(
-                  color: AppColors.navyDark,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  request.category.icon,
-                  color: AppColors.green,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      request.title,
-                      style: text.titleLarge?.copyWith(
-                        color: AppColors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      request.category.displayName,
-                      style: text.bodySmall?.copyWith(
-                        color: AppColors.lightGray,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Wrap(
-            spacing: 8,
-            runSpacing: 6,
-            children: <Widget>[
-              StatusChip(status: request.status),
-              UrgencyBadge(urgency: request.urgency),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ContractorSection extends ConsumerWidget {
-  const _ContractorSection({required this.request});
-
-  final MaintenanceRequest request;
-
-  Future<void> _pickAndAssign(BuildContext context, WidgetRef ref) async {
-    final Contractor? picked = await showAssignContractorSheet(
-      context,
-      currentContractorId: request.contractorId,
-    );
-    if (picked == null) return;
-    if (!context.mounted) return;
-    if (picked.id == request.contractorId) return;
-
-    final bool ok = await ref
-        .read(assignContractorControllerProvider.notifier)
-        .assign(requestId: request.id, contractor: picked);
-
-    if (!context.mounted) return;
-    if (ok) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Assigned to ${picked.name}.')),
-      );
-      return;
-    }
-    final AsyncValue<void> state =
-        ref.read(assignContractorControllerProvider);
-    final Object? error = state.error;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          error is RequestException
-              ? error.message
-              : 'Could not assign contractor.',
-        ),
-        backgroundColor: AppColors.error,
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final TextTheme text = Theme.of(context).textTheme;
-    final bool busy =
-        ref.watch(assignContractorControllerProvider).isLoading;
-    final bool assigned = request.hasContractorAssigned;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            const Icon(
-              Icons.engineering_rounded,
-              color: AppColors.greenDark,
-              size: 18,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              'Contractor',
-              style: text.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: AppColors.navy,
-              ),
-            ),
-            const Spacer(),
-            OutlinedButton.icon(
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(0, 38),
-                side: const BorderSide(color: AppColors.border),
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-              ),
-              onPressed: busy ? null : () => _pickAndAssign(context, ref),
-              icon: busy
-                  ? const SizedBox(
-                      height: 16,
-                      width: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.person_add_alt_1_rounded, size: 18),
-              label: Text(assigned ? 'Reassign' : 'Assign'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        if (assigned) _AssignedCard(request: request) else const _UnassignedCard(),
-      ],
-    );
-  }
-}
-
-class _AssignedCard extends StatelessWidget {
-  const _AssignedCard({required this.request});
-  final MaintenanceRequest request;
-
-  String _formatAssignedAt() {
-    final DateTime? a = request.assignedAt;
-    if (a == null) return '';
-    return DateFormat.yMMMd().add_jm().format(a.toLocal());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final TextTheme text = Theme.of(context).textTheme;
-    final String tradeLabel = request.contractorTrade ?? '';
-    final String when = _formatAssignedAt();
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: <Widget>[
-          Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-              color: AppColors.greenSoft,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Icon(
-              Icons.engineering_rounded,
-              color: AppColors.greenDark,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  request.contractorName ?? '—',
-                  style: text.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.navy,
-                  ),
-                ),
-                if (tradeLabel.isNotEmpty)
-                  Text(
-                    tradeLabel,
-                    style: text.bodySmall?.copyWith(
-                      color: AppColors.bodyText,
-                    ),
-                  ),
-                if (request.contractorEmail?.isNotEmpty == true)
-                  SelectableText(
-                    request.contractorEmail!,
-                    style: text.bodySmall?.copyWith(
-                      color: AppColors.mutedText,
-                    ),
-                  ),
-                if (when.isNotEmpty) ...<Widget>[
-                  const SizedBox(height: 4),
-                  Text(
-                    'Assigned $when',
-                    style: text.bodySmall?.copyWith(
-                      color: AppColors.mutedText,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _UnassignedCard extends StatelessWidget {
-  const _UnassignedCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final TextTheme text = Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: <Widget>[
-          const Icon(
-            Icons.person_outline_rounded,
-            color: AppColors.mutedText,
-            size: 20,
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              'No contractor assigned yet. Tap Assign to pick from your '
-              'roster — the request will move to "Sent to contractor" '
-              'automatically.',
-              style: text.bodyMedium?.copyWith(color: AppColors.bodyText),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -566,7 +361,7 @@ class _StatusPicker extends StatelessWidget {
               ),
             ),
             const Divider(height: 1),
-            for (final RequestStatus s in RequestStatus.values)
+            for (final RequestStatus s in _contractorStatuses)
               ListTile(
                 leading: StatusChip(status: s, dense: true),
                 title: Text(s.displayName),
@@ -612,15 +407,25 @@ class _PropertyTile extends StatelessWidget {
           ],
         ),
       ),
-      error: (Object e, _) => _PropertyPlaceholder(
-        text: 'Could not load property.',
-        tone: AppColors.error,
+      error: (Object e, _) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: const Text('Property details unavailable.'),
       ),
       data: (Property? p) {
         if (p == null) {
-          return _PropertyPlaceholder(
-            text: 'Property unavailable.',
-            tone: AppColors.mutedText,
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: const Text('Property unavailable.'),
           );
         }
         return Container(
@@ -680,33 +485,8 @@ class _PropertyTile extends StatelessWidget {
   }
 }
 
-class _PropertyPlaceholder extends StatelessWidget {
-  const _PropertyPlaceholder({required this.text, required this.tone});
-  final String text;
-  final Color tone;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: <Widget>[
-          Icon(Icons.info_outline_rounded, color: tone, size: 18),
-          const SizedBox(width: 8),
-          Expanded(child: Text(text)),
-        ],
-      ),
-    );
-  }
-}
-
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.label});
+  const _SectionHeader(this.label);
   final String label;
 
   @override
@@ -722,15 +502,10 @@ class _SectionHeader extends StatelessWidget {
 }
 
 class _DetailRow extends StatelessWidget {
-  const _DetailRow({
-    required this.label,
-    required this.value,
-    this.mono = false,
-  });
+  const _DetailRow({required this.label, required this.value});
 
   final String label;
   final String value;
-  final bool mono;
 
   @override
   Widget build(BuildContext context) {
@@ -753,18 +528,12 @@ class _DetailRow extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: SelectableText(
+            child: Text(
               value,
-              style: (mono
-                      ? text.bodySmall?.copyWith(
-                          fontFamily: 'monospace',
-                          color: AppColors.bodyText,
-                        )
-                      : text.bodyMedium?.copyWith(
-                          color: AppColors.bodyText,
-                          fontWeight: FontWeight.w500,
-                        )) ??
-                  const TextStyle(),
+              style: text.bodyMedium?.copyWith(
+                color: AppColors.bodyText,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],

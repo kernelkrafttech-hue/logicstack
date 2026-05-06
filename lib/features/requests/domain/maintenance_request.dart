@@ -15,6 +15,7 @@ enum RequestStatus {
     storageValue: 'sent_to_contractor',
     displayName: 'Sent to contractor',
   ),
+  accepted(storageValue: 'accepted', displayName: 'Accepted'),
   scheduled(storageValue: 'scheduled', displayName: 'Scheduled'),
   inProgress(storageValue: 'in_progress', displayName: 'In progress'),
   completed(storageValue: 'completed', displayName: 'Completed'),
@@ -35,6 +36,7 @@ enum RequestStatus {
       case RequestStatus.submitted:
       case RequestStatus.reviewed:
       case RequestStatus.sentToContractor:
+      case RequestStatus.accepted:
       case RequestStatus.scheduled:
       case RequestStatus.inProgress:
         return true;
@@ -54,6 +56,8 @@ enum RequestStatus {
         return const Color(0xFFE3EEFB);
       case RequestStatus.sentToContractor:
         return const Color(0xFFEDE7F6);
+      case RequestStatus.accepted:
+        return AppColors.greenSoft;
       case RequestStatus.scheduled:
         return const Color(0xFFE3EEFB);
       case RequestStatus.inProgress:
@@ -75,6 +79,8 @@ enum RequestStatus {
         return AppColors.info;
       case RequestStatus.sentToContractor:
         return const Color(0xFF6B46C1);
+      case RequestStatus.accepted:
+        return AppColors.greenDark;
       case RequestStatus.scheduled:
         return AppColors.info;
       case RequestStatus.inProgress:
@@ -254,6 +260,11 @@ class MaintenanceRequest {
     this.urgencySuggestion,
     this.contractorMessage,
     this.aiAnalyzedAt,
+    this.contractorId,
+    this.contractorName,
+    this.contractorTrade,
+    this.contractorEmail,
+    this.assignedAt,
   });
 
   final String id;
@@ -276,6 +287,18 @@ class MaintenanceRequest {
   final String? urgencySuggestion;
   final String? contractorMessage;
   final DateTime? aiAnalyzedAt;
+
+  // Contractor assignment fields. Populated when a landlord assigns a
+  // contractor on the detail screen. Email is denormalized so security
+  // rules can match the signed-in contractor without an extra `get()`.
+  final String? contractorId;
+  final String? contractorName;
+  final String? contractorTrade;
+  final String? contractorEmail;
+  final DateTime? assignedAt;
+
+  bool get hasContractorAssigned =>
+      contractorId != null && contractorId!.isNotEmpty;
 
   bool get hasAiAnalysis => aiAnalyzedAt != null;
 
@@ -326,6 +349,11 @@ class MaintenanceRequest {
       urgencySuggestion: data['urgencySuggestion'] as String?,
       contractorMessage: data['contractorMessage'] as String?,
       aiAnalyzedAt: (data['aiAnalyzedAt'] as Timestamp?)?.toDate(),
+      contractorId: data['contractorId'] as String?,
+      contractorName: data['contractorName'] as String?,
+      contractorTrade: data['contractorTrade'] as String?,
+      contractorEmail: data['contractorEmail'] as String?,
+      assignedAt: (data['assignedAt'] as Timestamp?)?.toDate(),
     );
   }
 }

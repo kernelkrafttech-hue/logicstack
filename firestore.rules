@@ -56,6 +56,36 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /contractors/{contractorId} {
+      // Landlord owns the contractor entry; the contractor themselves can
+      // also read it (matched by email) so future contractor-side features
+      // can show profile info.
+      allow read: if isSignedIn() && (
+        resource.data.landlordId == request.auth.uid
+        || resource.data.email == request.auth.token.email
+      );
+
+      allow create: if isLandlord()
+        && request.resource.data.landlordId == request.auth.uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.companyName is string
+        && request.resource.data.phone is string
+        && request.resource.data.email is string
+        && request.resource.data.email.size() > 0
+        && request.resource.data.trade in
+            ['plumbing','electrical','hvac','appliance','pest','structural','general'];
+
+      allow update: if isSignedIn()
+        && resource.data.landlordId == request.auth.uid
+        && request.resource.data.landlordId == resource.data.landlordId
+        && request.resource.data.trade in
+            ['plumbing','electrical','hvac','appliance','pest','structural','general'];
+
+      allow delete: if isSignedIn()
+        && resource.data.landlordId == request.auth.uid;
+    }
+
     match /properties/{propertyId} {
       // Landlord can read their own properties. Tenants can read all
       // properties for now (Phase-3 picker); tighten once tenant invites
@@ -84,10 +114,12 @@ service cloud.firestore {
     }
 
     match /maintenanceRequests/{requestId} {
-      // Author (tenant) and the property's landlord can read.
+      // Author (tenant), the property's landlord, and the assigned
+      // contractor (matched by email) can read.
       allow read: if isSignedIn() && (
         resource.data.tenantId == request.auth.uid ||
-        resource.data.landlordId == request.auth.uid
+        resource.data.landlordId == request.auth.uid ||
+        resource.data.contractorEmail == request.auth.token.email
       );
 
       // A signed-in tenant creates the doc, must list themselves as
@@ -110,20 +142,21 @@ service cloud.firestore {
         && request.resource.data.urgency in ['low','medium','high','emergency']
         && request.resource.data.photoUrls is list;
 
-      // Phase 4: the landlord on a request can change `status` (and the
-      // server-side updatedAt). Phase 5: tenant or landlord may write the
-      // AI insight fields (populated by the analyzeMaintenanceRequest
-      // Cloud Function and persisted from the client).
+      // Allowed update branches:
+      //   1. Landlord status update (Phase 4)
+      //   2. Tenant or landlord AI analysis write (Phase 5)
+      //   3. Landlord contractor assignment (Phase 6)
+      //   4. Assigned contractor status update (Phase 6)
       allow update: if isSignedIn() && (
-        // Landlord status update
+        // 1. Landlord status update
         (resource.data.landlordId == request.auth.uid
           && request.resource.data.diff(resource.data).affectedKeys()
               .hasOnly(['status', 'updatedAt'])
           && request.resource.data.status in
               ['submitted','reviewed','sent_to_contractor','scheduled',
-               'in_progress','completed','closed','cancelled'])
+               'accepted','in_progress','completed','closed','cancelled'])
         ||
-        // AI analysis write (tenant or landlord on the request)
+        // 2. AI analysis write (tenant or landlord on the request)
         ((resource.data.tenantId == request.auth.uid
           || resource.data.landlordId == request.auth.uid)
           && request.resource.data.diff(resource.data).affectedKeys()
@@ -134,6 +167,26 @@ service cloud.firestore {
           && request.resource.data.contractorMessage is string
           && request.resource.data.urgencySuggestion in
               ['low','medium','high','emergency'])
+        ||
+        // 3. Landlord contractor assignment
+        (resource.data.landlordId == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['contractorId','contractorName','contractorTrade',
+                        'contractorEmail','assignedAt','status','updatedAt'])
+          && request.resource.data.contractorId is string
+          && request.resource.data.contractorId.size() > 0
+          && request.resource.data.contractorName is string
+          && request.resource.data.contractorTrade is string
+          && request.resource.data.contractorEmail is string
+          && request.resource.data.contractorEmail.size() > 0
+          && request.resource.data.status == 'sent_to_contractor')
+        ||
+        // 4. Assigned contractor moving the job through their lifecycle
+        (resource.data.contractorEmail == request.auth.token.email
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['status', 'updatedAt'])
+          && request.resource.data.status in
+              ['accepted','scheduled','in_progress','completed'])
       );
 
       allow delete: if false;

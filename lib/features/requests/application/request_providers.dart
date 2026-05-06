@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../auth/application/auth_providers.dart';
+import '../../contractors/domain/contractor.dart';
 import '../data/ai_analysis_service.dart';
 import '../data/request_repository.dart';
 import '../domain/maintenance_request.dart';
@@ -45,6 +46,21 @@ final StreamProvider<List<MaintenanceRequest>> landlordRequestsProvider =
     return ref
         .watch(requestRepositoryProvider)
         .watchRequestsForLandlord(user.uid);
+  },
+);
+
+/// Live list of jobs assigned to the signed-in contractor (matched by email).
+final StreamProvider<List<MaintenanceRequest>> contractorJobsProvider =
+    StreamProvider<List<MaintenanceRequest>>(
+  (StreamProviderRef<List<MaintenanceRequest>> ref) {
+    final User? user = ref.watch(authStateProvider).valueOrNull;
+    final String? email = user?.email;
+    if (email == null || email.isEmpty) {
+      return Stream<List<MaintenanceRequest>>.value(<MaintenanceRequest>[]);
+    }
+    return ref
+        .watch(requestRepositoryProvider)
+        .watchRequestsForContractorEmail(email);
   },
 );
 
@@ -180,6 +196,47 @@ final StateNotifierProvider<UpdateRequestStatusController, AsyncValue<void>>
   (StateNotifierProviderRef<UpdateRequestStatusController, AsyncValue<void>>
           ref) {
     return UpdateRequestStatusController(ref.watch(requestRepositoryProvider));
+  },
+);
+
+/// Drives the assign-contractor bottom sheet on the landlord detail screen.
+class AssignContractorController extends StateNotifier<AsyncValue<void>> {
+  AssignContractorController(this._repo)
+      : super(const AsyncValue<void>.data(null));
+
+  final RequestRepository _repo;
+
+  Future<bool> assign({
+    required String requestId,
+    required Contractor contractor,
+  }) async {
+    state = const AsyncValue<void>.loading();
+    try {
+      await _repo.assignContractor(
+        requestId: requestId,
+        contractor: contractor,
+      );
+      state = const AsyncValue<void>.data(null);
+      return true;
+    } on RequestException catch (e, st) {
+      state = AsyncValue<void>.error(e, st);
+      return false;
+    } catch (e, st) {
+      state = AsyncValue<void>.error(
+        RequestException('Could not assign contractor.'),
+        st,
+      );
+      return false;
+    }
+  }
+}
+
+final StateNotifierProvider<AssignContractorController, AsyncValue<void>>
+    assignContractorControllerProvider =
+    StateNotifierProvider<AssignContractorController, AsyncValue<void>>(
+  (StateNotifierProviderRef<AssignContractorController, AsyncValue<void>>
+          ref) {
+    return AssignContractorController(ref.watch(requestRepositoryProvider));
   },
 );
 

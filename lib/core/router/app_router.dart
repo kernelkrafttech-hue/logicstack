@@ -13,9 +13,15 @@ import '../../features/auth/presentation/signup_screen.dart';
 import '../../features/dashboard/presentation/contractor_dashboard.dart';
 import '../../features/dashboard/presentation/landlord_dashboard.dart';
 import '../../features/dashboard/presentation/tenant_dashboard.dart';
+import '../../features/contractors/application/contractor_providers.dart';
+import '../../features/contractors/domain/contractor.dart';
+import '../../features/contractors/presentation/add_contractor_screen.dart';
+import '../../features/contractors/presentation/contractor_detail_screen.dart';
+import '../../features/contractors/presentation/contractors_list_screen.dart';
 import '../../features/properties/presentation/add_property_screen.dart';
 import '../../features/properties/presentation/properties_list_screen.dart';
 import '../../features/properties/presentation/property_detail_screen.dart';
+import '../../features/requests/presentation/contractor_job_detail_screen.dart';
 import '../../features/requests/presentation/landlord_request_detail_screen.dart';
 import '../../features/requests/presentation/maintenance_requests_screen.dart';
 import '../../features/requests/presentation/request_detail_screen.dart';
@@ -47,9 +53,19 @@ class AppRoutes {
   static String landlordRequestDetailFor(String id) =>
       '/landlord/requests/$id';
 
+  // Landlord -> Contractors
+  static const String contractors = '/landlord/contractors';
+  static const String contractorNew = '/landlord/contractors/new';
+  static String contractorDetailFor(String id) => '/landlord/contractors/$id';
+  static String contractorEdit(String id) =>
+      '/landlord/contractors/$id/edit';
+
   // Tenant -> Maintenance requests
   static const String requestNew = '/tenant/requests/new';
   static String requestDetailFor(String id) => '/tenant/requests/$id';
+
+  // Contractor -> Jobs
+  static String contractorJobDetailFor(String id) => '/contractor/jobs/$id';
 
   /// Path prefixes that scope a route to a single role. Used by the redirect
   /// to keep tenants/contractors out of landlord-only screens.
@@ -221,6 +237,41 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>(
                 ),
               ],
             ),
+            GoRoute(
+              path: 'contractors',
+              builder: (BuildContext context, GoRouterState state) =>
+                  const ContractorsListScreen(),
+              routes: <RouteBase>[
+                // Order matters: `new` is matched before `:id`.
+                GoRoute(
+                  path: 'new',
+                  builder: (BuildContext context, GoRouterState state) =>
+                      const AddContractorScreen(),
+                ),
+                GoRoute(
+                  path: ':id',
+                  builder: (BuildContext context, GoRouterState state) {
+                    final String? id = state.pathParameters['id'];
+                    if (id == null || id.isEmpty) {
+                      return const SplashScreen();
+                    }
+                    return ContractorDetailScreen(contractorId: id);
+                  },
+                  routes: <RouteBase>[
+                    GoRoute(
+                      path: 'edit',
+                      builder: (BuildContext context, GoRouterState state) {
+                        final String? id = state.pathParameters['id'];
+                        if (id == null || id.isEmpty) {
+                          return const SplashScreen();
+                        }
+                        return _EditContractorPage(contractorId: id);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ],
         ),
         GoRoute(
@@ -255,6 +306,18 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>(
             if (user == null) return const SplashScreen();
             return ContractorDashboard(user: user);
           },
+          routes: <RouteBase>[
+            GoRoute(
+              path: 'jobs/:id',
+              builder: (BuildContext context, GoRouterState state) {
+                final String? id = state.pathParameters['id'];
+                if (id == null || id.isEmpty) {
+                  return const SplashScreen();
+                }
+                return ContractorJobDetailScreen(requestId: id);
+              },
+            ),
+          ],
         ),
       ],
       errorBuilder: (BuildContext context, GoRouterState state) => Scaffold(
@@ -271,3 +334,36 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>(
     );
   },
 );
+
+/// Wrapper that loads the existing [Contractor] before rendering the edit
+/// form. The router can't use Riverpod directly inside its builder, so this
+/// consumer widget bridges the gap.
+class _EditContractorPage extends ConsumerWidget {
+  const _EditContractorPage({required this.contractorId});
+
+  final String contractorId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<Contractor?> async =
+        ref.watch(contractorByIdProvider(contractorId));
+    return async.when(
+      loading: () => const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      ),
+      error: (Object error, _) => Scaffold(
+        appBar: AppBar(title: const Text('Edit contractor')),
+        body: Center(child: Text('$error')),
+      ),
+      data: (Contractor? c) {
+        if (c == null) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Edit contractor')),
+            body: const Center(child: Text('Contractor not found.')),
+          );
+        }
+        return AddContractorScreen(existing: c);
+      },
+    );
+  }
+}

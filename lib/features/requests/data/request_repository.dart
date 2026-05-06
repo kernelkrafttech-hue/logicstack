@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../../core/constants/app_constants.dart';
+import '../../contractors/domain/contractor.dart';
 import '../domain/maintenance_request.dart';
 
 class RequestException implements Exception {
@@ -50,6 +51,25 @@ class RequestRepository {
     return _collection
         .where('landlordId', isEqualTo: landlordId)
         .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (QuerySnapshot<Map<String, dynamic>> snap) => snap.docs
+              .map(MaintenanceRequest.fromFirestore)
+              .toList(growable: false),
+        );
+  }
+
+  /// Live list of every request currently assigned to [contractorEmail].
+  ///
+  /// The contractor is matched by email rather than a uid because contractors
+  /// may sign in long after a landlord adds them to their roster. Email is
+  /// denormalized onto the request at assignment time.
+  Stream<List<MaintenanceRequest>> watchRequestsForContractorEmail(
+    String contractorEmail,
+  ) {
+    return _collection
+        .where('contractorEmail', isEqualTo: contractorEmail.toLowerCase())
+        .orderBy('assignedAt', descending: true)
         .snapshots()
         .map(
           (QuerySnapshot<Map<String, dynamic>> snap) => snap.docs
@@ -140,6 +160,29 @@ class RequestRepository {
     try {
       await _collection.doc(id).update(<String, Object?>{
         'status': status.storageValue,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } on FirebaseException catch (e) {
+      throw RequestException(_messageForCode(e.code));
+    }
+  }
+
+  /// Assigns a contractor to a request. Writes the four contractor fields
+  /// plus the denormalized email used by Firestore rules and the contractor
+  /// dashboard query, sets status to `sent_to_contractor`, and bumps the
+  /// audit timestamps. Firestore rules cap landlords to exactly this diff.
+  Future<void> assignContractor({
+    required String requestId,
+    required Contractor contractor,
+  }) async {
+    try {
+      await _collection.doc(requestId).update(<String, Object?>{
+        'contractorId': contractor.id,
+        'contractorName': contractor.name,
+        'contractorTrade': contractor.trade.storageValue,
+        'contractorEmail': contractor.email.toLowerCase(),
+        'assignedAt': FieldValue.serverTimestamp(),
+        'status': RequestStatus.sentToContractor.storageValue,
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } on FirebaseException catch (e) {

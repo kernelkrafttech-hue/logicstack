@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../auth/domain/app_user.dart';
+import '../../contractors/application/contractor_providers.dart';
+import '../../contractors/domain/contractor.dart';
 import '../../properties/application/property_providers.dart';
 import '../../properties/domain/property.dart';
 import '../../requests/application/request_providers.dart';
@@ -24,6 +26,8 @@ class LandlordDashboard extends ConsumerWidget {
         ref.watch(myPropertiesProvider);
     final AsyncValue<List<MaintenanceRequest>> requests =
         ref.watch(landlordRequestsProvider);
+    final AsyncValue<List<Contractor>> contractors =
+        ref.watch(myContractorsProvider);
     final TextTheme text = Theme.of(context).textTheme;
 
     return DashboardScaffold(
@@ -64,11 +68,11 @@ class LandlordDashboard extends ConsumerWidget {
           onTap: () => context.go(AppRoutes.landlordRequests),
         ),
         const SizedBox(height: 12),
-        const _EntryCard(
+        _EntryCard(
           icon: Icons.engineering_outlined,
           title: 'Contractors',
-          trailing: 'Coming soon',
-          onTap: null,
+          trailing: _contractorsTrailing(contractors),
+          onTap: () => context.go(AppRoutes.contractors),
         ),
       ],
     );
@@ -87,6 +91,13 @@ class LandlordDashboard extends ConsumerWidget {
     if (list.isEmpty) return 'Nothing yet';
     final int open = list.where((MaintenanceRequest x) => x.status.isOpen).length;
     return '$open open · ${list.length} total';
+  }
+
+  String _contractorsTrailing(AsyncValue<List<Contractor>> c) {
+    if (c.isLoading && !c.hasValue) return '…';
+    final int n = c.valueOrNull?.length ?? 0;
+    if (n == 0) return 'Add your first';
+    return '$n in roster';
   }
 }
 
