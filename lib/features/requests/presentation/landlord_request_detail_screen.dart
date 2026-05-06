@@ -12,7 +12,9 @@ import '../../properties/domain/property.dart';
 import '../application/request_providers.dart';
 import '../data/request_repository.dart';
 import '../domain/maintenance_request.dart';
+import 'widgets/activity_timeline.dart';
 import 'widgets/ai_insights_section.dart';
+import 'widgets/comments_section.dart';
 import 'widgets/status_chip.dart';
 import 'widgets/urgency_badge.dart';
 
@@ -203,7 +205,11 @@ class _Body extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
         ],
-        _SectionHeader(label: 'Activity'),
+        ActivityTimeline(requestId: request.id),
+        const SizedBox(height: 24),
+        CommentsSection(requestId: request.id),
+        const SizedBox(height: 24),
+        _SectionHeader(label: 'Timestamps'),
         const SizedBox(height: 8),
         _DetailRow(label: 'Submitted', value: _formatDate(request.createdAt)),
         _DetailRow(

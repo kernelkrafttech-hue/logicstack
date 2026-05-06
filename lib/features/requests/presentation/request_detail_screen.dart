@@ -7,6 +7,8 @@ import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../application/request_providers.dart';
 import '../domain/maintenance_request.dart';
+import 'widgets/activity_timeline.dart';
+import 'widgets/comments_section.dart';
 import 'widgets/urgency_badge.dart';
 
 class RequestDetailScreen extends ConsumerWidget {
@@ -193,8 +195,12 @@ class _Body extends StatelessWidget {
           ),
           const SizedBox(height: 24),
         ],
+        ActivityTimeline(requestId: request.id),
+        const SizedBox(height: 24),
+        CommentsSection(requestId: request.id),
+        const SizedBox(height: 24),
         Text(
-          'Activity',
+          'Timestamps',
           style: text.titleMedium?.copyWith(
             fontWeight: FontWeight.w700,
             color: AppColors.navy,

@@ -5,10 +5,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../auth/application/auth_providers.dart';
+import '../../auth/domain/app_user.dart';
 import '../../contractors/domain/contractor.dart';
 import '../data/ai_analysis_service.dart';
 import '../data/request_repository.dart';
+import '../domain/activity_event.dart';
 import '../domain/maintenance_request.dart';
+
+/// Resolves the current [AppUser] into the lightweight [ActivityActor]
+/// repositories use when stamping audit events. Returns `null` when the
+/// profile hasn't loaded yet so callers can fail closed.
+final Provider<ActivityActor?> activityActorProvider =
+    Provider<ActivityActor?>(
+  (ProviderRef<ActivityActor?> ref) {
+    final AppUser? user = ref.watch(appUserProvider).valueOrNull;
+    if (user == null) return null;
+    return ActivityActor(
+      uid: user.uid,
+      name: user.displayName,
+      role: user.role,
+    );
+  },
+);
 
 final Provider<RequestRepository> requestRepositoryProvider =
     Provider<RequestRepository>(
@@ -72,11 +90,12 @@ final StreamProviderFamily<MaintenanceRequest?, String> requestByIdProvider =
 );
 
 class SubmitRequestController extends StateNotifier<AsyncValue<void>> {
-  SubmitRequestController(this._repo, this._ai)
+  SubmitRequestController(this._repo, this._ai, this._ref)
       : super(const AsyncValue<void>.data(null));
 
   final RequestRepository _repo;
   final AiAnalysisService _ai;
+  final Ref _ref;
 
   /// Uploads photos, writes the request, and runs AI analysis.
   ///
@@ -93,6 +112,15 @@ class SubmitRequestController extends StateNotifier<AsyncValue<void>> {
     required RequestUrgency urgency,
     required List<XFile> photos,
   }) async {
+    final ActivityActor? actor = _ref.read(activityActorProvider);
+    if (actor == null) {
+      state = AsyncValue<void>.error(
+        RequestException('You must be signed in to submit a request.'),
+        StackTrace.current,
+      );
+      return null;
+    }
+
     state = const AsyncValue<void>.loading();
     try {
       final String requestId = _repo.newRequestId();
@@ -117,6 +145,7 @@ class SubmitRequestController extends StateNotifier<AsyncValue<void>> {
         category: category,
         urgency: urgency,
         photoUrls: photoUrls,
+        actor: actor,
       );
 
       // Soft-fail AI: the request is already saved, so we treat analysis
@@ -155,16 +184,18 @@ final StateNotifierProvider<SubmitRequestController, AsyncValue<void>>
     return SubmitRequestController(
       ref.watch(requestRepositoryProvider),
       ref.watch(aiAnalysisServiceProvider),
+      ref,
     );
   },
 );
 
 /// Drives the landlord-side status update on the request detail screen.
 class UpdateRequestStatusController extends StateNotifier<AsyncValue<void>> {
-  UpdateRequestStatusController(this._repo)
+  UpdateRequestStatusController(this._repo, this._ref)
       : super(const AsyncValue<void>.data(null));
 
   final RequestRepository _repo;
+  final Ref _ref;
 
   /// Returns `true` on success; failures are also published into [state] so
   /// the screen can surface a snackbar without hand-rolling a try/catch.
@@ -172,9 +203,17 @@ class UpdateRequestStatusController extends StateNotifier<AsyncValue<void>> {
     required String id,
     required RequestStatus status,
   }) async {
+    final ActivityActor? actor = _ref.read(activityActorProvider);
+    if (actor == null) {
+      state = AsyncValue<void>.error(
+        RequestException('You must be signed in to update status.'),
+        StackTrace.current,
+      );
+      return false;
+    }
     state = const AsyncValue<void>.loading();
     try {
-      await _repo.updateStatus(id: id, status: status);
+      await _repo.updateStatus(id: id, status: status, actor: actor);
       state = const AsyncValue<void>.data(null);
       return true;
     } on RequestException catch (e, st) {
@@ -195,26 +234,39 @@ final StateNotifierProvider<UpdateRequestStatusController, AsyncValue<void>>
     StateNotifierProvider<UpdateRequestStatusController, AsyncValue<void>>(
   (StateNotifierProviderRef<UpdateRequestStatusController, AsyncValue<void>>
           ref) {
-    return UpdateRequestStatusController(ref.watch(requestRepositoryProvider));
+    return UpdateRequestStatusController(
+      ref.watch(requestRepositoryProvider),
+      ref,
+    );
   },
 );
 
 /// Drives the assign-contractor bottom sheet on the landlord detail screen.
 class AssignContractorController extends StateNotifier<AsyncValue<void>> {
-  AssignContractorController(this._repo)
+  AssignContractorController(this._repo, this._ref)
       : super(const AsyncValue<void>.data(null));
 
   final RequestRepository _repo;
+  final Ref _ref;
 
   Future<bool> assign({
     required String requestId,
     required Contractor contractor,
   }) async {
+    final ActivityActor? actor = _ref.read(activityActorProvider);
+    if (actor == null) {
+      state = AsyncValue<void>.error(
+        RequestException('You must be signed in to assign a contractor.'),
+        StackTrace.current,
+      );
+      return false;
+    }
     state = const AsyncValue<void>.loading();
     try {
       await _repo.assignContractor(
         requestId: requestId,
         contractor: contractor,
+        actor: actor,
       );
       state = const AsyncValue<void>.data(null);
       return true;
@@ -236,7 +288,10 @@ final StateNotifierProvider<AssignContractorController, AsyncValue<void>>
     StateNotifierProvider<AssignContractorController, AsyncValue<void>>(
   (StateNotifierProviderRef<AssignContractorController, AsyncValue<void>>
           ref) {
-    return AssignContractorController(ref.watch(requestRepositoryProvider));
+    return AssignContractorController(
+      ref.watch(requestRepositoryProvider),
+      ref,
+    );
   },
 );
 

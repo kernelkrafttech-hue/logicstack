@@ -192,6 +192,54 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Helper: can the caller read the parent maintenance request?
+    //
+    // Uses `getAfter` so the activity event written in the SAME batch as
+    // the request creation can still see the parent doc's state. For
+    // post-create activity (status change, assignment) the result is
+    // identical to `get`.
+    function canAccessRequestAfter(requestId) {
+      let req = getAfter(
+        /databases/$(database)/documents/maintenanceRequests/$(requestId)
+      ).data;
+      return isSignedIn() && (
+        req.tenantId == request.auth.uid ||
+        req.landlordId == request.auth.uid ||
+        req.contractorEmail == request.auth.token.email
+      );
+    }
+
+    match /maintenanceRequests/{requestId}/comments/{commentId} {
+      allow read: if canAccessRequestAfter(requestId);
+
+      allow create: if canAccessRequestAfter(requestId)
+        && request.resource.data.senderId == request.auth.uid
+        && request.resource.data.requestId == requestId
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 4000
+        && request.resource.data.senderName is string
+        && request.resource.data.senderRole in
+            ['landlord','tenant','contractor'];
+
+      // Comments are immutable for the foundation.
+      allow update, delete: if false;
+    }
+
+    match /maintenanceRequests/{requestId}/activity/{activityId} {
+      allow read: if canAccessRequestAfter(requestId);
+
+      allow create: if canAccessRequestAfter(requestId)
+        && request.resource.data.requestId == requestId
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.type in
+            ['submitted','status_changed','contractor_assigned']
+        && request.resource.data.title is string
+        && request.resource.data.description is string;
+
+      allow update, delete: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../contractors/domain/contractor.dart';
+import '../domain/activity_event.dart';
 import '../domain/maintenance_request.dart';
 
 class RequestException implements Exception {
@@ -118,8 +119,29 @@ class RequestRepository {
     }
   }
 
-  /// Persists the request document. Caller is responsible for uploading any
-  /// photos first and passing their download URLs in [photoUrls].
+  DocumentReference<Map<String, dynamic>> _activityDoc(String requestId) =>
+      _collection.doc(requestId).collection('activity').doc();
+
+  ActivityEvent _buildEvent({
+    required DocumentReference<Map<String, dynamic>> ref,
+    required String requestId,
+    required ActivityType type,
+    required String title,
+    required String description,
+    required ActivityActor actor,
+  }) {
+    return ActivityEvent(
+      id: ref.id,
+      requestId: requestId,
+      type: type,
+      title: title,
+      description: description,
+      createdBy: actor.uid,
+    );
+  }
+
+  /// Persists the request document and seeds the timeline with the
+  /// "submitted" activity event in a single batched write.
   Future<MaintenanceRequest> createRequest({
     required String id,
     required String propertyId,
@@ -130,6 +152,7 @@ class RequestRepository {
     required RequestCategory category,
     required RequestUrgency urgency,
     required List<String> photoUrls,
+    required ActivityActor actor,
   }) async {
     try {
       final MaintenanceRequest request = MaintenanceRequest(
@@ -144,39 +167,83 @@ class RequestRepository {
         status: RequestStatus.submitted,
         photoUrls: photoUrls,
       );
-      await _collection.doc(id).set(request.toFirestoreCreate());
+
+      final DocumentReference<Map<String, dynamic>> activityRef =
+          _activityDoc(id);
+      final ActivityEvent event = _buildEvent(
+        ref: activityRef,
+        requestId: id,
+        type: ActivityType.submitted,
+        title: 'Request submitted',
+        description: 'Submitted by ${actor.name} (${actor.roleLabel}).',
+        actor: actor,
+      );
+
+      final WriteBatch batch = _firestore.batch();
+      batch.set(_collection.doc(id), request.toFirestoreCreate());
+      batch.set(activityRef, event.toFirestoreCreate());
+      await batch.commit();
       return request;
     } on FirebaseException catch (e) {
       throw RequestException(_messageForCode(e.code));
     }
   }
 
-  /// Updates only the [status] field and bumps `updatedAt` to the server
-  /// timestamp. Firestore rules constrain landlords to this exact diff.
+  /// Updates the [status] field, bumps `updatedAt`, and appends a
+  /// status_changed activity event in one batched write. Firestore rules
+  /// allow either branch (landlord or contractor) to write the activity
+  /// because both can read the parent request.
   Future<void> updateStatus({
     required String id,
     required RequestStatus status,
+    required ActivityActor actor,
   }) async {
     try {
-      await _collection.doc(id).update(<String, Object?>{
+      final DocumentReference<Map<String, dynamic>> activityRef =
+          _activityDoc(id);
+      final ActivityEvent event = _buildEvent(
+        ref: activityRef,
+        requestId: id,
+        type: ActivityType.statusChanged,
+        title: 'Status changed to ${status.displayName}',
+        description: 'Updated by ${actor.name} (${actor.roleLabel}).',
+        actor: actor,
+      );
+
+      final WriteBatch batch = _firestore.batch();
+      batch.update(_collection.doc(id), <String, Object?>{
         'status': status.storageValue,
         'updatedAt': FieldValue.serverTimestamp(),
       });
+      batch.set(activityRef, event.toFirestoreCreate());
+      await batch.commit();
     } on FirebaseException catch (e) {
       throw RequestException(_messageForCode(e.code));
     }
   }
 
-  /// Assigns a contractor to a request. Writes the four contractor fields
-  /// plus the denormalized email used by Firestore rules and the contractor
-  /// dashboard query, sets status to `sent_to_contractor`, and bumps the
-  /// audit timestamps. Firestore rules cap landlords to exactly this diff.
+  /// Assigns a contractor to a request, writes the assignment activity
+  /// event, and bumps audit timestamps in a single batched write.
   Future<void> assignContractor({
     required String requestId,
     required Contractor contractor,
+    required ActivityActor actor,
   }) async {
     try {
-      await _collection.doc(requestId).update(<String, Object?>{
+      final DocumentReference<Map<String, dynamic>> activityRef =
+          _activityDoc(requestId);
+      final ActivityEvent event = _buildEvent(
+        ref: activityRef,
+        requestId: requestId,
+        type: ActivityType.contractorAssigned,
+        title: 'Assigned to ${contractor.name}',
+        description:
+            '${contractor.trade.displayName} · routed by ${actor.name} (${actor.roleLabel}).',
+        actor: actor,
+      );
+
+      final WriteBatch batch = _firestore.batch();
+      batch.update(_collection.doc(requestId), <String, Object?>{
         'contractorId': contractor.id,
         'contractorName': contractor.name,
         'contractorTrade': contractor.trade.storageValue,
@@ -185,6 +252,8 @@ class RequestRepository {
         'status': RequestStatus.sentToContractor.storageValue,
         'updatedAt': FieldValue.serverTimestamp(),
       });
+      batch.set(activityRef, event.toFirestoreCreate());
+      await batch.commit();
     } on FirebaseException catch (e) {
       throw RequestException(_messageForCode(e.code));
     }
