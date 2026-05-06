@@ -19,6 +19,13 @@ export {
   notifyOnCommentCreated,
 } from "./notifications";
 
+export {
+  seedFreeTrialOnUserCreated,
+  createStripeCheckoutSession,
+  createStripeCustomerPortalSession,
+  stripeWebhook,
+} from "./billing";
+
 const openaiApiKey = defineSecret("OPENAI_API_KEY");
 
 const VALID_CATEGORIES = [

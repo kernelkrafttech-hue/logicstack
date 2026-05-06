@@ -53,15 +53,38 @@ firebase deploy --only firestore:rules,firestore:indexes,storage
 
 ### Cloud Functions
 
-The `analyzeMaintenanceRequest` callable lives in `functions/`. Configure the
-OpenAI key as a Functions secret (it never enters the Flutter app) and deploy:
+`functions/` holds three feature areas: `analyze.ts` (OpenAI-backed AI
+analysis), `notifications.ts` (FCM fan-out triggers), and `billing.ts`
+(Stripe subscriptions). Every secret stays on the server.
 
 ```bash
 cd functions
 npm install
-firebase functions:secrets:set OPENAI_API_KEY    # paste key when prompted
+
+# AI
+firebase functions:secrets:set OPENAI_API_KEY
+
+# Stripe
+firebase functions:secrets:set STRIPE_SECRET_KEY
+firebase functions:secrets:set STRIPE_WEBHOOK_SECRET
+firebase functions:secrets:set STRIPE_PRICE_STARTER   # price_xxx
+firebase functions:secrets:set STRIPE_PRICE_GROWTH    # price_xxx
+firebase functions:secrets:set STRIPE_PRICE_PRO       # price_xxx
+firebase functions:secrets:set STRIPE_PORTAL_RETURN_URL  # https://your-app/return
+
 npm run deploy
 ```
+
+After deploying, copy the deployed URL of `stripeWebhook` and register it
+in the Stripe dashboard for the `customer.subscription.created`,
+`customer.subscription.updated`, and `customer.subscription.deleted`
+events. The signing secret it shows you is what `STRIPE_WEBHOOK_SECRET`
+should be set to.
+
+Plans are wired by Stripe Price IDs — create three recurring USD prices in
+Stripe ($19, $49, $99/month) and feed their `price_xxx` ids to the secrets
+above. The 14-day free trial is seeded by `seedFreeTrialOnUserCreated` on
+sign-up, so no Stripe interaction is needed before paid plans kick in.
 
 To run locally against the emulator:
 

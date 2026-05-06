@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../billing/application/billing_providers.dart';
+import '../../../billing/domain/subscription.dart';
+import '../../../billing/presentation/widgets/upgrade_banner.dart';
 import '../../application/request_providers.dart';
 import '../../data/request_repository.dart';
 import '../../domain/maintenance_request.dart';
@@ -58,6 +61,9 @@ class AiInsightsSection extends ConsumerWidget {
     final bool loading = regenState.isLoading;
     final bool hasError = regenState.hasError;
     final bool hasAnalysis = request.hasAiAnalysis;
+    final Subscription? subscription =
+        ref.watch(subscriptionProvider).valueOrNull;
+    final GateResult gate = checkCanUseAi(subscription);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -84,7 +90,9 @@ class AiInsightsSection extends ConsumerWidget {
                 side: const BorderSide(color: AppColors.border),
                 padding: const EdgeInsets.symmetric(horizontal: 14),
               ),
-              onPressed: loading ? null : () => _regenerate(context, ref),
+              onPressed: loading || !gate.allowed
+                  ? null
+                  : () => _regenerate(context, ref),
               icon: loading
                   ? const SizedBox(
                       height: 16,
@@ -99,6 +107,13 @@ class AiInsightsSection extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 10),
+        if (!gate.allowed) ...<Widget>[
+          UpgradeBanner(
+            message: gate.reason,
+            suggestedPlan: gate.suggestedPlan,
+          ),
+          const SizedBox(height: 10),
+        ],
         if (loading && !hasAnalysis)
           const _LoadingBlock()
         else if (!hasAnalysis)

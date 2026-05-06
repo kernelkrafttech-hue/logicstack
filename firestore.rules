@@ -59,6 +59,14 @@ service cloud.firestore {
       match /fcmTokens/{tokenId} {
         allow read, create, update, delete: if isSelf(uid);
       }
+
+      // Stripe subscription state. Only readable by self; writes happen
+      // exclusively via the Stripe webhook + trial seed Cloud Functions
+      // (admin SDK bypasses rules).
+      match /subscription/{subscriptionId} {
+        allow read: if isSelf(uid);
+        allow create, update, delete: if false;
+      }
     }
 
     // In-app notifications. Created by the notification trigger Cloud

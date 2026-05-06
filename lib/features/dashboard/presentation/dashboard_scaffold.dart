@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:go_router/go_router.dart';
+
+import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/theme_mode_provider.dart';
 import '../../auth/application/auth_controller.dart';
@@ -32,6 +35,11 @@ class DashboardScaffold extends ConsumerWidget {
       appBar: AppBar(
         title: Text(title),
         actions: <Widget>[
+          IconButton(
+            tooltip: 'Subscription',
+            icon: const Icon(Icons.workspace_premium_rounded),
+            onPressed: () => context.go(AppRoutes.subscription),
+          ),
           _ThemeToggleButton(),
           const NotificationBell(),
           IconButton(

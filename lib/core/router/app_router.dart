@@ -10,6 +10,7 @@ import '../../features/auth/domain/app_user.dart';
 import '../../features/auth/domain/user_role.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/signup_screen.dart';
+import '../../features/billing/presentation/subscription_screen.dart';
 import '../../features/dashboard/presentation/contractor_dashboard.dart';
 import '../../features/dashboard/presentation/landlord_dashboard.dart';
 import '../../features/dashboard/presentation/tenant_dashboard.dart';
@@ -74,6 +75,7 @@ class AppRoutes {
 
   // Cross-role
   static const String notifications = '/notifications';
+  static const String subscription = '/subscription';
 
   /// Returns the role-appropriate request-detail route. Used by deep-links
   /// fired from FCM notifications and the in-app notifications list.
@@ -349,6 +351,11 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>(
           path: AppRoutes.notifications,
           builder: (BuildContext context, GoRouterState state) =>
               const NotificationsScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.subscription,
+          builder: (BuildContext context, GoRouterState state) =>
+              const SubscriptionScreen(),
         ),
       ],
       errorBuilder: (BuildContext context, GoRouterState state) => Scaffold(

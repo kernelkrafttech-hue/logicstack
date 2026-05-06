@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../auth/application/auth_providers.dart';
 import '../../auth/domain/app_user.dart';
+import '../../billing/application/billing_providers.dart';
+import '../../billing/domain/subscription.dart';
 import '../../contractors/domain/contractor.dart';
 import '../data/ai_analysis_service.dart';
 import '../data/request_repository.dart';
@@ -174,16 +176,21 @@ class SubmitRequestController extends StateNotifier<AsyncValue<void>> {
 
       // Soft-fail AI: the request is already saved, so we treat analysis
       // failure as a non-blocking warning rather than a submission failure.
-      try {
-        final AiAnalysis analysis = await _ai.analyze(
-          title: request.title,
-          description: request.description,
-          category: request.category,
-          urgency: request.urgency,
-        );
-        await _repo.applyAiAnalysis(id: request.id, analysis: analysis);
-      } catch (_) {
-        // Swallow: Phase 5 surfaces the regenerate path on the detail screen.
+      // Skip entirely when the plan doesn't include AI features.
+      final Subscription? subscription =
+          _ref.read(subscriptionProvider).valueOrNull;
+      if (checkCanUseAi(subscription).allowed) {
+        try {
+          final AiAnalysis analysis = await _ai.analyze(
+            title: request.title,
+            description: request.description,
+            category: request.category,
+            urgency: request.urgency,
+          );
+          await _repo.applyAiAnalysis(id: request.id, analysis: analysis);
+        } catch (_) {
+          // Swallow: Phase 5 surfaces the regenerate path on the detail screen.
+        }
       }
 
       state = const AsyncValue<void>.data(null);
@@ -325,16 +332,30 @@ final StateNotifierProvider<AssignContractorController, AsyncValue<void>>
 /// without their loading indicators colliding.
 class RegenerateAiController
     extends StateNotifier<Map<String, AsyncValue<void>>> {
-  RegenerateAiController(this._repo, this._ai)
+  RegenerateAiController(this._repo, this._ai, this._ref)
       : super(const <String, AsyncValue<void>>{});
 
   final RequestRepository _repo;
   final AiAnalysisService _ai;
+  final Ref _ref;
 
   AsyncValue<void> stateFor(String requestId) =>
       state[requestId] ?? const AsyncValue<void>.data(null);
 
   Future<bool> regenerate(MaintenanceRequest request) async {
+    final Subscription? subscription =
+        _ref.read(subscriptionProvider).valueOrNull;
+    final GateResult gate = checkCanUseAi(subscription);
+    if (!gate.allowed) {
+      state = <String, AsyncValue<void>>{
+        ...state,
+        request.id: AsyncValue<void>.error(
+          RequestException(gate.reason),
+          StackTrace.current,
+        ),
+      };
+      return false;
+    }
     state = <String, AsyncValue<void>>{
       ...state,
       request.id: const AsyncValue<void>.loading(),
@@ -381,6 +402,7 @@ final StateNotifierProvider<RegenerateAiController,
     return RegenerateAiController(
       ref.watch(requestRepositoryProvider),
       ref.watch(aiAnalysisServiceProvider),
+      ref,
     );
   },
 );

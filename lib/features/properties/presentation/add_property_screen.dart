@@ -9,6 +9,9 @@ import '../../../shared/widgets/auth_text_field.dart';
 import '../../../shared/widgets/primary_button.dart';
 import '../../auth/application/auth_providers.dart';
 import '../../auth/domain/app_user.dart';
+import '../../billing/application/billing_providers.dart';
+import '../../billing/domain/subscription.dart';
+import '../../billing/presentation/widgets/upgrade_banner.dart';
 import '../application/property_providers.dart';
 import '../data/property_repository.dart';
 import '../domain/property.dart';
@@ -46,6 +49,18 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
     final AppUser? user = ref.read(appUserProvider).valueOrNull;
     if (user == null) {
       _showError('You must be signed in to add a property.');
+      return;
+    }
+    final Subscription? subscription =
+        ref.read(subscriptionProvider).valueOrNull;
+    final List<Property> existing =
+        ref.read(myPropertiesProvider).valueOrNull ?? const <Property>[];
+    final GateResult gate = checkCanAddProperty(
+      subscription: subscription,
+      currentPropertyCount: existing.length,
+    );
+    if (!gate.allowed) {
+      _showError(gate.reason);
       return;
     }
     FocusScope.of(context).unfocus();
@@ -111,6 +126,7 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                _PlanGateBanner(),
                 Text(
                   'Property details',
                   style: text.titleLarge?.copyWith(
@@ -234,6 +250,29 @@ class _StateField extends StatelessWidget {
       prefixIcon: Icons.flag_outlined,
       validator: Validators.usState,
       autofillHints: const <String>[AutofillHints.addressState],
+    );
+  }
+}
+
+/// Inline banner shown above the form when the current plan's property
+/// limit has been hit.
+class _PlanGateBanner extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Subscription? sub = ref.watch(subscriptionProvider).valueOrNull;
+    final List<Property> existing =
+        ref.watch(myPropertiesProvider).valueOrNull ?? const <Property>[];
+    final GateResult gate = checkCanAddProperty(
+      subscription: sub,
+      currentPropertyCount: existing.length,
+    );
+    if (gate.allowed) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: UpgradeBanner(
+        message: gate.reason,
+        suggestedPlan: gate.suggestedPlan,
+      ),
     );
   }
 }
