@@ -48,12 +48,15 @@ class RequestRepository {
   }
 
   /// Live list of every request landed against properties owned by [landlordId].
-  Stream<List<MaintenanceRequest>> watchRequestsForLandlord(String landlordId) {
-    return _collection
+  Stream<List<MaintenanceRequest>> watchRequestsForLandlord(
+    String landlordId, {
+    int? limit,
+  }) {
+    Query<Map<String, dynamic>> query = _collection
         .where('landlordId', isEqualTo: landlordId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map(
+        .orderBy('createdAt', descending: true);
+    if (limit != null) query = query.limit(limit);
+    return query.snapshots().map(
           (QuerySnapshot<Map<String, dynamic>> snap) => snap.docs
               .map(MaintenanceRequest.fromFirestore)
               .toList(growable: false),

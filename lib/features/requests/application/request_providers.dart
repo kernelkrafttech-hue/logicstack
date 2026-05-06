@@ -53,8 +53,32 @@ final StreamProvider<List<MaintenanceRequest>> myRequestsProvider =
 );
 
 /// Live list of every maintenance request that targets a property owned by
-/// the signed-in landlord.
+/// the signed-in landlord. Pagination is layered on top via
+/// [landlordRequestsPageSizeProvider].
 final StreamProvider<List<MaintenanceRequest>> landlordRequestsProvider =
+    StreamProvider<List<MaintenanceRequest>>(
+  (StreamProviderRef<List<MaintenanceRequest>> ref) {
+    final User? user = ref.watch(authStateProvider).valueOrNull;
+    if (user == null) {
+      return Stream<List<MaintenanceRequest>>.value(<MaintenanceRequest>[]);
+    }
+    final int limit = ref.watch(landlordRequestsPageSizeProvider);
+    return ref
+        .watch(requestRepositoryProvider)
+        .watchRequestsForLandlord(user.uid, limit: limit);
+  },
+);
+
+/// Page size for [landlordRequestsProvider]. The list screen exposes a
+/// "Load more" button that bumps this by [landlordRequestsPageStep] until
+/// the stream returns fewer items than the limit.
+const int landlordRequestsPageStep = 30;
+final StateProvider<int> landlordRequestsPageSizeProvider =
+    StateProvider<int>((StateProviderRef<int> ref) => landlordRequestsPageStep);
+
+/// Unbounded variant used by the analytics screen — needs every request to
+/// compute meaningful averages. Capped at 500 as a safety net.
+final StreamProvider<List<MaintenanceRequest>> landlordAllRequestsProvider =
     StreamProvider<List<MaintenanceRequest>>(
   (StreamProviderRef<List<MaintenanceRequest>> ref) {
     final User? user = ref.watch(authStateProvider).valueOrNull;
@@ -63,7 +87,7 @@ final StreamProvider<List<MaintenanceRequest>> landlordRequestsProvider =
     }
     return ref
         .watch(requestRepositoryProvider)
-        .watchRequestsForLandlord(user.uid);
+        .watchRequestsForLandlord(user.uid, limit: 500);
   },
 );
 

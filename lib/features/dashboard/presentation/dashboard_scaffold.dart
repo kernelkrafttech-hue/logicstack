@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/theme_mode_provider.dart';
 import '../../auth/application/auth_controller.dart';
 import '../../auth/domain/app_user.dart';
 import '../../notifications/presentation/widgets/notification_bell.dart';
@@ -31,11 +32,12 @@ class DashboardScaffold extends ConsumerWidget {
       appBar: AppBar(
         title: Text(title),
         actions: <Widget>[
+          _ThemeToggleButton(),
           const NotificationBell(),
           IconButton(
             tooltip: 'Sign out',
             icon: const Icon(Icons.logout_rounded),
-            onPressed: () => ref.read(authControllerProvider.notifier).signOut(),
+            onPressed: () => _confirmSignOut(context, ref),
           ),
         ],
       ),
@@ -99,6 +101,43 @@ class DashboardScaffold extends ConsumerWidget {
     final String trimmed = displayName.trim();
     if (trimmed.isEmpty) return 'there';
     return trimmed.split(' ').first;
+  }
+
+  Future<void> _confirmSignOut(BuildContext context, WidgetRef ref) async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext ctx) => AlertDialog(
+        title: const Text('Sign out?'),
+        content: const Text(
+          'You\'ll need to enter your credentials again to come back.',
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Sign out'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await ref.read(authControllerProvider.notifier).signOut();
+  }
+}
+
+class _ThemeToggleButton extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ThemeMode mode = ref.watch(themeModeProvider);
+    return IconButton(
+      tooltip: mode.label,
+      icon: Icon(mode.icon),
+      onPressed: () =>
+          ref.read(themeModeProvider.notifier).state = mode.next,
+    );
   }
 }
 

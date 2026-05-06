@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/error_retry_view.dart';
+import '../../../shared/widgets/shimmer.dart';
 import '../application/property_providers.dart';
 import '../domain/property.dart';
 import 'widgets/property_card.dart';
@@ -38,27 +40,43 @@ class PropertiesListScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: properties.when(
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
+          skipLoadingOnRefresh: true,
+          loading: () => const Padding(
+            padding: EdgeInsets.fromLTRB(20, 16, 20, 24),
+            child: SkeletonList(count: 4),
           ),
-          error: (Object error, _) => _ErrorState(message: '$error'),
+          error: (Object error, _) => ErrorRetryView(
+            message: '$error',
+            onRetry: () => ref.invalidate(myPropertiesProvider),
+          ),
           data: (List<Property> list) {
-            if (list.isEmpty) {
-              return const _EmptyState();
-            }
-            return ListView.separated(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
-              itemBuilder: (BuildContext context, int index) {
-                final Property property = list[index];
-                return PropertyCard(
-                  property: property,
-                  onTap: () => context.go(
-                    AppRoutes.propertyDetailFor(property.id),
-                  ),
+            return RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(myPropertiesProvider);
+                await Future<void>.delayed(
+                  const Duration(milliseconds: 250),
                 );
               },
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemCount: list.length,
+              child: list.isEmpty
+                  ? ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: const <Widget>[_EmptyState()],
+                    )
+                  : ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
+                      itemBuilder: (BuildContext context, int index) {
+                        final Property property = list[index];
+                        return PropertyCard(
+                          property: property,
+                          onTap: () => context.go(
+                            AppRoutes.propertyDetailFor(property.id),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      itemCount: list.length,
+                    ),
             );
           },
         ),
@@ -119,34 +137,3 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-class _ErrorState extends StatelessWidget {
-  const _ErrorState({required this.message});
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            const Icon(
-              Icons.error_outline_rounded,
-              color: AppColors.error,
-              size: 36,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.bodyText,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

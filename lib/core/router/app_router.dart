@@ -23,6 +23,7 @@ import '../../features/properties/presentation/add_property_screen.dart';
 import '../../features/properties/presentation/properties_list_screen.dart';
 import '../../features/properties/presentation/property_detail_screen.dart';
 import '../../features/requests/presentation/contractor_job_detail_screen.dart';
+import '../../features/requests/presentation/landlord_analytics_screen.dart';
 import '../../features/requests/presentation/landlord_request_detail_screen.dart';
 import '../../features/requests/presentation/maintenance_requests_screen.dart';
 import '../../features/requests/presentation/request_detail_screen.dart';
@@ -46,6 +47,9 @@ class AppRoutes {
   static const String properties = '/landlord/properties';
   static const String propertyNew = '/landlord/properties/new';
   static String propertyDetailFor(String id) => '/landlord/properties/$id';
+
+  // Landlord -> Analytics
+  static const String landlordAnalytics = '/landlord/analytics';
 
   // Landlord -> Maintenance requests
   static const String landlordRequests = '/landlord/requests';
@@ -225,6 +229,11 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>(
                   },
                 ),
               ],
+            ),
+            GoRoute(
+              path: 'analytics',
+              builder: (BuildContext context, GoRouterState state) =>
+                  const LandlordAnalyticsScreen(),
             ),
             GoRoute(
               path: 'requests',

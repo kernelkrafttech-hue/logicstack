@@ -74,6 +74,13 @@ class LandlordDashboard extends ConsumerWidget {
           trailing: _contractorsTrailing(contractors),
           onTap: () => context.go(AppRoutes.contractors),
         ),
+        const SizedBox(height: 12),
+        _EntryCard(
+          icon: Icons.bar_chart_rounded,
+          title: 'Analytics',
+          trailing: 'Avg completion · category split',
+          onTap: () => context.go(AppRoutes.landlordAnalytics),
+        ),
       ],
     );
   }

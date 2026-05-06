@@ -27,9 +27,13 @@ class PhotoPickerGrid extends StatelessWidget {
   Future<void> _pick(BuildContext context) async {
     final ImagePicker picker = ImagePicker();
     try {
+      // Aggressive client-side compression keeps Storage costs sane and
+      // landlord/contractor downloads quick over cellular. Plenty of
+      // headroom for AI analysis to read the image too.
       final List<XFile> picked = await picker.pickMultiImage(
-        imageQuality: 75,
-        maxWidth: 1920,
+        imageQuality: 60,
+        maxWidth: 1600,
+        maxHeight: 1600,
       );
       if (picked.isEmpty) return;
       final List<XFile> next = <XFile>[...photos];
