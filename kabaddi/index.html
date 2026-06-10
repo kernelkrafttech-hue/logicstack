@@ -119,7 +119,7 @@
   <header>
     <p class="eyebrow">Kabaddi &middot; Mobile Game</p>
     <h1>Privacy Policy</h1>
-    <p class="meta">Effective date: 13 May 2026 &middot; Last updated: 13 May 2026</p>
+    <p class="meta">Effective date: 10 June 2026 &middot; Last updated: 10 June 2026</p>
   </header>
 
   <p>This Privacy Policy explains what information the <strong>Kabaddi</strong> mobile application
@@ -127,7 +127,8 @@
   rights regarding that information. We have kept this document short and in plain language.</p>
 
   <h2>1. Information we collect</h2>
-  <p>We collect the <strong>minimum amount of information necessary</strong> to run the global leaderboard.</p>
+  <p>We collect only the information needed to run the App, provide gameplay features, operate the
+  leaderboard, and support advertising.</p>
 
   <h3>(a) Player display name</h3>
   <p>When you first open the App, you choose a display name (1&ndash;12 characters; default is
@@ -146,90 +147,140 @@
 
   <h3>(c) Google Play Games Services (optional)</h3>
   <p>If you open the in-app Google Play leaderboard or achievements screen, you may be asked to sign
-  in with your Google account. This sign-in is handled entirely by Google. We do <strong>not</strong>
-  see, read, or store your Google account, email address, or any other personal information from your
-  Google account. We only submit your score and unlock achievements through Google&rsquo;s API. You
-  can use the entire game without ever signing in.</p>
+  in with your Google account. This sign-in is handled by Google. We do <strong>not</strong>
+  see, read, or store your Google account password. We only submit your score and unlock achievements
+  through Google&rsquo;s API. You can use the game without signing in to Google Play Games Services.</p>
 
-  <h3>(d) Local data</h3>
-  <p>The App stores game settings (sound, vibration, difficulty, tutorial-seen flag), high scores,
-  and campaign progress <strong>only on your device</strong>, in a local settings file. This data
-  never leaves your device unless you explicitly submit a score to the leaderboard.</p>
-
-  <h3>What we do NOT collect</h3>
+  <h3>(d) Advertising and device information</h3>
+  <p>The App may display ads, including banner, interstitial, and/or rewarded ads. Ads may be
+  provided by <strong>Google AdMob / Google Mobile Ads SDK</strong> and Google&rsquo;s advertising
+  partners.</p>
+  <p>To show, measure, secure, and improve ads, Google and its advertising partners may collect or
+  receive certain information from your device, including:</p>
   <ul>
-    <li>We do <strong>not</strong> collect your real name, email address, phone number, or postal address.</li>
-    <li>We do <strong>not</strong> collect your location.</li>
-    <li>We do <strong>not</strong> collect contacts, photos, microphone or camera data, or any files on your device.</li>
-    <li>We do <strong>not</strong> collect device identifiers (advertising ID, IMEI, MAC address, etc.).</li>
-    <li>We do <strong>not</strong> include any advertising or analytics SDKs. There are no ads.</li>
-    <li>We do <strong>not</strong> sell any data to third parties for any purpose.</li>
-    <li>We do <strong>not</strong> offer in-app purchases.</li>
+    <li>Advertising ID or similar device identifiers</li>
+    <li>IP address, device type, operating system, app version, and general technical information</li>
+    <li>Ad views, clicks, impressions, and interactions with ads</li>
+    <li>Approximate location inferred from your IP address or device settings, where applicable</li>
+    <li>Information used for fraud prevention, frequency capping, reporting, and ad measurement</li>
+  </ul>
+  <p>Depending on your device settings, location, and consent choices, ads may be personalized or
+  non-personalized. Personalized ads may be based on your activity in this App and/or other apps and
+  websites. Non-personalized ads are not based on your past activity, but may still use identifiers
+  for purposes such as frequency capping, fraud prevention, and aggregated reporting.</p>
+
+  <h3>(e) Rewarded ads</h3>
+  <p>If the App offers optional rewarded ads, you may choose to watch an ad in exchange for an
+  in-game reward, such as coins, boosts, or other game items. If you complete the ad, the advertising
+  service may notify the App that the reward should be granted. We do not receive your name, email
+  address, or payment information from the ad provider when this happens.</p>
+
+  <h3>(f) Local data</h3>
+  <p>The App stores game settings (sound, vibration, difficulty, tutorial-seen flag), high scores,
+  and campaign progress <strong>on your device</strong>, in a local settings file. This data does
+  not leave your device unless you submit a score to the leaderboard or use an online feature that
+  requires it.</p>
+
+  <h3>What we do NOT collect directly</h3>
+  <ul>
+    <li>We do <strong>not</strong> ask for your real name, phone number, or postal address.</li>
+    <li>We do <strong>not</strong> collect contacts, photos, microphone or camera data, or files on your device.</li>
+    <li>We do <strong>not</strong> collect precise GPS location.</li>
+    <li>We do <strong>not</strong> sell your personal information.</li>
+    <li>We do <strong>not</strong> offer in-app purchases unless clearly shown inside the App.</li>
   </ul>
 
   <h2>2. How we use the information</h2>
-  <p>The information described above is used <strong>only</strong> to:</p>
+  <p>The information described above is used to:</p>
   <ul>
     <li>Display your name and score on the global leaderboard inside the App</li>
     <li>Submit achievements and leaderboard scores to Google Play Games Services if you choose to sign in</li>
     <li>Save your progress and preferences locally on your device</li>
+    <li>Display ads and support optional rewarded ad features</li>
+    <li>Measure ad performance, prevent fraud and abuse, limit ad frequency, and improve ad reliability</li>
+    <li>Maintain, troubleshoot, and improve the App</li>
   </ul>
-  <p>We do <strong>not</strong> use this information for advertising, profiling, or any form of
-  automated decision-making.</p>
+  <p>We do <strong>not</strong> use leaderboard information for profiling or automated
+  decision-making.</p>
 
-  <h2>3. Where the data is stored</h2>
+  <h2>3. Where the data is stored and processed</h2>
   <p><strong>Leaderboard data</strong> (display name, score, difficulty, timestamp) is transmitted
   over HTTPS to <strong>Google Firebase Firestore</strong> in the project <code>kabaddi-4d792</code>,
   and to <strong>Google Play Games Services</strong> if you sign in. Both services are operated by
   Google LLC. Google&rsquo;s processing of this data is governed by Google&rsquo;s privacy policy:
   <a href="https://policies.google.com/privacy" rel="noopener" target="_blank">policies.google.com/privacy</a>.</p>
-  <p><strong>Local data</strong> (settings, campaign progress, high scores) is stored only on your
-  device in the App&rsquo;s private storage area. We have no access to it.</p>
+  <p><strong>Advertising data</strong> may be processed by Google AdMob / Google Mobile Ads SDK and
+  Google&rsquo;s advertising partners. Google&rsquo;s advertising technologies are described here:
+  <a href="https://policies.google.com/technologies/ads" rel="noopener" target="_blank">policies.google.com/technologies/ads</a>.</p>
+  <p><strong>Local data</strong> (settings, campaign progress, high scores) is stored in the App&rsquo;s
+  private storage area on your device.</p>
 
   <h2>4. Data sharing</h2>
-  <p>We do not share your information with any third party other than Google (Firebase Firestore
-  and, optionally, Google Play Games Services), which acts as a service provider hosting the
-  leaderboard infrastructure on our behalf. We do not sell your information. We do not allow any
-  third party to use the information for their own purposes.</p>
+  <p>We do not sell your information. We may share or allow access to limited information only with
+  service providers needed to run the App:</p>
+  <ul>
+    <li><strong>Google Firebase Firestore</strong> &mdash; stores leaderboard entries.</li>
+    <li><strong>Google Play Games Services</strong> &mdash; handles optional leaderboard and achievement sign-in.</li>
+    <li><strong>Google AdMob / Google Mobile Ads SDK</strong> &mdash; serves, measures, and secures ads.</li>
+  </ul>
+  <p>These services may process data according to their own privacy policies and applicable law.</p>
 
-  <h2>5. Data retention and deletion</h2>
+  <h2>5. Advertising choices and consent</h2>
+  <p>Depending on where you live, the App may ask for your consent before showing personalized ads
+  or before using certain identifiers for advertising. You can choose whether to allow personalized
+  ads where that option is available.</p>
+  <p>You can also manage advertising choices from your device settings. On Android, you can reset or
+  delete your Advertising ID in your Google/Android privacy settings. You may also manage Google ad
+  personalization choices through Google&rsquo;s ad settings, where available.</p>
+
+  <h2>6. Data retention and deletion</h2>
   <p>Leaderboard entries are retained for as long as the leaderboard is operational. To request
   deletion of your leaderboard entry, email us with the display name you used and the approximate
   date you submitted the score. We will remove it within 30 days.</p>
   <p>Local data on your device can be deleted at any time by uninstalling the App or clearing the
   App&rsquo;s data in your phone&rsquo;s Settings.</p>
+  <p>Advertising data collected or processed by Google AdMob / Google Mobile Ads SDK is handled by
+  Google according to Google&rsquo;s own policies and retention practices. We do not directly control
+  Google&rsquo;s advertising data retention systems.</p>
 
-  <h2>6. Children&rsquo;s privacy</h2>
+  <h2>7. Children&rsquo;s privacy</h2>
   <p>The App is <strong>not directed at children under 13</strong> and we do not knowingly collect
   information from children under 13. If you believe a child has submitted information to the
   leaderboard, please email us and we will remove the entry.</p>
+  <p>If the App is later directed to children or made available to child audiences, we will update
+  this Privacy Policy and the App&rsquo;s ad settings to comply with applicable child privacy laws
+  and platform requirements.</p>
 
-  <h2>7. Security</h2>
+  <h2>8. Security</h2>
   <p>All data transmitted from the App is sent over HTTPS using standard TLS encryption. We rely on
   Google Cloud&rsquo;s security infrastructure to protect data stored in Firebase Firestore. While
   no system is 100% secure, we use industry-standard practices.</p>
 
-  <h2>8. Your rights</h2>
-  <p>Depending on where you live, you may have rights under data-protection laws (GDPR, CCPA, etc.)
-  to access, correct, or delete information we hold about you, and to object to processing. Since
-  the only information we hold is the display name and score you chose to submit, the simplest way
-  to exercise these rights is to email us at the address below.</p>
+  <h2>9. Your rights</h2>
+  <p>Depending on where you live, you may have rights under data-protection laws (GDPR, CCPA, CPRA,
+  and similar laws) to access, correct, delete, or object to certain processing of information. Since
+  the leaderboard information we directly hold is limited to the display name and score you choose
+  to submit, the simplest way to exercise these rights is to email us at the address below.</p>
+  <p>For advertising data processed by Google, you may also use Google&rsquo;s privacy and ad controls
+  provided by Google.</p>
 
-  <h2>9. Permissions the App requests</h2>
+  <h2>10. Permissions the App requests</h2>
   <ul>
-    <li><strong>Internet access</strong> &mdash; required to submit scores to the global leaderboard
-    and connect to Google Play Games Services.</li>
+    <li><strong>Internet access</strong> &mdash; required to submit scores to the global leaderboard,
+    connect to Google Play Games Services, and load ads.</li>
+    <li><strong>Advertising ID</strong> &mdash; may be used by Google AdMob / Google Mobile Ads SDK to
+    serve, measure, and secure ads where permitted.</li>
     <li><strong>Vibration</strong> &mdash; optional; used for haptic feedback during gameplay. You can
     disable it in the App&rsquo;s Settings screen.</li>
   </ul>
-  <p>The App does not request any other permissions.</p>
+  <p>The App does not request camera, microphone, contacts, photos, or precise location permissions.</p>
 
-  <h2>10. Changes to this policy</h2>
+  <h2>11. Changes to this policy</h2>
   <p>If we update this Privacy Policy, the new version will be posted at this URL with an updated
   &ldquo;Last updated&rdquo; date. Material changes will be highlighted in the App&rsquo;s release
-  notes.</p>
+  notes where appropriate.</p>
 
-  <h2>11. Contact</h2>
+  <h2>12. Contact</h2>
   <div class="callout">
     <p style="margin:0">For any questions about this Privacy Policy or to request data deletion:<br>
     <strong>Email:</strong> <a href="mailto:kernelkrafttech@gmail.com">kernelkrafttech@gmail.com</a></p>
