@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LogicStack — Custom Apps & Network Engineering | Elkridge, MD</title>
+<meta name="description" content="LogicStack builds custom apps and designs, secures, and supports business networks. Led by a senior network engineer with 10+ years on NASA, DISA, and DoD infrastructure — serving the DC–Baltimore corridor."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo"><span class="logo-icon">LS</span> LogicStack</a>
+    <nav class="nav-links">
+      <a href="network-engineering.html">Network Engineering</a>
+      <a href="app-development.html">App Development</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <a href="assessment.html" class="nav-cta">Get a Free Assessment →</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="network-engineering.html">Network Engineering</a>
+    <a href="app-development.html">App Development</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="assessment.html" class="nav-cta">Get a Free Assessment →</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-badge reveal"><span class="dot"></span> Network engineer + software builder · Elkridge, MD</div>
+          <h1 class="reveal">We build the <em>apps</em> your business runs on — and the <em>network</em> behind them.</h1>
+          <p class="hero-lede reveal">LogicStack is led by a senior network engineer with 10+ years architecting and securing networks for organizations like NASA, DISA, and the DoD. Now that same engineering brings two things to local businesses: custom apps that fit how you work, and networks built to stay fast, secure, and up.</p>
+          <div class="hero-ctas reveal">
+            <a href="assessment.html" class="btn btn-primary">Get a free assessment <span class="arrow">→</span></a>
+            <a href="#services" class="btn btn-outline">See what we do</a>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal">
+          <div class="hero-stack">
+            <div class="hero-panel">
+              <div class="hero-panel-label"><span class="dot-g"></span> Network topology · secured</div>
+              <svg class="topo" viewBox="0 0 360 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Network diagram: internet through firewall to core switch and endpoints">
+                <defs>
+                  <linearGradient id="lnk" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#e85d26"/><stop offset="1" stop-color="#ff7a45"/>
+                  </linearGradient>
+                </defs>
+                <!-- links -->
+                <g stroke="url(#lnk)" stroke-width="2" fill="none" opacity="0.85">
+                  <path d="M58 38 H150"/>
+                  <path d="M192 38 V75 H120 V104"/>
+                  <path d="M192 38 V75"/>
+                  <path d="M192 75 H264 V104"/>
+                  <path d="M192 75 V104"/>
+                </g>
+                <!-- internet -->
+                <g>
+                  <rect x="20" y="22" width="38" height="32" rx="8" fill="#1a1a2e"/>
+                  <text x="39" y="42" text-anchor="middle" fill="#fff" font-size="13" font-family="JetBrains Mono, monospace">☁</text>
+                  <text x="39" y="68" text-anchor="middle" fill="#7a7a8e" font-size="8" font-family="JetBrains Mono, monospace">WAN</text>
+                </g>
+                <!-- firewall -->
+                <g>
+                  <rect x="150" y="22" width="42" height="32" rx="8" fill="#e85d26"/>
+                  <text x="171" y="42" text-anchor="middle" fill="#fff" font-size="13">🛡</text>
+                  <text x="171" y="68" text-anchor="middle" fill="#7a7a8e" font-size="8" font-family="JetBrains Mono, monospace">FIREWALL</text>
+                </g>
+                <!-- core switch -->
+                <g>
+                  <rect x="170" y="60" width="44" height="22" rx="6" fill="#0d9488"/>
+                  <text x="192" y="75" text-anchor="middle" fill="#fff" font-size="8" font-family="JetBrains Mono, monospace">CORE SW</text>
+                </g>
+                <!-- endpoints -->
+                <g fill="#fff" stroke="#1a1a2e" stroke-width="1.5">
+                  <rect x="98" y="104" width="44" height="30" rx="6"/>
+                  <rect x="170" y="104" width="44" height="30" rx="6"/>
+                  <rect x="242" y="104" width="44" height="30" rx="6"/>
+                </g>
+                <g fill="#4a4a5e" font-size="8" font-family="JetBrains Mono, monospace" text-anchor="middle">
+                  <text x="120" y="123">VLAN 10</text>
+                  <text x="192" y="123">VLAN 20</text>
+                  <text x="264" y="123">VLAN 30</text>
+                </g>
+              </svg>
+            </div>
+            <div class="hero-panel">
+              <div class="hero-panel-label"><span class="dot-g"></span> Custom app · your workflow</div>
+              <div class="app-mock">
+                <div class="app-bar"><i></i><i></i><i></i></div>
+                <div class="app-row w90"></div>
+                <div class="app-row w70"></div>
+                <div class="app-row w50"></div>
+                <div class="app-row accent"></div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-float">
+            <div class="num">99.9%</div>
+            uptime, by design
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST STRIP -->
+  <section class="trust" aria-label="Credentials">
+    <div class="container">
+      <div class="trust-inner">
+        <div class="trust-item reveal"><div class="big">10+</div><div class="lbl">Years engineering enterprise networks</div></div>
+        <div class="trust-item reveal"><div class="big">5</div><div class="lbl">Active certs incl. CCNP &amp; Security+</div></div>
+        <div class="trust-item reveal"><div class="big">4</div><div class="lbl">Vendor stacks deployed in production</div></div>
+        <div class="trust-item reveal"><div class="big">Zero&nbsp;Trust</div><div class="lbl">Security model baked in by default</div></div>
+      </div>
+      <div class="trust-logos reveal">
+        <span class="ll">Cisco</span><span class="sep">·</span>
+        <span class="ll">Juniper</span><span class="sep">·</span>
+        <span class="ll">Palo Alto</span><span class="sep">·</span>
+        <span class="ll">Fortinet</span><span class="sep">·</span>
+        <span class="ll">CCNP R&amp;S</span><span class="sep">·</span>
+        <span class="ll">CompTIA Security+</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES (two pillars) -->
+  <section id="services">
+    <div class="container">
+      <div class="section-label reveal">What we do</div>
+      <h2 class="section-title reveal">Two things, done <em>properly.</em></h2>
+      <p class="section-sub reveal">No grab-bag of services. We build apps, and we build networks. Both backed by a decade of enterprise engineering discipline.</p>
+
+      <div class="split-grid">
+        <a href="network-engineering.html" class="split-card reveal">
+          <div class="split-icon teal" aria-hidden="true">🌐</div>
+          <div class="kicker">01 — Network Engineering</div>
+          <h3>Networks built to stay up.</h3>
+          <p>Design, secure, and support the network your business depends on — the same way mission-critical networks are run, scaled down to fit your shop.</p>
+          <ul class="split-list">
+            <li>Network design &amp; architecture (LAN / WAN / Wi-Fi)</li>
+            <li>Firewalls, VPN &amp; Zero-Trust security</li>
+            <li>Routing, switching &amp; multi-site connectivity</li>
+            <li>Monitoring, optimization &amp; troubleshooting</li>
+          </ul>
+          <span class="more">Explore network services <span class="arrow">→</span></span>
+        </a>
+
+        <a href="app-development.html" class="split-card reveal">
+          <div class="split-icon" aria-hidden="true">⚙️</div>
+          <div class="kicker">02 — App Development</div>
+          <h3>Software that fits your business.</h3>
+          <p>Custom web and mobile apps, internal tools, and integrations — built around your actual workflow instead of bending your business to off-the-shelf software.</p>
+          <ul class="split-list">
+            <li>Custom web &amp; mobile apps</li>
+            <li>Internal tools &amp; dashboards</li>
+            <li>Automations &amp; system integrations</li>
+            <li>Built, hosted, and supported end-to-end</li>
+          </ul>
+          <span class="more">Explore app development <span class="arrow">→</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY / PAIN -->
+  <section class="pain" id="why">
+    <div class="container">
+      <div class="section-label reveal">Why it matters</div>
+      <h2 class="section-title reveal" style="max-width:24ch;">A slow network and clunky software cost you <em>more than you think.</em></h2>
+      <p class="section-sub reveal">These are the things that quietly drain time and money until someone with the right engineering background fixes them for good.</p>
+
+      <div class="pain-grid">
+        <div class="pain-card reveal">
+          <div class="icon orange" aria-hidden="true">🐌</div>
+          <h3>Slow, flaky network</h3>
+          <p>Dropped Wi-Fi, dead zones, sluggish connections, the system that "just goes down sometimes." It kills productivity and nobody can tell you why.</p>
+        </div>
+        <div class="pain-card reveal">
+          <div class="icon violet" aria-hidden="true">🔓</div>
+          <h3>Wide-open security</h3>
+          <p>Flat network, default passwords, no segmentation, no firewall rules worth the name. One bad click and the whole shop is exposed.</p>
+        </div>
+        <div class="pain-card reveal">
+          <div class="icon teal" aria-hidden="true">🧩</div>
+          <h3>Software that doesn't fit</h3>
+          <p>You pay monthly for five tools that half-work, don't talk to each other, and force your team into workarounds and copy-paste between tabs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="container">
+      <div class="section-label reveal">How it works</div>
+      <h2 class="section-title reveal">From "this is a mess" to <em>"it just works."</em></h2>
+
+      <div class="how-steps">
+        <div class="step reveal">
+          <div class="step-num">1</div>
+          <h3>Assess</h3>
+          <p>We start with a free assessment of your network, your tools, and what's slowing you down — on site when it helps.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">2</div>
+          <h3>Design</h3>
+          <p>You get a clear plan: what we'd build or fix, how it's secured, what it costs, and what it buys you. No jargon wall.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">3</div>
+          <h3>Build</h3>
+          <p>We build and deploy it properly — documented, tested, and secured — with as little disruption to your operation as possible.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">4</div>
+          <h3>Support</h3>
+          <p>We don't disappear. Monitoring, updates, and a direct line to the engineer who built it. Month-to-month, cancel anytime.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / CREDIBILITY -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <div class="section-label">Who's behind it</div>
+          <h2 class="section-title" style="max-width:16ch;">Enterprise engineering, <em>local hands.</em></h2>
+          <p>LogicStack is run by <strong>Hardeep Aujla</strong>, a senior network engineer based in Elkridge, Maryland with more than ten years architecting, securing, and optimizing large-scale networks for organizations like <strong>NASA, DISA, and the Department of Defense</strong>.</p>
+          <p>That means the same discipline behind mission-critical, high-security networks — Zero-Trust segmentation, hardened firewalls, resilient WAN design, real monitoring — applied to businesses that have never had access to that level of engineering before.</p>
+          <p>No call center, no offshore handoff. You work directly with the engineer who designs and builds your systems.</p>
+        </div>
+        <div class="cred-card reveal">
+          <h3>Credentials &amp; stack</h3>
+          <div class="cred-row">
+            <span class="cred-badge accent">CCNP R&amp;S</span>
+            <span class="cred-badge">CCNA</span>
+            <span class="cred-badge">CompTIA Security+</span>
+            <span class="cred-badge">CompTIA A+</span>
+            <span class="cred-badge">Palo Alto ACE</span>
+          </div>
+          <h3>Vendors</h3>
+          <div class="cred-row">
+            <span class="cred-badge">Cisco</span>
+            <span class="cred-badge">Juniper</span>
+            <span class="cred-badge">Palo Alto</span>
+            <span class="cred-badge">Fortinet</span>
+          </div>
+          <h3>Specialties</h3>
+          <div class="cred-row">
+            <span class="cred-badge">Zero Trust</span>
+            <span class="cred-badge">Firewalls / VPN</span>
+            <span class="cred-badge">BGP / OSPF</span>
+            <span class="cred-badge">SD-Access</span>
+            <span class="cred-badge">Network security</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT CTA -->
+  <section class="assess" id="assessment">
+    <div class="container">
+      <div class="assess-wrap">
+        <div class="assess-text reveal">
+          <div class="section-label">Free assessment</div>
+          <h2 class="section-title">Tell us what's slow, broken, or risky. <em>We'll map the fix.</em></h2>
+          <p class="section-sub">A short questionnaire about your network and the software you rely on. We use it to put together a clear, written plan — what to fix, how to secure it, and what to build. Free, no obligation.</p>
+          <div class="assess-features">
+            <div class="assess-feat"><div class="check">✓</div><p><strong>Takes about 10 minutes.</strong> Detailed enough to be useful, short enough to finish over coffee.</p></div>
+            <div class="assess-feat"><div class="check">✓</div><p><strong>You get a real plan back.</strong> A written roadmap for your network and apps — not a sales deck.</p></div>
+            <div class="assess-feat"><div class="check">✓</div><p><strong>No obligation.</strong> Keep the plan whether you hire us or not. It's yours.</p></div>
+          </div>
+          <div style="margin-top:36px;">
+            <a href="assessment.html" class="btn btn-primary">Start the assessment <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <div class="assess-preview reveal">
+          <div class="assess-preview-label">Preview: what we'll ask</div>
+          <div class="assess-q"><span class="qnum">01</span> What does your business do, and how many people work there?</div>
+          <div class="assess-q"><span class="qnum">02</span> How is your network set up today — internet, Wi-Fi, switches, who manages it?</div>
+          <div class="assess-q"><span class="qnum">03</span> Where does it hurt — slow connections, dead zones, downtime, security worries?</div>
+          <div class="assess-q"><span class="qnum">04</span> What software and tools does your team use every day?</div>
+          <div class="assess-q"><span class="qnum">05</span> What manual task or clunky tool wastes the most time?</div>
+          <div class="assess-q"><span class="qnum">06</span> Have you had a security review or do you worry you're exposed?</div>
+          <div class="assess-q"><span class="qnum">07</span> What would "fixed" look like 90 days from now?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCAL -->
+  <section>
+    <div class="container">
+      <div class="local-grid">
+        <div class="reveal">
+          <div class="section-label">Local first</div>
+          <h2 class="section-title" style="max-width:16ch;">Your <em>neighbor,</em> not a faceless MSP.</h2>
+          <div class="local-text">
+            <p>LogicStack is based in Elkridge, Maryland and works with shops, clinics, offices, contractors, and service businesses across the DC–Baltimore corridor. We can show up on site, walk your space, and put hands on the actual gear — not just remote in and guess.</p>
+            <p>Within driving distance of:</p>
+          </div>
+          <div class="local-areas">
+            <span>Elkridge</span><span>Columbia</span><span>Baltimore</span><span>Annapolis</span><span>DC</span><span>Silver Spring</span><span>Laurel</span><span>Ellicott City</span><span>Towson</span><span>Glen Burnie</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="reveal">
+          <div class="local-card"><div class="big" aria-hidden="true">🏢</div><div class="label">Built for local business</div></div>
+          <div class="local-card"><div class="big" aria-hidden="true">🤝</div><div class="label">On-site discovery &amp; install</div></div>
+          <div class="local-card"><div class="big" aria-hidden="true">⚡</div><div class="label">48-hour first response</div></div>
+          <div class="local-card"><div class="big" aria-hidden="true">📱</div><div class="label">Direct line to the engineer</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIG CTA -->
+  <section class="big-cta">
+    <div class="container">
+      <h2 class="reveal">Stop fighting your network and your software. <em>Let's fix both.</em></h2>
+      <p class="reveal">Ten minutes to tell us what's going on. You'll get a free, written plan for a faster, safer network and the custom tools to run your business better.</p>
+      <a href="assessment.html" class="btn btn-primary reveal">Start your free assessment <span class="arrow">→</span></a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-wrap">
+        <div class="contact-info reveal">
+          <div class="section-label">Get in touch</div>
+          <h2>Let's talk about your setup.</h2>
+          <p>Not ready for the full assessment? Drop a line with whatever you've got — a problem, a project, or just a question. We reply within one business day.</p>
+          <div class="contact-detail"><span class="key">Email</span><span class="val"><a href="mailto:kernelkrafttech@gmail.com">kernelkrafttech@gmail.com</a></span></div>
+          <div class="contact-detail"><span class="key">Call or text</span><span class="val"><a href="tel:+14438501215">(443) 850-1215</a></span></div>
+          <div class="contact-detail"><span class="key">Based in</span><span class="val">Elkridge, Maryland</span></div>
+          <div class="contact-detail"><span class="key">Service area</span><span class="val">Baltimore &amp; the DC corridor</span></div>
+          <div class="contact-detail"><span class="key">Hours</span><span class="val">Mon–Fri · 9am–5pm ET</span></div>
+        </div>
+        <div class="reveal">
+          <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="f08b63ba-6b6c-40c0-be32-20fb54fda15d"/>
+            <input type="hidden" name="subject" value="New LogicStack Contact Form Submission"/>
+            <input type="hidden" name="from_name" value="LogicStack Website"/>
+            <input type="hidden" name="redirect" value="https://kernelkrafttech-hue.github.io/logicstack/thanks.html"/>
+            <input type="checkbox" name="botcheck" class="hidden" style="display:none;"/>
+            <div class="form-row">
+              <div><label for="name">Name <span class="req">*</span></label><input type="text" id="name" name="Name" required/></div>
+              <div><label for="biz">Business name</label><input type="text" id="biz" name="Business Name"/></div>
+            </div>
+            <div class="form-row">
+              <div><label for="email">Email <span class="req">*</span></label><input type="email" id="email" name="Email" required/></div>
+              <div><label for="phone">Phone (optional)</label><input type="tel" id="phone" name="Phone"/></div>
+            </div>
+            <div>
+              <label for="interest">What do you need?</label>
+              <select id="interest" name="Interest">
+                <option>Network design or install</option>
+                <option>Network security / firewall review</option>
+                <option>Wi-Fi / connectivity troubleshooting</option>
+                <option>Ongoing network monitoring &amp; support</option>
+                <option>Custom app or software</option>
+                <option>Internal tool / dashboard / automation</option>
+                <option>Not sure — just want to talk</option>
+              </select>
+            </div>
+            <div><label for="message">Tell us what's going on <span class="req">*</span></label><textarea id="message" name="Message" required placeholder="Example: We run a 12-person clinic with two locations. The Wi-Fi drops constantly, we're worried our network isn't secure, and our booking system doesn't sync between sites."></textarea></div>
+            <button type="submit" class="form-submit">Send message →</button>
+            <div class="form-note">We reply within one business day.</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="logo"><span class="logo-icon">LS</span> LogicStack</div>
+        <div style="font-size:14px;color:var(--ink-dim);max-width:34ch;margin-top:12px;">Custom apps &amp; network engineering for businesses in the DC–Baltimore corridor.</div>
+      </div>
+      <nav class="footer-nav">
+        <a href="network-engineering.html">Network Engineering</a>
+        <a href="app-development.html">App Development</a>
+        <a href="assessment.html">Free Assessment</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <div>© <span id="year"></span> LogicStack LLC · Elkridge, Maryland</div>
+      <div><a href="#top">Back to top ↑</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* mobile menu */
+var navToggle = document.getElementById('navToggle');
+var mobileMenu = document.getElementById('mobileMenu');
+if (navToggle) {
+  navToggle.addEventListener('click', function () {
+    var open = mobileMenu.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  mobileMenu.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () { mobileMenu.classList.remove('open'); navToggle.setAttribute('aria-expanded', 'false'); });
+  });
+}
+
+/* reveal on scroll */
+var io = new IntersectionObserver(function (entries) {
+  entries.forEach(function (el) { if (el.isIntersecting) { el.target.classList.add('in'); io.unobserve(el.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+document.querySelectorAll('.hero .reveal').forEach(function (el, i) { el.style.transitionDelay = (i * 100) + 'ms'; });
+</script>
+</body>
+</html>

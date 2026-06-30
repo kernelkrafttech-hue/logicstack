@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Thanks — We'll be in touch | LogicStack</title>
+<meta name="description" content="Thanks for reaching out to LogicStack. We'll get back to you within one business day."/>
+<meta name="robots" content="noindex"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo"><span class="logo-icon">LS</span> LogicStack</a>
+    <nav class="nav-links">
+      <a href="network-engineering.html">Network Engineering</a>
+      <a href="app-development.html">App Development</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <a href="assessment.html" class="nav-cta">Get a Free Assessment →</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="network-engineering.html">Network Engineering</a>
+    <a href="app-development.html">App Development</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="assessment.html" class="nav-cta">Get a Free Assessment →</a>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="thanks-wrap">
+      <div class="thanks-card">
+        <div class="thanks-mark" aria-hidden="true">✓</div>
+        <h1>Got it — <em>thank you.</em></h1>
+        <p>Your message is on its way. We read every one personally and reply within one business day, usually with a few first thoughts on what we'd do.</p>
+        <div class="hero-ctas" style="justify-content:center;">
+          <a href="index.html" class="btn btn-primary">Back to home <span class="arrow">→</span></a>
+          <a href="network-engineering.html" class="btn btn-outline">Explore services</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="logo"><span class="logo-icon">LS</span> LogicStack</div>
+        <div style="font-size:14px;color:var(--ink-dim);max-width:34ch;margin-top:12px;">Custom apps &amp; network engineering for businesses in the DC–Baltimore corridor.</div>
+      </div>
+      <nav class="footer-nav">
+        <a href="network-engineering.html">Network Engineering</a>
+        <a href="app-development.html">App Development</a>
+        <a href="assessment.html">Free Assessment</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <div>© <span id="year"></span> LogicStack LLC · Elkridge, Maryland</div>
+      <div><a href="index.html">Home</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+var navToggle = document.getElementById('navToggle');
+var mobileMenu = document.getElementById('mobileMenu');
+if (navToggle) {
+  navToggle.addEventListener('click', function () {
+    var open = mobileMenu.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  mobileMenu.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () { mobileMenu.classList.remove('open'); navToggle.setAttribute('aria-expanded', 'false'); });
+  });
+}
+</script>
+</body>
+</html>
