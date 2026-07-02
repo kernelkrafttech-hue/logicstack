@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BizPilot — Delete your account</title>
+  <style>
+    :root { --navy:#0E1430; --accent:#7C3AED; --ink:#1A2140; --muted:#54607A; --line:#E4E8F0; --bg:#F7F8FC; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px 72px; }
+    header { background: linear-gradient(135deg, var(--navy), #1A2140); color: #fff; padding: 40px 20px 34px; margin-bottom: 32px; }
+    header .inner { max-width: 720px; margin: 0 auto; }
+    .badge { width: 52px; height: 52px; border-radius: 14px; margin-bottom: 16px; background: linear-gradient(135deg, #E11D48, #7C3AED); display: flex; align-items: center; justify-content: center; font-size: 26px; }
+    h1 { font-size: 26px; margin: 0 0 6px; }
+    header p { margin: 0; color: #AEB7CE; font-size: 14px; }
+    h2 { font-size: 18px; margin: 32px 0 10px; color: var(--navy); }
+    p, li { color: #2C3550; font-size: 15px; }
+    a { color: #2563EB; }
+    ol, ul { padding-left: 22px; }
+    li { margin: 6px 0; }
+    .steps { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 18px 22px; margin: 14px 0; }
+    .btn { display: inline-block; margin-top: 8px; background: linear-gradient(135deg, #E11D48, #7C3AED); color: #fff; text-decoration: none; padding: 12px 22px; border-radius: 12px; font-weight: 600; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; }
+    th, td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; vertical-align: top; }
+    th { background: #EEF1F8; }
+    footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+    .overflow { overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="inner">
+      <div class="badge">🗑️</div>
+      <h1>Delete your BizPilot account</h1>
+      <p>LogicStack &middot; BizPilot (com.logicstack.bizpilot)</p>
+    </div>
+  </header>
+  <div class="wrap">
+    <p>You can permanently delete your BizPilot account and all of the data
+      associated with it. There are two ways to do this.</p>
+
+    <h2>Option 1 — Delete in the app (immediate)</h2>
+    <div class="steps">
+      <ol>
+        <li>Open <strong>BizPilot</strong> and sign in.</li>
+        <li>Go to <strong>Settings</strong>.</li>
+        <li>Tap <strong>Delete account</strong> in the account section.</li>
+        <li>Confirm. Your account and cloud data are permanently deleted.</li>
+      </ol>
+    </div>
+
+    <h2>Option 2 — Request by email</h2>
+    <p>If you can't access the app, email us from the address on your account and
+      we will delete your account within 30 days.</p>
+    <a class="btn" href="mailto:kernelkrafttech@gmail.com?subject=Delete%20my%20BizPilot%20account">
+      Email a deletion request</a>
+
+    <h2>What gets deleted</h2>
+    <div class="overflow">
+    <table>
+      <tr><th>Deleted</th><th>Retained</th></tr>
+      <tr>
+        <td>
+          <ul>
+            <li>Your sign-in account (email / Google login)</li>
+            <li>All cloud data under your account: businesses, products,
+              inventory, customers, suppliers, employees, sales, quotes, expenses,
+              appointments, and reports</li>
+            <li>Local app data on your device</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>Transaction records held by our payment processor
+              <strong>Stripe</strong>, which Stripe keeps as required by financial
+              and tax law (independent of BizPilot)</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+    </div>
+
+    <p><strong>Deletion is permanent and cannot be undone.</strong> Export any data
+      you want to keep (Settings &rarr; Export) before deleting.</p>
+
+    <footer>
+      &copy; 2026 LogicStack &middot; BizPilot &middot;
+      <a href="index.html">Privacy Policy</a> &middot;
+      <a href="terms.html">Terms of Service</a>
+    </footer>
+  </div>
+</body>
+</html>
