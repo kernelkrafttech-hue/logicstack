@@ -3,140 +3,296 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Veer — Privacy Policy</title>
+<title>Privacy Policy — Veer: Punjabi Senior Helper</title>
+<meta name="description" content="Privacy policy for Veer, a Punjabi-language companion app for older adults, by Logicstack LLC. Covers iPhone, iPad and Android.">
 <style>
-  :root { color-scheme: light; }
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff; --fg: #1f2328; --muted: #57606a;
+    --rule: #e3e6ea; --soft: #f6f8fa; --code: #f3f4f6; --link: #0969da;
+    --accent: #8a6209; --warn-bg: #fff8e6; --warn-rule: #d4a72c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --fg: #e6edf3; --muted: #9198a1;
+      --rule: #30363d; --soft: #161b22; --code: #1c2128; --link: #6cb6ff;
+      --accent: #e0b44e; --warn-bg: #1f1a0d; --warn-rule: #7d6320;
+    }
+  }
+  * { box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.65; color: #1f2328; background: #ffffff;
-    max-width: 760px; margin: 0 auto; padding: 32px 20px 80px;
+    line-height: 1.65; color: var(--fg); background: var(--bg);
+    max-width: 780px; margin: 0 auto; padding: 32px 20px 80px;
+    -webkit-text-size-adjust: 100%;
   }
-  h1 { font-size: 1.9rem; margin-bottom: 4px; }
-  h2 { font-size: 1.25rem; margin-top: 36px; border-bottom: 1px solid #e3e6ea; padding-bottom: 6px; }
-  .meta { color: #57606a; font-size: 0.95rem; margin-bottom: 8px; }
+  h1 { font-size: 1.9rem; margin-bottom: 4px; line-height: 1.2; }
+  h2 { font-size: 1.25rem; margin-top: 40px; border-bottom: 1px solid var(--rule); padding-bottom: 6px; }
+  h3 { font-size: 1.05rem; margin-top: 26px; margin-bottom: 6px; }
+  .meta { color: var(--muted); font-size: 0.95rem; margin: 2px 0; }
   ul { padding-left: 22px; }
   li { margin: 6px 0; }
-  code { background: #f3f4f6; padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
-  a { color: #0969da; }
-  .note { background: #f6f8fa; border: 1px solid #e3e6ea; border-radius: 8px; padding: 12px 16px; }
+  code { background: var(--code); padding: 1px 5px; border-radius: 4px; font-size: 0.9em;
+         font-family: ui-monospace, SFMono-Regular, Menlo, monospace; word-break: break-word; }
+  a { color: var(--link); }
+  .note { background: var(--soft); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 18px; margin: 20px 0; }
+  .callout { background: var(--warn-bg); border-left: 4px solid var(--warn-rule); border-radius: 4px;
+             padding: 14px 18px; margin: 20px 0; }
+  .tablewrap { overflow-x: auto; margin: 18px 0; border: 1px solid var(--rule); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.94rem; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th { background: var(--soft); font-size: 0.8rem; text-transform: uppercase;
+             letter-spacing: 0.05em; color: var(--muted); white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: none; }
+  footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--rule);
+           color: var(--muted); font-size: 0.9rem; }
 </style>
 </head>
 <body>
 
 <h1>Privacy Policy — Veer</h1>
-<p class="meta"><strong>App:</strong> Veer (Punjabi Voice Helper)</p>
-<p class="meta"><strong>Effective date:</strong> 25 June 2026</p>
+<p class="meta"><strong>App:</strong> Veer: Punjabi Senior Helper — for iPhone, iPad and Android</p>
+<p class="meta"><strong>Provided by:</strong> Logicstack LLC</p>
+<p class="meta"><strong>Effective date:</strong> 21 August 2026</p>
 <p class="meta"><strong>Contact:</strong> <a href="mailto:kernelkrafttech@gmail.com">kernelkrafttech@gmail.com</a></p>
 
-<p>Veer is a simple assistant designed for older Punjabi-speaking adults to manage health
-reminders, family contacts, prayer (Gurbani), news, and everyday tasks. We built Veer to be
-<strong>private by default</strong>. This policy explains, in plain terms, what data Veer handles,
-where it goes, and the choices you have.</p>
+<p>Veer is a simple companion app designed for older Punjabi-speaking adults, to help with medicines,
+doctors, appointments, family contacts, prayer (Gurbani), news and everyday tasks. We built Veer to be
+<strong>private by default</strong>. This policy explains, in plain terms, what Veer handles, where it
+goes, and the choices you have. It applies to the app on both Apple and Android devices; where the two
+platforms differ, that is spelled out.</p>
 
 <div class="note">
 <strong>The short version:</strong> Veer has no account and no login. Your personal information —
-medicines, doctors, appointments, family contacts, notes, and health details — is stored only on
-your device and is never sent to us or anyone else. We run no ads, no analytics, and no tracking.
-A few features (weather, optional AI help) contact outside services only as described below.
+medicines, doctors, appointments, family contacts, notes and health details — is stored only on your
+own device and is never sent to us or to anyone else. We operate no servers that hold your data. There
+are no ads, no analytics and no tracking of any kind. A few features (weather, news, prayer audio and
+an optional AI helper) contact outside services, and only for the reasons described below.
 </div>
 
-<h2>1. We do not collect data on our servers</h2>
-<p>Veer has no user accounts, no sign-in, and no servers that store your information. Everything you
-enter stays in the app's private storage on your phone. We, the developer, cannot see it. Uninstalling
-the app permanently removes this data from your device.</p>
+<h2>1. We do not collect your data on our servers</h2>
+<p>Veer has no user accounts, no sign-in and no servers that store your information. Everything you enter
+stays in the app's private storage on your phone. We, the developer, cannot see it, cannot retrieve it
+and cannot restore it. Uninstalling the app permanently removes this data from your device.</p>
 
 <h2>2. Information stored on your device only</h2>
 <p>The following is saved locally on your phone and is <strong>never transmitted off the device</strong>:</p>
 <ul>
-  <li>Profile details you choose to enter (name, age, emergency contact, allergies, conditions)</li>
-  <li>Medicines, dosages, and reminder times</li>
+  <li>Profile details you choose to enter — your name, age, emergency contact, allergies and conditions</li>
+  <li>Medicines, dosages, dose times and which doses you have marked as taken</li>
   <li>Doctors and health-care contacts</li>
-  <li>Appointments and tasks</li>
-  <li>Family and emergency contacts (names and phone numbers you type in)</li>
+  <li>Appointments and to-do items</li>
+  <li>Family and emergency contacts — the names and phone numbers you type in yourself</li>
   <li>Personal notes</li>
-  <li>App settings (language, text size, theme, accessibility preferences)</li>
+  <li>Your settings: language, text size, theme, accessibility preferences and your emergency number</li>
+  <li>Your AI provider key, if you choose to add one</li>
 </ul>
-<p>Veer does not read your device's contact list, call logs, messages, or files. Contacts in Veer are
-only the ones you type in yourself.</p>
+<p>Veer does not read your device's own contact list, call history, text messages, photos library or
+files. Contacts inside Veer are only the ones you type in yourself.</p>
 
-<h2>3. Information sent to outside services</h2>
-<p>Some features need the internet. In those cases, only the minimum data needed for the feature is sent,
-and never your stored personal or health information.</p>
+<h2>3. Permissions Veer asks for, and why</h2>
+<p>Veer asks for a permission only at the moment the feature needs it, and every one of them is optional
+— the app works without them.</p>
 
-<h3>Weather (location)</h3>
-<p>If you grant location permission, Veer uses your phone's location (or, as a fallback, your approximate
-location from your internet connection) to show the local weather. Your coordinates are sent to the
-weather provider <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> and a
-reverse-geocoding service to look up your city name. Location is used <strong>only</strong> for weather,
-is <strong>not stored</strong> as a history, and is <strong>not used for advertising or tracking</strong>.
-The weather feature is optional — Veer works without granting location.</p>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Permission</th><th>Used for</th><th>If you decline</th></tr></thead>
+  <tbody>
+    <tr><td>Location</td><td>Showing today's weather for where you are</td><td>Veer shows the time of day instead of weather. Nothing else changes.</td></tr>
+    <tr><td>Microphone</td><td>Speaking to "Ask Veer" instead of typing</td><td>You can still type your question.</td></tr>
+    <tr><td>Speech recognition <em>(iPhone and iPad)</em></td><td>Turning what you say into text</td><td>You can still type your question.</td></tr>
+    <tr><td>Camera</td><td>Photographing a medicine label to fill in a form</td><td>You can type the details in yourself.</td></tr>
+    <tr><td>Photos</td><td>Choosing an existing picture of a label instead of taking one</td><td>You can type the details in yourself.</td></tr>
+    <tr><td>Notifications</td><td>Reminding you about medicines and appointments</td><td>Reminders will not appear. Your medicine list still works.</td></tr>
+    <tr><td>Phone <em>(Android only)</em></td><td>Placing the emergency call the moment you tap the button</td><td>Veer opens your dialler with the number filled in, and you press call.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>On <strong>Android only</strong>, the "My apps" screen shows the other apps installed on your phone
+so you can open them with a large, clear button. Veer reads only the list of apps that have a launcher
+icon, together with their names and icons, and this list never leaves your device — it is cached
+privately so the screen opens quickly. Apple does not permit an app to see what else is installed, so
+this feature does not exist on iPhone or iPad.</p>
+
+<h2>4. Information sent to outside services</h2>
+<p>Some features need the internet. In each case only the minimum needed for that feature is sent, always
+over an encrypted (HTTPS) connection, and <strong>never</strong> your stored personal or health
+information.</p>
+
+<h3>Weather and location</h3>
+<p>If you allow location access, Veer sends your coordinates to
+<a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (<code>api.open-meteo.com</code>)
+to fetch the forecast, and to <a href="https://www.bigdatacloud.com/" target="_blank" rel="noopener">BigDataCloud</a>
+(<code>api.bigdatacloud.net</code>) to turn those coordinates into a place name to show you.</p>
+<p>If you decline location access, Veer can instead estimate your rough area from your internet
+connection using <code>ipapi.co</code> or <code>ipwho.is</code>, which receive your device's IP address.
+Your location is used <strong>only</strong> for weather, is <strong>not</strong> kept as a history, and
+is <strong>never</strong> used for advertising or tracking.</p>
 
 <h3>Voice (microphone)</h3>
-<p>When you use the "Ask Veer" voice feature, your speech is converted to text by your phone's own
-built-in speech recognizer. Veer does not record, store, or upload raw audio. Only the resulting text
-question may be sent to an AI service, and only if you have enabled that option (see below).</p>
+<p>When you use the "Ask Veer" voice feature, your speech is turned into text by your phone's own speech
+recogniser. Veer itself never records, stores or uploads your audio — only the resulting text is used,
+and it is passed on to an AI service only if you have switched that option on (see below).</p>
+<p>Please note that the recogniser belongs to your phone, not to Veer, and it may perform the
+transcription on its own servers: on iPhone and iPad, Apple may send the audio to Apple to transcribe
+it, and on Android, Google may do the same. That step is handled under
+<a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">Apple's</a> and
+<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's</a> own privacy
+policies. You can avoid it entirely by typing your question instead of speaking it.</p>
 
-<h3>Scan-to-text (camera)</h3>
-<p>When you photograph a label or prescription to auto-fill a form, the text is read <strong>on your
-device</strong> using offline recognition. The photo stays on your phone. An optional cloud option exists
-only if you choose to enable it with your own AI key (see below); otherwise no image leaves your device.
-Temporary photo files used for scanning are deleted immediately after processing.</p>
+<h3>Scan a label (camera)</h3>
+<p>When you photograph a medicine label or prescription to fill in a form, the text is read
+<strong>on your device</strong> using offline recognition, and the photo stays on your phone. The
+temporary image file is deleted as soon as it has been read.</p>
+<div class="callout">
+<p><strong>There is one exception, and Veer always asks first.</strong> If you have added your own AI key
+and switched on "smarter understanding", Veer can offer to send that one photo to the AI provider you
+chose, which reads labels far more accurately. Veer asks your permission <strong>every single time</strong>,
+names the provider in the question, and reads the photo on your phone instead if you say no. No image
+ever leaves your device without you agreeing to it on that occasion.</p>
+</div>
 
-<h3>Optional AI assistance (bring-your-own key)</h3>
-<p>Veer can optionally connect to a third-party AI provider to better understand your questions. This is
-<strong>off unless you add your own API key</strong> in Settings. If enabled, only the text of your
-question (and, for cloud scan-to-text, the photo you chose) is sent to the provider you selected:</p>
+<h3>Optional AI assistance (bring your own key)</h3>
+<p>Veer can optionally use a third-party AI service to understand your questions more flexibly. This is
+<strong>switched off unless you add your own API key</strong> in Settings and turn on "smarter
+understanding". When it is on, what is sent is the text of your question — and, only with your
+per-photo agreement described above, a photo you scanned. It goes to whichever provider your key
+belongs to:</p>
 <ul>
   <li>OpenAI — <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">privacy policy</a></li>
   <li>Google (Gemini) — <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">privacy policy</a></li>
   <li>Anthropic (Claude) — <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">privacy policy</a></li>
 </ul>
-<p>Your stored personal and health data is never included in these requests. Use of the provider is
-governed by that provider's own privacy policy. Your API key is stored only on your device.</p>
-
-<h3>News, prayer, and live audio</h3>
-<p>The News, Gurbani prayer audio, and live radio/kirtan features fetch publicly available content from
-third-party sources (such as Google News, BBC Punjabi, the Internet Archive, SikhNet, and All India
-Radio). These are simple content requests; no personal information is sent. Following a link or video may
-open another app (for example YouTube), which has its own privacy policy.</p>
+<p>Your saved medicines, doctors, appointments, family contacts and notes are <strong>never</strong>
+included in these requests. Your API key is stored only on your device, and you can delete it in
+Settings at any time to stop all AI requests immediately. Because you are using your own key, your use
+of that provider is governed by your agreement with them and by their privacy policy, not ours.</p>
+<p>AI answers are generated by a machine and can be wrong. Veer is instructed to decline medical
+questions and refer you to your doctor, but you should never rely on an AI answer for a health
+decision. Every AI answer in the app carries a "Report this answer" link that emails it to us.</p>
 
 <h3>Address search</h3>
-<p>When typing a location into an appointment, what you type is sent to an open mapping search service
-(<a href="https://photon.komoot.io/" target="_blank" rel="noopener">Photon / OpenStreetMap</a>) to suggest
-addresses. No other data is included.</p>
+<p>When you type a place into an appointment or a doctor's address, what you type — and, if available,
+your approximate coordinates — is sent to open address-lookup services to suggest matching addresses:
+<a href="https://photon.komoot.io/" target="_blank" rel="noopener">Photon / OpenStreetMap</a>
+(<code>photon.komoot.io</code>) and, for United States addresses, the US Census Bureau geocoder
+(<code>geocoding.geo.census.gov</code>). Nothing else about you is included.</p>
 
-<h2>4. Phone calls and notifications</h2>
-<p>The emergency (SOS) feature can place a phone call to a number you have set, when you tap it. Veer does
-not collect call data. Notifications are used only to remind you about medicines, appointments, and tasks
-you created.</p>
+<h3>Directions</h3>
+<p>Tapping "Directions" on an appointment or a doctor hands the address you saved to
+<a href="https://www.google.com/maps" target="_blank" rel="noopener">Google Maps</a> in your browser or
+maps app, so it can route you there. Only that one address is passed across, and what happens next is
+governed by <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's
+privacy policy</a>.</p>
 
-<h2>5. No ads, analytics, or tracking</h2>
-<p>Veer contains <strong>no advertising</strong>, <strong>no third-party analytics</strong>, and
-<strong>no tracking SDKs</strong>. Veer does not use an advertising identifier and does not build a profile
-of you.</p>
+<h3>News, prayer and live audio</h3>
+<p>The News, Gurbani and live radio features fetch publicly available content from third parties,
+including Google News, BBC Punjabi (<code>feeds.bbci.co.uk</code>), the Internet Archive
+(<code>archive.org</code>), SikhNet (<code>radio.sikhnet.com</code>), SGPC
+(<code>live.sgpc.net</code>) and All India Radio. These are ordinary content requests — no personal
+information is attached to them. Veer does not save this audio to your phone. Opening a news article or
+a TV channel hands you over to your browser or to YouTube, which have their own privacy policies.</p>
 
-<h2>6. Children</h2>
-<p>Veer is designed for adults and is not directed to children under 13. We do not knowingly collect
-information from children.</p>
+<h2>5. Emergency calls</h2>
+<p>The Emergency screen can dial your country's emergency-services number, or a different number you set
+yourself in Settings, and can call a family contact you have saved. Veer places the call through your
+phone's own dialler and keeps no record of it. We receive nothing when you use this feature.</p>
+<div class="callout">
+<p><strong>Veer is not an emergency service.</strong> It only dials a number for you. It does not
+contact emergency services on your behalf, does not monitor you, and cannot summon help by itself. On
+iPhone and iPad your phone will always ask you to confirm before the call is placed.</p>
+</div>
 
-<h2>7. Data security and retention</h2>
-<p>Data on your device is protected by your phone's standard app sandboxing. Information sent to the outside
-services described above is transmitted over encrypted (HTTPS) connections. Because your personal data lives
-only on your device, it is retained until you delete it in the app or uninstall Veer.</p>
+<h2>6. Notifications</h2>
+<p>Notifications are created and scheduled entirely on your device, by the app itself. They are used only
+to remind you about the medicines, appointments and tasks that you entered. Veer sends no push
+notifications from any server — there is no server — and nothing about your reminders is transmitted
+anywhere.</p>
 
-<h2>8. Your choices and deleting your data</h2>
+<h2>7. No ads, analytics or tracking</h2>
+<p>Veer contains <strong>no advertising</strong>, <strong>no third-party analytics</strong> and
+<strong>no tracking software</strong>. Veer does not use an advertising identifier, does not track you
+across other apps or websites, and does not build a profile of you. We do not sell or share your
+personal information, and we never have.</p>
+
+<h2>8. How this maps to the app store privacy labels</h2>
+<p>Both Apple and Google require a summary of data handling on the app's store page. For completeness,
+this is what Veer declares. In every case the data is used only to make the feature work, is
+<strong>not linked to your identity</strong>, and is <strong>not used to track you</strong>.</p>
+
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Data type</th><th>When it is sent</th><th>Who receives it</th></tr></thead>
+  <tbody>
+    <tr><td>Precise location</td><td>Only while showing the weather, if you allowed location</td><td>Open-Meteo, BigDataCloud</td></tr>
+    <tr><td>Coarse location</td><td>As a weather fallback if you declined location; and when searching an address</td><td>ipapi.co or ipwho.is; Photon, US Census geocoder</td></tr>
+    <tr><td>Photos</td><td>Only a label you scanned, and only after you agree to that specific photo</td><td>The AI provider whose key you added</td></tr>
+    <tr><td>Other user content</td><td>The question you ask "Ask Veer", when smarter understanding is on</td><td>The AI provider whose key you added</td></tr>
+    <tr><td>Health information</td><td>Only if a label you scanned, or a question you asked, happens to contain it</td><td>The AI provider whose key you added</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Nothing else is collected. In particular Veer collects no contact information, no identifiers, no
+purchase history, no browsing or search history, no usage statistics, and no crash or diagnostic
+reports.</p>
+
+<h2>9. Children</h2>
+<p>Veer is designed for adults, particularly older adults, and is not directed to children. We do not
+knowingly collect information from children. If you believe a child has provided information through
+this app, please contact us and we will help you remove it — though in practice, all such information
+is on the device itself and can be deleted there.</p>
+
+<h2>10. Security and retention</h2>
+<p>Data on your device is protected by your phone's standard app sandboxing, which prevents other apps
+from reading it, and by your device passcode. Everything sent to the outside services described above
+travels over encrypted HTTPS connections. Because your personal data lives only on your device, we
+retain none of it; it is kept until you delete it in the app or uninstall Veer.</p>
+<p>Note that if your phone is backed up to iCloud or to Google, your Veer data may be included in that
+backup, under Apple's or Google's own terms. You can exclude Veer from backups in your device settings.</p>
+
+<h2>11. Your choices and your rights</h2>
 <ul>
-  <li>You can decline or revoke location, microphone, and camera permissions at any time in your phone's settings.</li>
-  <li>You can delete any item (medicine, contact, note, etc.) inside the app.</li>
-  <li>Uninstalling Veer permanently removes all data the app stored on your device.</li>
-  <li>You can remove your AI provider key in Settings at any time to stop all AI requests.</li>
+  <li>You can decline, or later revoke, any permission — location, microphone, speech, camera, photos,
+      notifications — in your phone's settings, at any time.</li>
+  <li>You can delete any individual item (a medicine, a contact, a note) inside the app.</li>
+  <li>You can remove your AI provider key in Settings, which stops every AI request immediately.</li>
+  <li>You can set or change the emergency number Veer dials in Settings.</li>
+  <li>Uninstalling Veer permanently removes everything the app stored on your device.</li>
+</ul>
+<p>If you are in the European Economic Area, the United Kingdom, California or another region with data
+protection rights — such as the right to access, correct, delete or export your personal data, or to
+object to its processing — those rights apply to personal data a company holds about you. Because
+Logicstack LLC holds none of your personal data on any server, there is nothing for us to retrieve,
+correct or erase: you already hold and control all of it on your own device, and deleting it there is
+final. If you have a question about this, please write to us at the address below and we will help.</p>
+
+<h2>12. Differences between iPhone and Android</h2>
+<ul>
+  <li><strong>My apps:</strong> available on Android only. Apple does not allow an app to see or open
+      other apps, so this feature is not present on iPhone or iPad.</li>
+  <li><strong>Screen off:</strong> available on Android only, using a permission you grant once. Apple
+      provides no equivalent, so the button is not shown on iPhone or iPad.</li>
+  <li><strong>Emergency calls:</strong> on Android, with your permission, Veer can place the call the
+      instant you tap. On iPhone and iPad your phone always shows its own confirmation first — no app
+      can bypass that.</li>
+  <li><strong>Punjabi scanning and speech:</strong> the languages available for reading Gurmukhi from a
+      photo, and for speaking answers aloud, depend on what your phone provides. They differ between
+      Apple and Android devices, and between models.</li>
 </ul>
 
-<h2>9. Changes to this policy</h2>
-<p>If this policy changes, we will update this page and revise the effective date above.</p>
+<h2>13. Changes to this policy</h2>
+<p>If this policy changes, we will update this page and revise the effective date at the top. Significant
+changes will also be noted in the app's release notes.</p>
 
-<h2>10. Contact</h2>
-<p>Questions about this policy? Email <a href="mailto:kernelkrafttech@gmail.com">kernelkrafttech@gmail.com</a>.</p>
+<h2>14. Contact</h2>
+<p>Questions about this policy, or about your privacy in Veer? Email
+<a href="mailto:kernelkrafttech@gmail.com">kernelkrafttech@gmail.com</a>.</p>
+
+<footer>
+  <p>Veer: Punjabi Senior Helper — © 2026 Logicstack LLC. Last updated 21 August 2026.</p>
+</footer>
 
 </body>
 </html>
