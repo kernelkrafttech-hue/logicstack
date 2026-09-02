@@ -13,26 +13,51 @@
   code { background: #f2f2f2; padding: 1px 4px; border-radius: 3px; }
   .meta { color: #666; font-size: 0.9rem; }
   ul { padding-left: 1.2rem; }
+  table { border-collapse: collapse; width: 100%; margin-top: 0.5rem; }
+  th, td { border: 1px solid #ddd; padding: 8px 10px; text-align: left;
+           vertical-align: top; font-size: 0.95rem; }
+  th { background: #f7f7f7; }
 </style>
 </head>
 <body>
 
 <h1>Privacy Policy — WeatherDrobe</h1>
-<p class="meta">Last updated: 30 June 2026</p>
+<p class="meta">Last updated: 2 September 2026</p>
 
 <p>
   WeatherDrobe ("the app", "we", "us") is a weather-and-wardrobe app that shows
   an outfit suited to today's weather. This policy explains what data the app
-  handles and why. WeatherDrobe is a fully on-device app: we operate no servers,
-  user accounts, or profiles, and we do not track you.
+  handles and why.
+</p>
+
+<p>
+  <strong>It covers both versions of the app</strong> — the Android version
+  distributed through Google Play, and the iPhone and iPad version distributed
+  through the Apple App Store. The two are built from the same code and handle
+  your data the same way. Where a platform genuinely differs — the store that
+  takes a payment, the name of a permission, where you go to change a setting —
+  this policy says so explicitly and names both.
+</p>
+
+<p>
+  WeatherDrobe is a fully on-device app: we operate no servers, user accounts,
+  or profiles, and we do not track you.
 </p>
 
 <h2>Summary</h2>
 <ul>
-  <li>No accounts. No sign-in. No advertising. No analytics or tracking SDKs.</li>
-  <li>Your location is sent only to weather providers, only to fetch a forecast.</li>
+  <li>No accounts. No sign-in. No advertising. No analytics SDK of our own, on
+      either platform.</li>
+  <li>Your location is sent only to our weather provider, only to fetch a
+      forecast.</li>
   <li>Photos you add stay on your device and are never uploaded.</li>
-  <li>Uninstalling the app deletes everything it stored.</li>
+  <li>If the app crashes, an anonymous diagnostic report may be sent so we can
+      fix it.</li>
+  <li>If you buy Premium, the purchase is handled by Google Play on Android or
+      the Apple App Store on iPhone and iPad — whichever your device uses — and
+      confirmed through RevenueCat. No account is created and we never see a
+      card number.</li>
+  <li>Uninstalling the app deletes everything it stored, on either platform.</li>
 </ul>
 
 <h2>Information We Process</h2>
@@ -41,68 +66,165 @@
 <p>
   To show local weather, the app may request your device location (precise or
   approximate). If you grant permission, your latitude and longitude are sent
-  over an encrypted (HTTPS) connection to our third-party weather providers
-  (see below) solely to retrieve a forecast for that point. You can instead
-  search for a city by name; that search text is sent to a geocoding service to
-  resolve coordinates. Location data is used only for app functionality. It is
-  never used for advertising or tracking, and we do not store it on any server
-  of ours — we have none.
+  over an encrypted (HTTPS) connection to our weather provider (see below)
+  solely to retrieve a forecast for that point. You can instead search for a
+  city by name; that search text is sent to a geocoding service to resolve
+  coordinates. Location data is used only for app functionality. It is never
+  used for advertising or tracking, and we do not store it on any server of
+  ours — we have none.
+</p>
+<p>
+  This is the same on both platforms. On Android the permission is
+  <code>ACCESS_FINE_LOCATION</code> / <code>ACCESS_COARSE_LOCATION</code>; on
+  iPhone and iPad it is "While Using the App" location access
+  (<code>NSLocationWhenInUseUsageDescription</code>). Neither version asks for
+  background or "always" location.
 </p>
 
 <h3>Photos</h3>
 <p>
   The app lets you pick or capture images for your wardrobe. These images are
   stored locally on your device only. They are never transmitted off the device,
-  uploaded, or shared.
+  uploaded, or shared. If you choose "Save Image" from the share sheet, the
+  image is written to your own photo library on your device and nowhere else.
 </p>
 
 <h3>App Settings</h3>
 <p>
-  Preferences (units, theme, notification choices, selected location) are saved
-  locally on your device using standard on-device storage. They are not sent
-  anywhere.
+  Preferences (units, theme, character choice, notification choices, selected
+  location) are saved locally on your device using standard on-device storage —
+  <code>SharedPreferences</code> on Android, <code>UserDefaults</code> on
+  iPhone and iPad. They are not sent anywhere.
+</p>
+
+<h3>Home Screen Widgets and Background Refresh</h3>
+<p>
+  Both the Android and the iOS version offer home screen widgets. To keep a
+  widget current, the app may refresh the forecast in the background — through
+  Android's WorkManager or iOS's background app refresh — which sends the same
+  location to the same weather provider described above, and nothing else. The
+  result is written to storage shared between the app and its widget on your
+  device (a shared preferences file on Android, an App Group container on
+  iPhone and iPad). Remove the widget, or turn off background refresh in your
+  system settings, and these refreshes stop.
 </p>
 
 <h3>Notifications</h3>
 <p>
   If you enable reminders, notifications are scheduled and shown locally on your
-  device. No notification data leaves your device.
+  device. There is no push server: no notification data leaves your device, on
+  either platform. Android 13 and later ask for the
+  <code>POST_NOTIFICATIONS</code> permission; iPhone and iPad ask through the
+  standard system notification prompt.
+</p>
+
+<h3>Crash Diagnostics</h3>
+<p>
+  If the app crashes or hits an unexpected error, a diagnostic report may be sent
+  to our error-monitoring provider (Sentry) so the fault can be fixed. A report
+  contains the error, a stack trace, and basic device information such as the
+  operating system version and device model. It does not contain your name, email,
+  account identifier, advertising ID, photos, or your coordinates — latitude and
+  longitude are stripped from any address recorded in a report before it is sent.
+  These reports are used only to diagnose faults, never for advertising, profiling,
+  or analytics. This applies identically to the Android and iOS versions.
+</p>
+
+<h3>Advertising</h3>
+<p>
+  <strong>WeatherDrobe does not show ads</strong>, on Android or on iPhone and
+  iPad. No advertising SDK is initialised, no ad is ever requested, and nothing
+  in the app reads your advertising identifier — Android's Advertising ID or
+  Apple's IDFA. There is no ad-consent form and no App Tracking Transparency
+  prompt, because there is nothing to consent to. If that ever changes, this
+  policy will be updated to describe it before the change ships.
+</p>
+
+<h3>Purchases</h3>
+<p>
+  WeatherDrobe Premium is optional. If you buy it, the payment itself is handled
+  entirely by the store your device uses — Google Play on Android, the Apple
+  App Store on iPhone and iPad. Your payment details are entered in the store's
+  own checkout sheet and never pass through this app. To know whether Premium is
+  active, the purchase record is sent over an encrypted (HTTPS) connection to our
+  billing provider (RevenueCat), which stores it so your purchase can be restored
+  if you reinstall or change device.
+</p>
+<p>
+  This does not create an account. Your purchase is linked to an anonymous
+  identifier generated on your device, not to a name, email address, or login. We
+  never receive or store your card number, bank details, or billing address. If
+  you never buy Premium, nothing is sent to RevenueCat at all.
+</p>
+<p>
+  Subscriptions renew automatically until cancelled. You can cancel at any time
+  — on Android in Google Play under Payments &amp; subscriptions, on iPhone and
+  iPad in Settings → Apple Account → Subscriptions. Cancelling is handled by
+  Google or Apple, not by us.
 </p>
 
 <h2>Third-Party Services</h2>
 <p>
-  The app sends weather and geocoding requests to the following providers. We
-  share only the coordinates or city-name text needed to return a result:
+  The app sends requests to the following providers, and the list is the same on
+  Android and on iPhone and iPad. We share only what each one needs to answer:
 </p>
 <ul>
   <li><strong>Open-Meteo</strong> — weather forecasts and city search
-      (<code>open-meteo.com</code>). See open-meteo.com for their terms.</li>
-  <li><strong>The Weather Company / IBM</strong> — weather data
-      (<code>api.weather.com</code>). See ibm.com/privacy for their policy.</li>
+      (<code>open-meteo.com</code>). Receives the coordinates you are asking about,
+      or the city-name text you type. See open-meteo.com for their terms.</li>
+  <li><strong>Sentry</strong> — crash and error diagnostics
+      (<code>sentry.io</code>). Receives crash reports as described above. See
+      sentry.io/privacy for their policy.</li>
+  <li><strong>Google Play Billing</strong> (Android only) — processes the payment
+      if you buy Premium. Receives your payment details directly; we never see
+      them. Governed by Google's own privacy policy.</li>
+  <li><strong>Apple App Store</strong> (iPhone and iPad only) — processes the
+      payment if you buy Premium. Receives your payment details directly; we
+      never see them. Governed by Apple's own privacy policy.</li>
+  <li><strong>RevenueCat</strong> — confirms and restores purchases
+      (<code>revenuecat.com</code>). Receives the purchase record and an anonymous
+      install identifier, only if you buy Premium. See revenuecat.com/privacy for
+      their policy.</li>
+  <li><strong>Superwall</strong> — presents the Premium offer screen in builds
+      where it is enabled (<code>superwall.com</code>). Receives an anonymous
+      install identifier and basic device and locale information in order to
+      choose which offer to show. It is never contacted if Premium is not
+      offered on your build.</li>
 </ul>
 <p>
-  These providers receive a location to answer a forecast request. Refer to
-  their policies for how they handle request data.
+  Refer to their policies for how they handle request data. No advertising
+  network is on this list, because the app serves no ads.
 </p>
 
 <h2>Data Sharing and Sale</h2>
 <p>
-  We do not sell your data. We do not share your data with anyone except the
-  weather providers above, and only the minimum needed to fetch a forecast.
+  We do not sell your data, and we do not share it for advertising. We share it
+  only with the providers listed above, and only the minimum each needs. Every
+  one of them acts on our behalf, processing what we send in order to answer us.
 </p>
 
 <h2>Data Security</h2>
 <p>
-  All network requests use encrypted HTTPS connections. Because data stays on
-  your device and we run no servers, there is no central store of your
-  information to breach.
+  All network requests use encrypted HTTPS connections. We run no servers of our
+  own, and your settings, photos and wardrobe never leave your device. The only
+  thing held off your device is a purchase receipt at our billing provider, if
+  you bought Premium — and it contains no name, email or payment details.
+  Nothing you typed or photographed in the app is held anywhere but your device.
 </p>
 
 <h2>Data Retention and Deletion</h2>
 <p>
-  All app data — settings and photos — lives only on your device. To delete it,
-  uninstall the app. We hold no copy to delete on your behalf because we store
-  nothing on our side.
+  All app data — settings, photos and your wardrobe — lives only on your device.
+  To delete it, uninstall the app (Android or iPhone and iPad alike); we hold no
+  copy, because we store nothing on our side.
+</p>
+<p>
+  If you bought Premium, the purchase receipt held by our billing provider is the
+  one exception. It is what makes your purchase restorable, so it outlives an
+  uninstall by design. To have it erased, email us at the address below and we
+  will request its deletion — note that doing so gives up the ability to restore
+  the purchase. Payment records held by Google Play or Apple are governed by
+  their own policies and retention rules.
 </p>
 
 <h2>Children's Privacy</h2>
@@ -112,12 +234,51 @@
 </p>
 
 <h2>Permissions We Request</h2>
-<ul>
-  <li><strong>Location</strong> — to fetch weather for where you are.</li>
-  <li><strong>Camera / Photos</strong> — optional, to add wardrobe images (stored locally).</li>
-  <li><strong>Notifications</strong> — to show local weather/outfit reminders.</li>
-  <li><strong>Internet</strong> — to request forecasts.</li>
-</ul>
+<p>Both versions request the same things; only the names differ.</p>
+<table>
+  <tr><th>What it is for</th><th>Android</th><th>iPhone and iPad</th></tr>
+  <tr>
+    <td>Weather for where you are</td>
+    <td><code>ACCESS_FINE_LOCATION</code>, <code>ACCESS_COARSE_LOCATION</code></td>
+    <td>Location — While Using the App</td>
+  </tr>
+  <tr>
+    <td>Adding wardrobe images (optional, stored locally)</td>
+    <td>Photo picker / camera</td>
+    <td>Camera, Photo Library</td>
+  </tr>
+  <tr>
+    <td>Local weather and outfit reminders</td>
+    <td><code>POST_NOTIFICATIONS</code></td>
+    <td>Notifications</td>
+  </tr>
+  <tr>
+    <td>Requesting forecasts</td>
+    <td><code>INTERNET</code></td>
+    <td>Granted by default</td>
+  </tr>
+  <tr>
+    <td>Re-scheduling reminders after a restart</td>
+    <td><code>RECEIVE_BOOT_COMPLETED</code></td>
+    <td>Not applicable</td>
+  </tr>
+</table>
+<p>
+  You can withdraw any of these at any time — on Android in Settings → Apps →
+  WeatherDrobe → Permissions, and on iPhone and iPad in Settings → WeatherDrobe.
+  The app keeps working without them; you can search a city by name instead of
+  granting location.
+</p>
+
+<h2>Your Rights</h2>
+<p>
+  Because we hold no personal data on any server of ours, there is nothing for us
+  to look up, export, or correct about you. Deleting the app deletes everything
+  it stored. The single exception is the purchase receipt described under Data
+  Retention and Deletion, which we will ask our billing provider to erase on
+  request. If you are in a region with statutory data rights (such as the EEA,
+  the UK, or California), write to us at the address below and we will answer.
+</p>
 
 <h2>Changes to This Policy</h2>
 <p>
@@ -129,6 +290,77 @@
 <p>
   Questions about this policy: <a href="mailto:kernelkrafttech@gmail.com">kernelkrafttech@gmail.com</a>
 </p>
+
+<!--
+  ============================================================================
+  ADS-ON DISCLOSURE — DO NOT DELETE. Restore verbatim when ADS_ENABLED ships.
+  ============================================================================
+  This build serves no ads: AdsConstants.enabled is false, the Google Mobile Ads
+  SDK is never initialised, and docs/app-privacy-labels.md files Advertising
+  Data / Device ID / Coarse Location as NOT collected and Tracking as No on
+  Apple, matching ios/Runner/PrivacyInfo.xcprivacy. A hosted policy that
+  describes ad targeting while those labels say otherwise is a label-mismatch
+  finding at review, which is why the section below is parked rather than shown
+  — the same reasoning as StoreCopy.privacyPolicyText in lib/core/l10n/store_copy.dart.
+
+  When ads come back, delete the "Advertising" section above, paste this in its
+  place, add the AdMob bullet to Third-Party Services, and restore the
+  "one of those relationships is different" paragraph under Data Sharing.
+
+  <h3>Advertising</h3>
+  <p>
+    The free version of WeatherDrobe is supported by ads served by Google AdMob: a
+    banner at the bottom of the main and forecast screens, and at most one
+    full-screen ad every four hours, shown when you open the full forecast. Ads
+    never appear while the app is starting up or interrupt you mid-task. This is
+    the same on Android and on iPhone and iPad.
+  </p>
+  <p>
+    To select an ad, Google receives your device's advertising ID, your IP address,
+    and an approximate location Google derives from that IP address. We do not pass
+    your GPS coordinates to Google, and the app has no code that could — the exact
+    location you grant for weather is used only to fetch your forecast. Google may
+    use what it receives for ad targeting, frequency capping, and measurement under
+    its own privacy policy.
+  </p>
+  <p>
+    <strong>Your choices.</strong> If you are in the EEA, the UK, or Switzerland, you
+    are shown a consent form before any ad is requested, and nothing is requested
+    until you answer. You can reopen that form at any time from
+    Settings → Ads → Ad privacy choices and change your decision. If you decline,
+    no ads are served at all.
+  </p>
+  <p>
+    <strong>On iPhone and iPad,</strong> Apple's App Tracking Transparency prompt
+    asks whether WeatherDrobe may use your advertising identifier. If you decline,
+    Google serves non-personalised ads instead — ads still appear, but the
+    identifier is not used to pick them. You can change that answer at any time in
+    Settings → Privacy &amp; Security → Tracking. On Android, you can reset or
+    delete your advertising ID in Settings → Google → Ads.
+  </p>
+  <p>
+    <strong>Buying Premium removes ads entirely</strong>, and with them everything
+    described in this section. That is a genuine difference in what leaves your
+    device, not only a difference in what you see.
+  </p>
+
+  Third-Party Services bullet:
+  <li><strong>Google AdMob</strong> — serves ads on the free version
+      (<code>google.com/admob</code>). Receives your advertising ID, IP address and
+      an approximate location derived from it, as described above. Governed by
+      Google's privacy policy. Not contacted at all for Premium users, or for
+      users who decline consent.</li>
+
+  Data Sharing paragraph:
+  <p>
+    One of those relationships is different from the rest and we would rather say so
+    than bury it: Open-Meteo, Sentry and RevenueCat each act on our behalf,
+    processing what we send in order to answer us. Google AdMob does not. It uses
+    what it receives — your advertising ID and an approximate location — for its own
+    ad targeting and measurement. If that is not a trade you want to make, Premium
+    removes ads and everything that goes with them.
+  </p>
+-->
 
 </body>
 </html>
