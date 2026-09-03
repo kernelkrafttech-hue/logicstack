@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy - Bhabhi Card Game</title>
+  <title>Privacy Policy &amp; Account Deletion - Bhabhi Card Game</title>
   <style>
     body {
       margin: 0;
@@ -72,6 +72,23 @@
       margin: 20px 0;
     }
 
+    .primary {
+      background: #eef4ff;
+      border-left: 4px solid #0a58ca;
+      padding: 16px 18px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    .jump {
+      font-size: 15px;
+      margin: 18px 0 0;
+    }
+
+    [id] {
+      scroll-margin-top: 20px;
+    }
+
     .platform {
       background: #f9fafb;
       border: 1px solid #e5e7eb;
@@ -115,52 +132,80 @@
   <div class="container">
     <div class="card">
       <h1>Privacy Policy for Bhabhi Card Game</h1>
-      <p class="updated">Last updated: 20 August 2026</p>
+      <p class="updated">Last updated: 2 September 2026</p>
 
       <p>
         Logicstack LLC ("we," "our," or "us") operates the Bhabhi Card Game mobile
-        application (the "App") for iOS and Android. This Privacy Policy explains what
-        information the App collects, how it is used, and how you can delete it.
+        application (the "App") for iOS and Android. This page is both the App's Privacy
+        Policy and its account deletion instructions: it explains what information the App
+        collects, how it is used, and how to delete it and the account it is attached to.
+      </p>
+      <p class="jump">
+        Here to delete your account? Go straight to
+        <a href="#account-deletion"><strong>Account and Data Deletion</strong></a>.
       </p>
 
       <div class="notice">
         <strong>The short version.</strong> Bhabhi has no sign-up. You never give us your
-        name, email address, or phone number. The App creates an anonymous ID so your coins
-        and level survive reinstalls and so online matches work. You can delete everything
-        from inside the App at any time: <strong>Settings &rarr; Account &rarr; Delete my
-        account and data</strong>.
+        name, email address, or phone number. The App creates an anonymous ID the first time
+        it saves anything to our servers &mdash; which happens in single-player too &mdash;
+        so your progress is kept and online matches work. That ID belongs to one
+        installation: it does not carry your progress to another device. If you allow it,
+        the App also sends reminders that your own device schedules; nothing about them is
+        sent to us. You can delete your account and game data from inside the App at any
+        time: <strong>Settings &rarr; Account &rarr; Delete my account and data</strong>
+        (<a href="#account-deletion">full details</a>).
       </div>
 
       <h2>Information We Collect</h2>
 
       <h3>Anonymous Account ID</h3>
       <p>
-        The first time you play online, the App creates an anonymous account through Firebase
-        Authentication. This is a random identifier. There is no sign-in screen, and the
-        identifier is not linked to your Apple ID, Google account, email address, or phone
-        number. We cannot use it to identify you personally.
+        The App creates an anonymous account through Firebase Authentication the first time
+        it needs to save your progress to our servers. That can happen without ever playing
+        online &mdash; for example when you win or spend coins in a game against the
+        computer, claim a daily quest, collect free coins or a rewarded-ad bonus, play an
+        arcade mini-game, or open the leaderboard. This is a random identifier. There is no
+        sign-in screen, and the identifier is not linked to your Apple ID, Google account,
+        email address, or phone number. We cannot use it to identify you personally.
       </p>
 
-      <h3>Your Player Name</h3>
+      <h3>Your Player Name and Public Profile</h3>
       <p>
-        The name you choose is shown to other players at online tables and on the public
-        leaderboard. Please choose a name you are comfortable showing publicly. Names are
-        screened automatically, and you can report an offensive name at
+        The name and avatar you choose are shown to other players at online tables and on
+        the public leaderboard, next to your level and XP, your coin balance, your online
+        rating and your number of wins. Please choose a name you are comfortable showing
+        publicly. Names are screened automatically, and you can report an offensive name at
         <a href="mailto:kernelkrafttech@gmail.com">kernelkrafttech@gmail.com</a>.
+      </p>
+      <p>
+        Your profile is held in a shared database, and the rest of what it holds &mdash;
+        achievements, quests, campaign progress, avatars and table designs you own, and play
+        statistics such as when you last played and which days you opened the App &mdash;
+        can also be read by other people using the App. None of it contains your real name,
+        email address, or any other contact detail, and nothing in it identifies you beyond
+        what you put in your player name. Please do not put anything private in the name you
+        choose.
       </p>
 
       <h3>Game Progress</h3>
       <p>
         Coins, XP and level, online rating, achievements, quests, match results and game
-        statistics, stored against your anonymous ID so your progress follows you across
-        devices and reinstalls.
+        statistics, stored against your anonymous ID so that online matches, matchmaking and
+        the leaderboard work and so your progress is kept between sessions. Some of it is
+        visible to other players; see <strong>Your Player Name and Public Profile</strong>
+        above. Because there is no sign-in, the anonymous ID belongs to a single
+        installation: your progress does not transfer to another device, and it may be lost
+        if you uninstall the App.
       </p>
 
       <h3>Feedback You Choose to Send</h3>
       <p>
         If you submit a note through the rating prompt, we store its text along with your
         anonymous ID and the platform you sent it from. Please do not include personal
-        details in it.
+        details in it. These notes are kept separately from your game data; see
+        <a href="#account-deletion"><strong>Account and Data Deletion</strong></a> for how to
+        have them removed.
       </p>
 
       <h3>Standard Technical Data</h3>
@@ -168,6 +213,16 @@
         Google Firebase logs ordinary service data, such as IP address, timestamps, and
         device and operating system type, when the App communicates with our servers.
         Firebase processes this on our behalf.
+      </p>
+      <p>
+        Separately, the App downloads its typefaces from Google's font service
+        (fonts.gstatic.com) the first time it runs after installation, and caches them on
+        your device for later launches. Like any web request, that download tells Google
+        the device's IP address and basic request details. It happens as the first screen
+        is drawn, so it takes place before the advertising consent form described below.
+        Google is the controller of that data and handles it under the
+        <a href="https://policies.google.com/privacy">Google Privacy Policy</a>. No
+        account, player name, or game data is sent with it.
       </p>
 
       <p>
@@ -177,28 +232,32 @@
 
       <h2>Advertising</h2>
 
+      <p>
+        Bhabhi shows Google AdMob advertisements on <strong>both iOS and Android</strong>.
+        Most are advertisements you choose to watch in exchange for in-game coins; a short
+        one may also appear between games. Advertisements are never required in order to
+        play. Google's handling of that data is described at
+        <a href="https://policies.google.com/technologies/partner-sites">
+        policies.google.com/technologies/partner-sites</a>.
+      </p>
+
       <div class="platform">
-        <p><strong>On iOS:</strong> this version of Bhabhi shows <strong>no advertisements</strong>.
-        We do not use the Advertising Identifier (IDFA), we do not ask for tracking
-        permission, and we do not track you across other companies' apps or websites.</p>
+        <p><strong>On iOS:</strong> we do <strong>not</strong> ask for tracking permission,
+        and we never use the Advertising Identifier (IDFA). Because we never request it, the
+        advertisements you see are based on the app you are using rather than on a profile
+        of you, and we do not track you across other companies' apps or websites.</p>
       </div>
 
       <div class="platform">
-        <p><strong>On Android:</strong> Bhabhi shows Google AdMob advertisements, which you
-        may choose to watch in exchange for in-game coins. AdMob may use an advertising
-        identifier to limit repeat ads, measure performance, and, depending on your settings
-        and region, personalise advertising. Google's handling of that data is described at
-        <a href="https://policies.google.com/technologies/partner-sites">
-        policies.google.com/technologies/partner-sites</a>. Advertisements are never required
-        in order to play the game.</p>
-        <p>Users in the European Economic Area, the United Kingdom, and Switzerland may be
-        shown a consent message to manage advertising choices where required by law.</p>
+        <p><strong>On Android:</strong> AdMob may use an advertising identifier to limit
+        repeat ads, measure performance, and, depending on your settings and region,
+        personalise advertising.</p>
       </div>
 
       <p>
-        If we add advertising to the iOS version in a future release, we will update this
-        policy and ask for your permission first through Apple's App Tracking Transparency
-        prompt.
+        Users in the European Economic Area, the United Kingdom, and Switzerland are shown
+        Google's consent form before any advertisement loads, and we honour that answer. You
+        can change it at any time from <strong>Settings &rarr; Ad privacy options</strong>.
       </p>
 
       <h2>Purchases</h2>
@@ -208,13 +267,38 @@
         information.
       </p>
 
+      <h2>Notifications and Reminders</h2>
+      <p>
+        After your first finished game, the App asks your device for permission to send
+        notifications. If you allow it, the App schedules up to two reminders when you leave
+        the App &mdash; for example that your daily streak is about to lapse, that fresh
+        daily quests are available, or that a saved game is waiting for you. If you decline,
+        no reminders are sent and you are not asked again.
+      </p>
+      <p>
+        These reminders are created and scheduled entirely on your device. Their wording is
+        chosen there from information already described above &mdash; your login streak and
+        whether you have a game in progress. There is no push server: nothing about them is
+        sent to us or to anyone else, and we cannot tell whether one was shown. Pending
+        reminders are cancelled as soon as you open the App again, and on Android they are
+        re-registered after a device restart.
+      </p>
+      <p>
+        There is no reminder switch inside the App. You can turn notifications off at any
+        time in your device settings (<strong>iOS: Settings &rarr; Notifications &rarr;
+        Bhabhi</strong>; <strong>Android: Settings &rarr; Apps &rarr; Bhabhi &rarr;
+        Notifications</strong>), and turning them off changes nothing about the game.
+      </p>
+
       <h2>How We Use Your Information</h2>
       <ul>
         <li>Provide, operate, and maintain the App</li>
         <li>Enable online multiplayer gameplay and matchmaking</li>
-        <li>Save and sync your game progress</li>
+        <li>Save your game progress to your device and to our servers</li>
+        <li>Send optional on-device reminders about your streak, daily quests, and
+        unfinished games</li>
         <li>Track results, statistics, rankings, and the leaderboard</li>
-        <li>Show advertisements and measure their performance (Android only)</li>
+        <li>Show advertisements and measure their performance</li>
         <li>Detect and prevent cheating, fraud, and abuse</li>
         <li>Fix crashes, bugs, and technical problems</li>
         <li>Comply with legal obligations and platform requirements</li>
@@ -222,9 +306,14 @@
 
       <h2>What We Never Do</h2>
       <p>
-        We do not sell your personal information. We do not share it with data brokers. We do
-        not use it to build advertising profiles about you, and we do not track you across
-        other companies' apps or websites.
+        We do not sell your personal information and we do not share it with data brokers.
+        We do not track you across other companies' apps or websites, and we build no
+        advertising profile of our own about anyone.</p>
+      <p>
+        The one thing we cannot claim on your behalf is what Google does with an Android
+        advertising ID once advertising is personalised &mdash; that is between you and
+        Google, and your device settings control it. On iOS the question does not arise: we
+        never ask for the identifier that would make it possible.
       </p>
 
       <h2>Third-Party Services</h2>
@@ -235,8 +324,13 @@
           <a href="https://firebase.google.com/support/privacy">Firebase privacy</a>
         </li>
         <li>
-          <strong>Google AdMob</strong> for advertising, <strong>Android only</strong>.
+          <strong>Google AdMob</strong> for advertising, on iOS and Android.
           <a href="https://policies.google.com/technologies/partner-sites">AdMob privacy</a>
+        </li>
+        <li>
+          <strong>Google Fonts</strong> (fonts.gstatic.com) to download the App's typefaces
+          on first launch, on iOS and Android.
+          <a href="https://policies.google.com/privacy">Google privacy policy</a>
         </li>
       </ul>
 
@@ -249,32 +343,125 @@
         cannot guarantee absolute security.
       </p>
 
-      <h2>Data Retention and Deletion</h2>
+      <h2 id="account-deletion">Account and Data Deletion</h2>
+
+      <div class="primary">
+        <strong>Delete it yourself, from inside the App.</strong> Open
+        <strong>Settings &rarr; Account &rarr; Delete my account and data</strong>. Deletion
+        runs immediately on both iOS and Android. You do not need to email us, and there is
+        nothing to wait for.
+      </div>
+
+      <h3>How long we keep your data</h3>
       <p>
         We keep your data until you delete it. Inactive anonymous accounts may be removed
         after an extended period of inactivity.
       </p>
+
+      <h3>There is no sign-in, so there is nothing to identify</h3>
       <p>
-        <strong>To delete everything from inside the App:</strong> Settings &rarr; Account
-        &rarr; Delete my account and data.
-      </p>
-      <p>
-        This permanently removes your player name and avatar, coins, level and XP, online
-        rating and leaderboard entry, achievements, quests and statistics, along with the
-        anonymous account itself and your progress on the device. It cannot be undone.
-      </p>
-      <p>
-        You may also request access to, correction of, or deletion of your data by emailing
-        <a href="mailto:kernelkrafttech@gmail.com">kernelkrafttech@gmail.com</a>. Because
-        accounts are anonymous, we may be unable to locate your data from an email address
-        alone, so the in-app deletion is the reliable route.
+        Bhabhi has no sign-up and no login. You never give us a name, email address, or
+        phone number. The App creates an anonymous identifier for itself so your progress
+        can be saved and online matches can work, and that identifier is what the in-app
+        deletion removes. Because accounts are anonymous, we generally <strong>cannot</strong>
+        find your data from an email address alone &mdash; the in-app deletion is the
+        reliable route, and the only one that works instantly.
       </p>
 
-      <h2>Children's Privacy</h2>
+      <h3>What the in-app deletion removes</h3>
+      <ul>
+        <li>Your player name and avatar.</li>
+        <li>Your coins, level and XP.</li>
+        <li>Your online rating and your entry on the public leaderboard.</li>
+        <li>Your achievements, quests, campaign progress, and play statistics.</li>
+        <li>Items you own, such as avatars and table designs.</li>
+        <li>Your progress stored on the device itself.</li>
+        <li>The anonymous account record.</li>
+      </ul>
       <p>
-        The App is not directed to children under the age of 13, and we do not knowingly
-        collect personal information from children under 13. If you are a parent or guardian
-        and believe a child has provided us with personal information, please contact us at
+        This cannot be undone. If that last step &mdash; removing the anonymous account
+        record itself &mdash; cannot complete, the App signs the session out instead, and
+        the leftover record is removed by the inactivity clean-up described above. It holds
+        none of the data listed here.
+      </p>
+
+      <h3>What the in-app deletion does not reach</h3>
+      <p>
+        An online table keeps its own copy of the name, avatar and rating of everyone seated
+        at it. That copy goes when the table closes, which normally happens as soon as the
+        last player leaves, but a table everyone quit by force-closing the App can be left
+        behind holding it. Such a table is never shown on the leaderboard, and once your
+        account is deleted it is no longer connected to you.
+      </p>
+      <p>
+        Feedback notes you chose to send through the rating prompt are stored separately and
+        are not always removed by the in-app deletion.
+      </p>
+      <p>
+        For either of these, email
+        <a href="mailto:kernelkrafttech@gmail.com?subject=Bhabhi%20Account%20Deletion%20Request">kernelkrafttech@gmail.com</a>
+        with the subject line <strong>Bhabhi Account Deletion Request</strong> and we will
+        delete them. Please do not send passwords or other sensitive information &mdash; we
+        never need them.
+      </p>
+
+      <h3>What we may keep</h3>
+      <p>
+        We may retain limited records where required for security, fraud prevention, legal
+        compliance, dispute resolution, or legitimate business records. Anything retained is
+        kept only for as long as necessary for those purposes.
+      </p>
+      <p>
+        Advertising data handled by third-party ad providers, such as Google AdMob, is
+        controlled by those providers under their own policies. You can review Google's
+        controls at <a href="https://policies.google.com/privacy">Google's Privacy Policy</a>.
+        On Android you can reset or delete your advertising ID in
+        <strong>Settings &rarr; Privacy &rarr; Ads</strong>. On iOS the App never requests the
+        Advertising Identifier at all.
+      </p>
+
+      <h3>Removing the App's data from your device</h3>
+      <p>
+        Data stored only on your device is removed when you delete the App:
+      </p>
+      <ul>
+        <li><strong>iOS:</strong> touch and hold the app icon, then
+            <strong>Remove App &rarr; Delete App</strong>.</li>
+        <li><strong>Android:</strong> <strong>Settings &rarr; Apps &rarr; Bhabhi &rarr;
+            Storage</strong> to clear its storage, or uninstall the App.</li>
+      </ul>
+      <p>
+        Uninstalling on its own does not delete what is stored on our servers. Use the in-app
+        deletion first if you want everything gone.
+      </p>
+
+      <h3>Emailed requests</h3>
+      <p>
+        In-app deletion is immediate. You may also request access to, correction of, or
+        deletion of your data by emailing
+        <a href="mailto:kernelkrafttech@gmail.com">kernelkrafttech@gmail.com</a>. We aim to
+        respond within 30 days, and we may contact you if we need more information to locate
+        the data.
+      </p>
+
+      <h2>Children's Privacy and Age</h2>
+      <p>
+        The App is intended for adults. It carries a <strong>17+</strong> content rating
+        because it includes simulated gambling &mdash; a slot machine, a spin wheel, a
+        scratch card, and coin wagering on ordinary rounds. No real money is involved
+        anywhere: all coins are earned in-game and there are no in-app purchases.
+      </p>
+      <p>
+        The App is not directed to children, and we do not knowingly collect personal
+        information from anyone under 13. We also do not knowingly permit use by anyone below
+        the age of digital consent where they live &mdash; that is 13 to 16 depending on the
+        European Economic Area member state, and 13 in the United Kingdom. Our advertising
+        provider is configured on the basis that users are at or above that age, consistent
+        with the App's 17+ rating.
+      </p>
+      <p>
+        If you are a parent or guardian and believe a child has provided us with personal
+        information, please contact us at
         <a href="mailto:kernelkrafttech@gmail.com">kernelkrafttech@gmail.com</a> and we will
         delete it.
       </p>
