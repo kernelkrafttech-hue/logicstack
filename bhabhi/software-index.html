@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software Index - Bhabhi Card Game</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7f8fb;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 35px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #1f2937;
+      font-size: 32px;
+    }
+
+    h2 {
+      margin-top: 32px;
+      color: #111827;
+      font-size: 22px;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      margin-top: 20px;
+      color: #374151;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 12px 0;
+    }
+
+    ul {
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .updated {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .notice {
+      background: #f3f4f6;
+      border-left: 4px solid #2563eb;
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 22px 0;
+    }
+
+    .empty {
+      background: #ecfdf5;
+      border-left: 4px solid #059669;
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 22px 0;
+      font-size: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 15px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f9fafb;
+      color: #111827;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .wrap {
+      overflow-x: auto;
+    }
+
+    code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      margin-top: 35px;
+      font-size: 14px;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 24px;
+      }
+      h1 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Software Index &mdash; Bhabhi Card Game: Multiplayer</h1>
+      <p class="updated">Last updated: 6 September 2026 &middot; Applies to build 1.0.3 (16) and later</p>
+
+      <p>
+        This page is the index of games and software in <strong>Bhabhi Card Game:
+        Multiplayer</strong> (Apple ID 6803359801, bundle identifier
+        <code>com.logicstack.bhabi</code>), published by <strong>Logicstack LLC</strong>.
+        It is maintained for App Store Review Guideline 4.7 and is linked from the App
+        Review Information notes of every submission.
+      </p>
+
+      <h2>Index of non-embedded games and software</h2>
+
+      <div class="empty">
+        <strong>0 entries.</strong> This app contains no games or software that are not
+        embedded in the binary. There are no external titles, no third-party developers
+        and no hosted content, so there are no names, developers or URLs to list.
+      </div>
+
+      <p>
+        None of the software this app offers is downloaded, interpreted, hot-patched,
+        streamed or executed after review. Specifically, the submitted binary contains no
+        HTML, JavaScript, WebAssembly, JS bundle, Lua or SWF files of our own; there is no
+        emulator, no chatbot, no plug-in host and no mini app platform. The one exception is
+        third-party advertising delivered by Google's SDK, described below. Online multiplayer runs the
+        rules engine on the device and synchronises only serialized game state &mdash;
+        card indices, turn order and timestamps. No screen, string, layout, rule or asset
+        is fetched from a server.
+      </p>
+
+      <h2>Embedded features that award in-game coins</h2>
+
+      <p>
+        These four are <strong>not</strong> index entries. They are listed here because
+        they are the features a reviewer reaches from the Rewards panel, and we would
+        rather name them than have them discovered. Each one is a native screen written
+        in Dart, built with Flutter and compiled ahead-of-time into the submitted binary.
+        Their titles, rules and prize tables are a single compile-time constant in our
+        source, and every outcome is drawn on the device. None of them is hosted
+        anywhere, so none of them has a URL.
+      </p>
+
+      <div class="wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Developer</th>
+              <th>URL</th>
+              <th>Where it lives</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Spin the Wheel</td>
+              <td>Logicstack LLC</td>
+              <td>None &mdash; not hosted</td>
+              <td>Compiled into build 1.0.3 (16)</td>
+            </tr>
+            <tr>
+              <td>Scratch Card</td>
+              <td>Logicstack LLC</td>
+              <td>None &mdash; not hosted</td>
+              <td>Compiled into build 1.0.3 (16)</td>
+            </tr>
+            <tr>
+              <td>Suit Slots</td>
+              <td>Logicstack LLC</td>
+              <td>None &mdash; not hosted</td>
+              <td>Compiled into build 1.0.3 (16)</td>
+            </tr>
+            <tr>
+              <td>High or Low</td>
+              <td>Logicstack LLC</td>
+              <td>None &mdash; not hosted</td>
+              <td>Compiled into build 1.0.3 (16)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        All four are free, the player never stakes coins, and every play pays out. Coins
+        cannot be purchased or exchanged outside the app, and the app has no in-app
+        purchases and no real money anywhere. Simulated gambling is declared in the age
+        rating. There is no third-party content in any of them.
+      </p>
+
+      <h2>Third-party content served by embedded SDKs</h2>
+
+      <p>
+        Two surfaces in the app render content produced by Google rather than by us. We
+        list them here for completeness. Neither is a game or software that this app
+        offers, and neither is ours to index.
+      </p>
+
+      <ul>
+        <li>
+          <strong>Google AdMob advertising</strong> &mdash; Google LLC &mdash;
+          <a href="https://admob.google.com/">https://admob.google.com/</a>.
+          Rewarded and occasional interstitial advertisements, served through the Google
+          Mobile Ads SDK. Every request is made non-personalised, so creatives are chosen
+          for this app rather than from a profile of the user, and the advertising
+          identifier is never read. Creatives are selected and delivered by Google and can
+          include interactive formats. They are third-party advertising, not software
+          offered by this app.
+        </li>
+        <li>
+          <strong>Google User Messaging Platform consent form</strong> &mdash; Google LLC
+          &mdash;
+          <a href="https://support.google.com/admob/answer/10113207">https://support.google.com/admob/answer/10113207</a>.
+          Fetched and rendered by Google's SDK. No message is currently published for this
+          app, so no form is shown; the component is listed because the SDK that renders it
+          is still linked into the binary.
+        </li>
+      </ul>
+
+      <p>
+        WebKit is linked into the binary only as a transitive dependency of the Google
+        Mobile Ads SDK, which uses it to render the two surfaces above. No code we wrote
+        uses it, and no content of ours is rendered as web content.
+      </p>
+
+      <h2>Typefaces</h2>
+
+      <p>
+        Typefaces are loaded from Google Fonts (<code>fonts.gstatic.com</code>) at first
+        use and cached on the device. These are font files, not code and not games.
+      </p>
+
+      <h2>Contact</h2>
+
+      <p>
+        Logicstack LLC &mdash;
+        <a href="mailto:kernelkrafttech@gmail.com">kernelkrafttech@gmail.com</a><br />
+        Privacy policy:
+        <a href="https://kernelkrafttech-hue.github.io/logicstack/bhabhi/">https://kernelkrafttech-hue.github.io/logicstack/bhabhi/</a>
+      </p>
+    </div>
+
+    <footer>
+      &copy; 2026 Logicstack LLC. All rights reserved.
+    </footer>
+  </div>
+</body>
+</html>
