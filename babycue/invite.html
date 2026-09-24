@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Join a baby on BabyCue</title>
+<meta name="description" content="Accept a BabyCue caregiver invitation.">
+<style>
+  :root {
+    --bg: #f7f3ec; --surface: #fffdf9; --text: #2b2622; --muted: #6b625a;
+    --accent: #9a5b3c; --rule: #e4dcd0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1c1916; --surface: #24201c; --text: #ece6de; --muted: #a89e93;
+      --accent: #e0a07e; --rule: #3a342e;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1916; --surface: #24201c; --text: #ece6de; --muted: #a89e93;
+    --accent: #e0a07e; --rule: #3a342e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main {
+    max-width: 720px; margin: 0 auto; padding: 48px 16px 64px;
+  }
+  header { border-bottom: 1px solid var(--rule); padding-bottom: 24px; margin-bottom: 8px; }
+  .brand { color: var(--accent); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-size: 13px; }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-size: 2.2rem; line-height: 1.2; margin: 8px 0; }
+  .date { color: var(--muted); font-size: 15px; margin: 0; }
+  h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.35rem; margin: 40px 0 12px; }
+  p, li { max-width: 68ch; }
+  ul { padding-left: 1.25em; }
+  li { margin: 6px 0; }
+  a { color: var(--accent); }
+  .summary { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 4px 20px 8px; margin-top: 24px; }
+  nav ol { columns: 2; column-gap: 32px; padding-left: 1.25em; font-size: 15px; }
+  @media (max-width: 560px) { nav ol { columns: 1; } h1 { font-size: 1.8rem; } }
+  .table-wrap { overflow-x: auto; margin: 16px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .03em; }
+  footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+</style>
+
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand">BabyCue</div>
+    <h1>You've been invited</h1>
+    <p class="date">Last updated: September 24, 2026</p>
+  </header>
+
+  <p>Someone invited you to help look after a baby on BabyCue.</p><div class="summary"><p>Your invite code: <strong id="code" style="font-size:1.4em;letter-spacing:.08em">(see your message)</strong></p></div>
+
+
+  <section id="join">
+    <h2>How to accept</h2>
+    <ul><li>Install BabyCue from the App Store (iPhone and iPad) or Google Play (Android).</li><li>Open BabyCue and sign in or create an account.</li><li>Go to More &gt; Caregivers &gt; Enter an invite code and enter the code above.</li></ul><p>The code expires, so ask the person who invited you for a new one if it doesn't work.</p>
+  </section>
+
+  <footer>© 2026 LogicStack. <a href="https://kernelkrafttech-hue.github.io/logicstack/babycue/privacy.html">Privacy Policy</a> · <a href="https://kernelkrafttech-hue.github.io/logicstack/babycue/terms.html">Terms of Service</a> · <a href="https://kernelkrafttech-hue.github.io/logicstack/babycue/support.html">Support</a></footer>
+</main>
+<script>
+  try {
+    var c = new URLSearchParams(location.search).get("code");
+    if (c && /^[A-Za-z0-9]{4,32}$/.test(c)) document.getElementById("code").textContent = c.toUpperCase();
+  } catch (e) {}
+</script>
+</body>
+</html>
