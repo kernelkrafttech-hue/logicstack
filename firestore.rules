@@ -1,0 +1,285 @@
+rules_version = '2';
+
+// MaintenanceOS Firestore security rules.
+//
+// Phase 3 scope:
+//   - users/{uid}           — self-only profile
+//   - properties/{id}       — landlord-owned, plus temporary tenant read so
+//                             tenants can pick a property when submitting a
+//                             request (will tighten once invites land)
+//   - maintenanceRequests/  — tenant authors; tenant + landlord can read
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function validRole(role) {
+      return role in ['landlord', 'tenant', 'contractor'];
+    }
+
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isLandlord() {
+      return isSignedIn() && userRole() == 'landlord';
+    }
+
+    function isTenant() {
+      return isSignedIn() && userRole() == 'tenant';
+    }
+
+    function ownsProperty(data) {
+      return isSignedIn() && data.ownerId == request.auth.uid;
+    }
+
+    match /users/{uid} {
+      allow read: if isSelf(uid);
+
+      allow create: if isSelf(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.email is string
+        && request.resource.data.displayName is string
+        && validRole(request.resource.data.role);
+
+      // Profile updates: uid, email, role are immutable. The user can
+      // only touch their own display fields (handled by the diff
+      // affectedKeys check).
+      allow update: if isSelf(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['displayName','phone','companyName','photoUrl','updatedAt']);
+
+      allow delete: if false;
+
+      // Per-device FCM tokens. Only the owning user can read or write.
+      match /fcmTokens/{tokenId} {
+        allow read, create, update, delete: if isSelf(uid);
+      }
+
+      // Stripe subscription state. Only readable by self; writes happen
+      // exclusively via the Stripe webhook + trial seed Cloud Functions
+      // (admin SDK bypasses rules).
+      match /subscription/{subscriptionId} {
+        allow read: if isSelf(uid);
+        allow create, update, delete: if false;
+      }
+    }
+
+    // In-app notifications. Created by the notification trigger Cloud
+    // Functions (admin SDK bypasses these rules); the recipient may read
+    // their own and toggle `read`.
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn()
+        && resource.data.userId == request.auth.uid;
+
+      allow update: if isSignedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['read']);
+
+      allow delete: if isSignedIn()
+        && resource.data.userId == request.auth.uid;
+
+      // Clients never create directly — only the Cloud Function.
+      allow create: if false;
+    }
+
+    match /contractors/{contractorId} {
+      // Landlord owns the contractor entry; the contractor themselves can
+      // also read it (matched by email) so future contractor-side features
+      // can show profile info.
+      allow read: if isSignedIn() && (
+        resource.data.landlordId == request.auth.uid
+        || resource.data.email == request.auth.token.email
+      );
+
+      allow create: if isLandlord()
+        && request.resource.data.landlordId == request.auth.uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.companyName is string
+        && request.resource.data.phone is string
+        && request.resource.data.email is string
+        && request.resource.data.email.size() > 0
+        && request.resource.data.trade in
+            ['plumbing','electrical','hvac','appliance','pest','structural','general'];
+
+      allow update: if isSignedIn()
+        && resource.data.landlordId == request.auth.uid
+        && request.resource.data.landlordId == resource.data.landlordId
+        && request.resource.data.trade in
+            ['plumbing','electrical','hvac','appliance','pest','structural','general'];
+
+      allow delete: if isSignedIn()
+        && resource.data.landlordId == request.auth.uid;
+    }
+
+    match /properties/{propertyId} {
+      // Landlord can read their own properties. Tenants can read all
+      // properties for now (Phase-3 picker); tighten once tenant invites
+      // exist.
+      allow read: if ownsProperty(resource.data) || isTenant();
+
+      // Only landlords may create, and the document must list them as owner.
+      allow create: if isLandlord()
+        && ownsProperty(request.resource.data)
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.address is string
+        && request.resource.data.address.size() > 0
+        && request.resource.data.unit is string
+        && request.resource.data.city is string
+        && request.resource.data.city.size() > 0
+        && request.resource.data.state is string
+        && request.resource.data.state.matches('^[A-Z]{2}$')
+        && request.resource.data.zipCode is string
+        && request.resource.data.zipCode.matches('^[0-9]{5}(-[0-9]{4})?$');
+
+      allow update: if ownsProperty(resource.data)
+        && request.resource.data.ownerId == resource.data.ownerId;
+
+      allow delete: if ownsProperty(resource.data);
+    }
+
+    match /maintenanceRequests/{requestId} {
+      // Author (tenant), the property's landlord, and the assigned
+      // contractor (matched by email) can read.
+      allow read: if isSignedIn() && (
+        resource.data.tenantId == request.auth.uid ||
+        resource.data.landlordId == request.auth.uid ||
+        resource.data.contractorEmail == request.auth.token.email
+      );
+
+      // A signed-in tenant creates the doc, must list themselves as
+      // tenantId, the landlordId must match the property's actual owner,
+      // and the request must start in `submitted`.
+      allow create: if isTenant()
+        && request.resource.data.tenantId == request.auth.uid
+        && request.resource.data.status == 'submitted'
+        && request.resource.data.propertyId is string
+        && request.resource.data.propertyId.size() > 0
+        && request.resource.data.landlordId is string
+        && request.resource.data.landlordId.size() > 0
+        && request.resource.data.landlordId ==
+            get(/databases/$(database)/documents/properties/$(request.resource.data.propertyId)).data.ownerId
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.description is string
+        && request.resource.data.category in
+            ['plumbing','electrical','hvac','appliance','pest','structural','other']
+        && request.resource.data.urgency in ['low','medium','high','emergency']
+        && request.resource.data.photoUrls is list;
+
+      // Allowed update branches:
+      //   1. Landlord status update (Phase 4)
+      //   2. Tenant or landlord AI analysis write (Phase 5)
+      //   3. Landlord contractor assignment (Phase 6)
+      //   4. Assigned contractor status update (Phase 6)
+      allow update: if isSignedIn() && (
+        // 1. Landlord status update
+        (resource.data.landlordId == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['status', 'updatedAt'])
+          && request.resource.data.status in
+              ['submitted','reviewed','sent_to_contractor','scheduled',
+               'accepted','in_progress','completed','closed','cancelled'])
+        ||
+        // 2. AI analysis write (tenant or landlord on the request)
+        ((resource.data.tenantId == request.auth.uid
+          || resource.data.landlordId == request.auth.uid)
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['aiSummary','likelyTrade','urgencySuggestion',
+                        'contractorMessage','aiAnalyzedAt'])
+          && request.resource.data.aiSummary is string
+          && request.resource.data.likelyTrade is string
+          && request.resource.data.contractorMessage is string
+          && request.resource.data.urgencySuggestion in
+              ['low','medium','high','emergency'])
+        ||
+        // 3. Landlord contractor assignment
+        (resource.data.landlordId == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['contractorId','contractorName','contractorTrade',
+                        'contractorEmail','assignedAt','status','updatedAt'])
+          && request.resource.data.contractorId is string
+          && request.resource.data.contractorId.size() > 0
+          && request.resource.data.contractorName is string
+          && request.resource.data.contractorTrade is string
+          && request.resource.data.contractorEmail is string
+          && request.resource.data.contractorEmail.size() > 0
+          && request.resource.data.status == 'sent_to_contractor')
+        ||
+        // 4. Assigned contractor moving the job through their lifecycle
+        (resource.data.contractorEmail == request.auth.token.email
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['status', 'updatedAt'])
+          && request.resource.data.status in
+              ['accepted','scheduled','in_progress','completed'])
+      );
+
+      allow delete: if false;
+    }
+
+    // Helper: can the caller read the parent maintenance request?
+    //
+    // Uses `getAfter` so the activity event written in the SAME batch as
+    // the request creation can still see the parent doc's state. For
+    // post-create activity (status change, assignment) the result is
+    // identical to `get`.
+    function canAccessRequestAfter(requestId) {
+      let req = getAfter(
+        /databases/$(database)/documents/maintenanceRequests/$(requestId)
+      ).data;
+      return isSignedIn() && (
+        req.tenantId == request.auth.uid ||
+        req.landlordId == request.auth.uid ||
+        req.contractorEmail == request.auth.token.email
+      );
+    }
+
+    match /maintenanceRequests/{requestId}/comments/{commentId} {
+      allow read: if canAccessRequestAfter(requestId);
+
+      allow create: if canAccessRequestAfter(requestId)
+        && request.resource.data.senderId == request.auth.uid
+        && request.resource.data.requestId == requestId
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 4000
+        && request.resource.data.senderName is string
+        && request.resource.data.senderRole in
+            ['landlord','tenant','contractor'];
+
+      // Comments are immutable for the foundation.
+      allow update, delete: if false;
+    }
+
+    match /maintenanceRequests/{requestId}/activity/{activityId} {
+      allow read: if canAccessRequestAfter(requestId);
+
+      allow create: if canAccessRequestAfter(requestId)
+        && request.resource.data.requestId == requestId
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.type in
+            ['submitted','status_changed','contractor_assigned']
+        && request.resource.data.title is string
+        && request.resource.data.description is string;
+
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
